@@ -7,620 +7,276 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --azul:           #1a3a6b;
-    --azul-medio:     #1e4fa0;
-    --azul-claro:     #256ad1;
-    --rojo:           #c0202c;
-    --rojo-claro:     #e02030;
-    --amarillo:       #f5c800;
-    --amarillo-claro: #ffd740;
-    --negro:          #0f0f0f;
-    --negro-suave:    #1c1c1c;
-    --blanco:         #ffffff;
-    --gris-bg:        #f0f2f8;
-    --gris-borde:     #d0d6e8;
-    --texto:          #1c1c2e;
-    --texto-suave:    #5a6480;
-    --sombra:         0 1px 3px rgba(26,58,107,0.08), 0 8px 32px rgba(26,58,107,0.10);
-    --sombra-lg:      0 4px 8px rgba(26,58,107,0.08), 0 24px 64px rgba(26,58,107,0.14);
+    --azul:#1a3a6b; --azul-medio:#1e4fa0; --azul-claro:#256ad1;
+    --rojo:#c0202c; --rojo-claro:#e02030; --amarillo:#f5c800;
+    --negro:#0f0f0f; --negro-suave:#1c1c1c; --blanco:#ffffff;
+    --gris-bg:#f0f2f8; --gris-borde:#d0d6e8; --texto:#1c1c2e;
+    --texto-suave:#5a6480;
+    --sombra:0 1px 3px rgba(26,58,107,0.08),0 8px 32px rgba(26,58,107,0.10);
+    --sombra-lg:0 4px 8px rgba(26,58,107,0.08),0 24px 64px rgba(26,58,107,0.14);
   }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--gris-bg);color:var(--texto);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--gris-bg);
-    color: var(--texto);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    line-height: 1.6;
-  }
+  .topbar{display:flex;height:4px;position:sticky;top:0;z-index:100}
+  .topbar div{flex:1}
+  .topbar .t1{background:var(--azul)}
+  .topbar .t2{background:var(--rojo)}
+  .topbar .t3{background:var(--amarillo)}
 
-  .topbar { display: flex; height: 4px; position: sticky; top: 0; z-index: 100; }
-  .topbar div { flex: 1; }
-  .topbar .t1 { background: var(--azul); }
-  .topbar .t2 { background: var(--rojo); }
-  .topbar .t3 { background: var(--amarillo); }
+  .site-header{background:var(--azul);position:relative;overflow:hidden}
+  .site-header::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border:60px solid rgba(255,255,255,0.03);border-radius:50%;pointer-events:none}
+  .header-bg-line{position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,200,0,0.3),transparent)}
+  .header-inner{max-width:1100px;margin:0 auto;padding:32px 40px;display:flex;align-items:center;gap:32px;position:relative;z-index:1}
+  .escudo{flex-shrink:0;width:88px;height:88px;background:var(--blanco);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px rgba(245,200,0,0.4),0 8px 32px rgba(0,0,0,0.3);position:relative;overflow:hidden}
+  .escudo::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(245,200,0,0.25)}
+  .header-info{flex:1}
+  .header-eyebrow{font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--amarillo);margin-bottom:6px;opacity:.9}
+  .colegio-nombre{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:700;color:var(--blanco);line-height:1.1;letter-spacing:-0.02em}
+  .header-divider{width:48px;height:2px;background:linear-gradient(90deg,var(--amarillo),transparent);margin:12px 0}
+  .colegio-datos{display:flex;flex-wrap:wrap;gap:20px}
+  .dato-item{font-size:12px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:6px}
+  .dato-item .dot{width:4px;height:4px;background:var(--amarillo);border-radius:50%;opacity:.6}
+  .dato-item strong{color:rgba(255,255,255,0.75);font-weight:500}
+  .header-sello{flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+  .sello-year{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:700;color:rgba(255,255,255,0.06);line-height:1;letter-spacing:-4px}
+  .sello-label{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25)}
 
-  .site-header { background: var(--azul); position: relative; overflow: hidden; }
-  .site-header::before {
-    content: ''; position: absolute; top: -80px; right: -80px;
-    width: 320px; height: 320px; border: 60px solid rgba(255,255,255,0.03);
-    border-radius: 50%; pointer-events: none;
-  }
-  .site-header::after {
-    content: ''; position: absolute; bottom: -60px; right: 120px;
-    width: 200px; height: 200px; border: 40px solid rgba(245,200,0,0.06);
-    border-radius: 50%; pointer-events: none;
-  }
-  .header-bg-line {
-    position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(245,200,0,0.3), transparent);
-  }
-  .header-inner {
-    max-width: 1100px; margin: 0 auto; padding: 32px 40px;
-    display: flex; align-items: center; gap: 32px; position: relative; z-index: 1;
-  }
-  .escudo {
-    flex-shrink: 0; width: 88px; height: 88px; background: var(--blanco);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 32px; box-shadow: 0 0 0 3px rgba(245,200,0,0.4), 0 8px 32px rgba(0,0,0,0.3);
-    position: relative;
-  }
-  .escudo::before {
-    content: ''; position: absolute; inset: -6px; border-radius: 50%;
-    border: 2px solid rgba(245,200,0,0.25);
-  }
-  .escudo-inner { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .escudo-icon { font-size: 32px; line-height: 1; }
-  .escudo-text { font-family: 'DM Sans', sans-serif; font-size: 7px; font-weight: 600; color: var(--azul); letter-spacing: 2px; text-transform: uppercase; }
-  .header-info { flex: 1; }
-  .header-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--amarillo); margin-bottom: 6px; opacity: 0.9; }
-  .colegio-nombre { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem, 3.5vw, 2.3rem); font-weight: 700; color: var(--blanco); line-height: 1.1; letter-spacing: -0.02em; }
-  .header-divider { width: 48px; height: 2px; background: linear-gradient(90deg, var(--amarillo), transparent); margin: 12px 0; }
-  .colegio-datos { display: flex; flex-wrap: wrap; gap: 20px; }
-  .dato-item { font-size: 12px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 6px; font-weight: 400; }
-  .dato-item .dot { width: 4px; height: 4px; background: var(--amarillo); border-radius: 50%; opacity: 0.6; }
-  .dato-item strong { color: rgba(255,255,255,0.75); font-weight: 500; }
-  .header-sello { flex-shrink: 0; text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  .sello-year { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 700; color: rgba(255,255,255,0.06); line-height: 1; letter-spacing: -4px; }
-  .sello-label { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.25); }
+  .band{background:var(--amarillo);padding:0 40px;display:flex;align-items:stretch;justify-content:space-between}
+  .band-left{font-weight:700;font-size:10px;letter-spacing:3px;color:var(--negro);text-transform:uppercase;display:flex;align-items:center;gap:10px;padding:10px 0}
+  .band-left::before{content:'';width:18px;height:2px;background:var(--azul);opacity:.4}
+  .band-right{font-size:11px;color:rgba(0,0,0,0.5);display:flex;align-items:center;gap:8px;padding:10px 0}
+  .band-sep{width:1px;height:14px;background:rgba(0,0,0,0.2)}
 
-  .band { background: var(--amarillo); padding: 0 40px; display: flex; align-items: stretch; justify-content: space-between; }
-  .band-left { font-weight: 700; font-size: 10px; letter-spacing: 3px; color: var(--negro); text-transform: uppercase; display: flex; align-items: center; gap: 10px; padding: 10px 0; }
-  .band-left::before { content: ''; width: 18px; height: 2px; background: var(--azul); opacity: 0.4; }
-  .band-right { font-size: 11px; color: rgba(0,0,0,0.5); letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; padding: 10px 0; }
-  .band-sep { width: 1px; height: 14px; background: rgba(0,0,0,0.2); }
+  .nav-sec{background:var(--negro-suave);padding:0 40px;display:flex;overflow-x:auto;border-bottom:1px solid rgba(255,255,255,0.04);scrollbar-width:none}
+  .nav-sec::-webkit-scrollbar{display:none}
+  .nav-item{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);padding:16px 22px;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap}
+  .nav-item:hover{color:rgba(255,255,255,0.7)}
+  .nav-item.active{color:var(--amarillo);border-bottom-color:var(--amarillo)}
 
-  .nav-sec { background: var(--negro-suave); padding: 0 40px; display: flex; overflow-x: auto; border-bottom: 1px solid rgba(255,255,255,0.04); scrollbar-width: none; }
-  .nav-sec::-webkit-scrollbar { display: none; }
-  .nav-item { font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); padding: 16px 22px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
-  .nav-item:hover { color: rgba(255,255,255,0.7); }
-  .nav-item.active { color: var(--amarillo); border-bottom-color: var(--amarillo); }
+  .main{max-width:1100px;margin:0 auto;padding:48px 40px 80px}
 
-  .main { max-width: 1100px; margin: 0 auto; padding: 48px 40px 80px; }
+  .breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--texto-suave);margin-bottom:36px}
+  .breadcrumb a{color:var(--azul-claro);text-decoration:none}
+  .breadcrumb .sep{color:var(--gris-borde);font-size:14px}
+  .breadcrumb .current{color:var(--rojo);font-weight:600}
 
-  .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--texto-suave); margin-bottom: 36px; letter-spacing: 0.3px; }
-  .breadcrumb a { color: var(--azul-claro); text-decoration: none; transition: color 0.2s; }
-  .breadcrumb a:hover { color: var(--azul); }
-  .breadcrumb .sep { color: var(--gris-borde); font-size: 14px; }
-  .breadcrumb .current { color: var(--rojo); font-weight: 600; }
+  .section-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px;margin-bottom:36px;animation:fadeUp 0.6s ease both}
+  .section-icon-wrap{width:56px;height:56px;background:var(--rojo);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 24px rgba(192,32,44,0.3);flex-shrink:0}
+  .section-title h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--azul);line-height:1.1;letter-spacing:-0.02em}
+  .section-title p{font-size:13px;color:var(--texto-suave);margin-top:4px}
+  .section-badge{background:var(--azul);color:var(--amarillo);font-size:10px;font-weight:600;letter-spacing:2px;padding:6px 14px;border-radius:4px;text-transform:uppercase;white-space:nowrap}
 
-  .section-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; margin-bottom: 36px; animation: fadeUp 0.6s ease both; }
-  .section-icon-wrap { width: 56px; height: 56px; background: var(--rojo); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 8px 24px rgba(192,32,44,0.3); flex-shrink: 0; }
-  .section-title h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; color: var(--azul); line-height: 1.1; letter-spacing: -0.02em; }
-  .section-title p { font-size: 13px; color: var(--texto-suave); margin-top: 4px; font-weight: 400; }
-  .section-badge { background: var(--azul); color: var(--amarillo); font-size: 10px; font-weight: 600; letter-spacing: 2px; padding: 6px 14px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
+  /* TABS */
+  .search-tabs{display:flex;gap:0;margin-bottom:-1px;position:relative;z-index:1}
+  .search-tab{display:flex;align-items:center;gap:8px;padding:12px 24px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid var(--gris-borde);border-bottom:none;border-radius:10px 10px 0 0;background:#e8eaf2;color:var(--texto-suave);transition:all 0.2s;user-select:none}
+  .search-tab:hover{background:#dde0ef;color:var(--azul)}
+  .search-tab.active{background:var(--blanco);color:var(--azul);position:relative}
+  .search-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--blanco)}
+  .tab-icon{font-size:14px}
 
-  /* ═══ TABS DE BÚSQUEDA ═══ */
-  .search-tabs {
-    display: flex;
-    gap: 0;
-    margin-bottom: -1px;
-    position: relative;
-    z-index: 1;
-  }
+  /* PANEL */
+  .search-panel{background:var(--blanco);border-radius:0 16px 16px 16px;border:1px solid var(--gris-borde);box-shadow:var(--sombra);animation:fadeUp 0.6s 0.1s ease both;margin-bottom:28px}
+  .panel-header{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-medio) 100%);padding:18px 28px;display:flex;align-items:center;justify-content:space-between;border-radius:0 12px 0 0}
+  .panel-header-left{display:flex;align-items:center;gap:12px}
+  .panel-dots{display:flex;gap:5px}
+  .panel-dot{width:8px;height:8px;border-radius:50%}
+  .panel-dot:nth-child(1){background:var(--rojo)}
+  .panel-dot:nth-child(2){background:var(--amarillo)}
+  .panel-dot:nth-child(3){background:rgba(255,255,255,0.25)}
+  .panel-header h3{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--blanco);letter-spacing:.5px}
+  .panel-header-tag{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.07);padding:4px 10px;border-radius:4px}
+  .panel-body{padding:32px 28px 28px}
 
-  .search-tab {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: 1px solid var(--gris-borde);
-    border-bottom: none;
-    border-radius: 10px 10px 0 0;
-    background: #e8eaf2;
-    color: var(--texto-suave);
-    transition: all 0.2s;
-    user-select: none;
-  }
+  /* TAB PANES */
+  .tab-pane{display:none}
+  .tab-pane.active{display:block}
 
-  .search-tab:hover { background: #dde0ef; color: var(--azul); }
+  /* DNI */
+  .input-label{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--azul);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .input-label::after{content:'';flex:1;height:1px;background:var(--gris-borde)}
+  .input-row{display:flex;gap:14px;align-items:flex-end}
+  .input-group{flex:1}
+  .dni-field{display:flex;align-items:stretch;border:1.5px solid var(--gris-borde);border-radius:10px;overflow:hidden;transition:border-color 0.25s,box-shadow 0.25s;background:var(--blanco)}
+  .dni-field:focus-within{border-color:var(--azul-claro);box-shadow:0 0 0 4px rgba(45,111,207,0.1)}
+  .dni-prefix{background:var(--azul);color:var(--amarillo);font-family:'DM Mono',monospace;font-weight:500;font-size:11px;letter-spacing:2px;padding:0 20px;height:56px;display:flex;align-items:center;flex-shrink:0;user-select:none}
+  #dniInput{flex:1;border:none;outline:none;font-family:'DM Mono',monospace;font-size:24px;font-weight:400;letter-spacing:6px;color:var(--negro);padding:0 20px;height:56px;background:transparent;width:100%}
+  #dniInput::placeholder{color:#c8d0e0;letter-spacing:5px;font-size:22px}
+  #dniInput::-webkit-outer-spin-button,#dniInput::-webkit-inner-spin-button{-webkit-appearance:none}
+  #dniInput[type=number]{-moz-appearance:textfield}
 
-  .search-tab.active {
-    background: var(--blanco);
-    color: var(--azul);
-    border-color: var(--gris-borde);
-    position: relative;
-  }
+  /* NOMBRE */
+  .nombre-fields-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .nombre-field-wrap{display:flex;flex-direction:column;gap:6px}
+  .nombre-field-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave)}
+  .nombre-input-box{display:flex;align-items:stretch;border:1.5px solid var(--gris-borde);border-radius:10px;overflow:hidden;transition:border-color 0.25s,box-shadow 0.25s;background:var(--blanco)}
+  .nombre-input-box:focus-within{border-color:var(--azul-claro);box-shadow:0 0 0 4px rgba(45,111,207,0.1)}
+  .nombre-prefix{background:var(--azul);color:var(--amarillo);font-family:'DM Mono',monospace;font-weight:500;font-size:10px;letter-spacing:1.5px;padding:0 14px;height:52px;display:flex;align-items:center;flex-shrink:0;user-select:none}
+  .nombre-input-box input{flex:1;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:var(--negro);padding:0 16px;height:52px;background:transparent;width:100%;text-transform:uppercase}
+  .nombre-input-box input::placeholder{color:#c8d0e0;font-weight:400;text-transform:none;font-size:13px}
+  .nombre-search-row{display:flex;gap:14px;align-items:flex-end;margin-top:14px}
+  .hint-text{font-size:11px;color:var(--texto-suave);margin-top:8px;display:flex;align-items:center;gap:6px}
+  .hint-text::before{content:'ℹ';font-size:12px;color:var(--azul-claro)}
 
-  .search-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0; right: 0;
-    height: 2px;
-    background: var(--blanco);
-  }
+  /* BOTONES */
+  .btn-buscar{background:var(--rojo);color:var(--blanco);border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:0 32px;height:56px;border-radius:10px;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(192,32,44,0.3);flex-shrink:0}
+  .btn-buscar:hover{background:var(--rojo-claro);transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,32,44,0.4)}
+  .btn-buscar-nombre{background:var(--rojo);color:var(--blanco);border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:0 28px;height:52px;border-radius:10px;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(192,32,44,0.3);flex-shrink:0}
+  .btn-buscar-nombre:hover{background:var(--rojo-claro);transform:translateY(-2px)}
+  .btn-icon{font-size:16px}
 
-  .tab-icon { font-size: 14px; }
+  /* SAMPLES */
+  .sample-section{margin-top:24px;padding-top:20px;border-top:1px solid var(--gris-bg)}
+  .sample-label{font-size:10px;font-weight:600;letter-spacing:2.5px;color:var(--texto-suave);text-transform:uppercase;margin-bottom:10px}
+  .chips-row{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:var(--gris-bg);border:1.5px solid var(--gris-borde);color:var(--azul);font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:2px;padding:6px 16px;border-radius:6px;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:6px}
+  .chip::before{content:'#';color:var(--azul-claro);opacity:.5;font-size:10px}
+  .chip:hover{background:var(--azul);border-color:var(--azul);color:var(--blanco);transform:translateY(-1px)}
+  .chip-nombre{background:var(--gris-bg);border:1.5px solid var(--gris-borde);color:var(--azul);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:6px}
+  .chip-nombre::before{content:'👤';font-size:10px}
+  .chip-nombre:hover{background:var(--azul);border-color:var(--azul);color:var(--blanco);transform:translateY(-1px)}
 
-  /* ═══ PANEL BÚSQUEDA ═══ */
-  .search-panel {
-    background: var(--blanco);
-    border-radius: 0 16px 16px 16px;
-    border: 1px solid var(--gris-borde);
-    overflow: hidden;
-    box-shadow: var(--sombra);
-    animation: fadeUp 0.6s 0.1s ease both;
-    margin-bottom: 28px;
-  }
+  /* LOADING */
+  .loading{display:none;align-items:center;gap:16px;padding:24px 28px;background:var(--blanco);border-radius:12px;border:1px solid var(--gris-borde);margin-bottom:20px;box-shadow:var(--sombra)}
+  .spinner-wrap{position:relative;width:28px;height:28px;flex-shrink:0}
+  .spinner{width:28px;height:28px;border:2.5px solid rgba(26,58,107,0.1);border-top-color:var(--azul);border-radius:50%;animation:spin 0.8s linear infinite}
+  .loading-info{flex:1}
+  .loading-title{font-size:13px;font-weight:600;color:var(--azul)}
+  .loading-sub{font-size:11px;color:var(--texto-suave);margin-top:2px}
+  .loading-bar{width:100%;height:2px;background:var(--gris-bg);border-radius:2px;margin-top:10px;overflow:hidden}
+  .loading-bar-fill{height:100%;background:linear-gradient(90deg,var(--azul),var(--azul-claro));border-radius:2px;animation:loadBar 1.5s ease-in-out infinite}
 
-  .panel-header {
-    background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%);
-    padding: 18px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .panel-header-left { display: flex; align-items: center; gap: 12px; }
-  .panel-dots { display: flex; gap: 5px; }
-  .panel-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .panel-dot:nth-child(1) { background: var(--rojo); }
-  .panel-dot:nth-child(2) { background: var(--amarillo); }
-  .panel-dot:nth-child(3) { background: rgba(255,255,255,0.25); }
-  .panel-header h3 { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--blanco); letter-spacing: 0.5px; }
-  .panel-header-tag { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.07); padding: 4px 10px; border-radius: 4px; }
+  /* ERROR */
+  .error-box{display:none;padding:20px 24px;background:#fff5f6;border:1px solid rgba(192,32,44,0.15);border-left:4px solid var(--rojo);border-radius:0 12px 12px 0;margin-bottom:20px;animation:fadeUp 0.3s ease both}
+  .error-inner{display:flex;align-items:flex-start;gap:14px}
+  .error-icon-wrap{width:36px;height:36px;background:rgba(192,32,44,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .error-title{font-size:13px;font-weight:600;color:var(--rojo);margin-bottom:3px}
+  .error-sub{font-size:12px;color:#a0535a;line-height:1.4}
 
-  .panel-body { padding: 32px 28px 28px; }
+  /* RESULTADOS LISTA */
+  .resultados-lista{display:none;animation:fadeUp 0.4s ease both;margin-bottom:28px}
+  .resultados-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px}
+  .resultados-titulo{font-size:12px;font-weight:600;color:var(--azul)}
+  .resultados-count{background:var(--azul);color:var(--amarillo);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:1px}
+  .resultado-item{background:var(--blanco);border:1.5px solid var(--gris-borde);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all 0.2s;margin-bottom:8px;box-shadow:var(--sombra)}
+  .resultado-item:hover{border-color:var(--azul-claro);box-shadow:0 4px 20px rgba(26,58,107,0.12);transform:translateY(-1px)}
+  .resultado-avatar{width:44px;height:44px;background:linear-gradient(135deg,var(--azul),var(--azul-medio));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+  .resultado-info{flex:1;min-width:0}
+  .resultado-nombre{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--negro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .resultado-meta{display:flex;gap:14px;margin-top:3px;flex-wrap:wrap}
+  .resultado-meta span{font-size:11px;color:var(--texto-suave)}
+  .resultado-dni{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--azul);background:rgba(26,58,107,0.06);padding:2px 8px;border-radius:4px;letter-spacing:2px;flex-shrink:0}
+  .resultado-arrow{font-size:16px;color:var(--gris-borde);transition:color 0.2s,transform 0.2s;flex-shrink:0}
+  .resultado-item:hover .resultado-arrow{color:var(--azul-claro);transform:translateX(3px)}
 
-  /* Tab panes */
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
+  /* FICHA */
+  .ficha{display:none;animation:fadeUp 0.6s ease both}
+  .ficha-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px;flex-wrap:wrap;gap:8px}
+  .ficha-id-wrap{display:flex;align-items:center;gap:10px}
+  .ficha-id-label{font-size:10px;font-weight:600;letter-spacing:2px;color:var(--texto-suave);text-transform:uppercase}
+  .badge-id{background:var(--azul);color:var(--amarillo);font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:4px 12px;border-radius:4px;letter-spacing:2px}
+  .ficha-ts{font-size:11px;color:var(--texto-suave);display:flex;align-items:center;gap:6px}
+  .ficha-ts::before{content:'●';color:#22c55e;font-size:8px;animation:pulseGreen 2s infinite}
+  .ficha-card{background:var(--blanco);border-radius:16px;border:1px solid var(--gris-borde);overflow:hidden;box-shadow:var(--sombra-lg)}
+  .ficha-top{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-medio) 60%,var(--azul-claro) 100%);padding:36px 36px 32px;display:flex;align-items:flex-start;gap:24px;position:relative;overflow:hidden}
+  .ficha-top::before{content:'';position:absolute;right:-60px;top:-60px;width:240px;height:240px;border:50px solid rgba(255,255,255,0.04);border-radius:50%}
+  .ficha-top::after{content:'';position:absolute;left:0;bottom:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,200,0,0.3),transparent)}
+  .avatar{width:72px;height:72px;background:rgba(245,200,0,0.15);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border:2px solid rgba(245,200,0,0.2);position:relative;z-index:1}
+  .ficha-info{position:relative;z-index:1;flex:1}
+  .ficha-eyebrow{font-size:10px;font-weight:600;letter-spacing:3px;color:var(--amarillo);text-transform:uppercase;opacity:.8;margin-bottom:6px}
+  .ficha-nombre{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3.5vw,2rem);font-weight:700;color:var(--blanco);line-height:1.15;letter-spacing:-0.01em}
+  .ficha-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .ficha-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:1.5px;padding:5px 12px;border-radius:5px;text-transform:uppercase}
+  .ficha-tag.grado{background:var(--amarillo);color:var(--negro)}
+  .ficha-tag.nivel{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.1)}
+  .ficha-stripe{height:3px;background:linear-gradient(90deg,var(--rojo) 0%,var(--rojo) 60%,var(--amarillo) 100%)}
+  .section-label{background:#f8f9fc;padding:12px 28px;font-size:10px;font-weight:600;letter-spacing:3px;color:var(--azul);text-transform:uppercase;border-bottom:1px solid var(--gris-borde);border-top:1px solid var(--gris-borde);display:flex;align-items:center;gap:10px}
+  .section-bullet{width:3px;height:14px;background:var(--rojo);border-radius:2px;flex-shrink:0}
+  .fields-grid{display:grid;grid-template-columns:1fr 1fr}
+  .field-item{padding:20px 28px;border-right:1px solid #f0f2f8;border-bottom:1px solid #f0f2f8;transition:background 0.15s}
+  .field-item:hover{background:#fafbfd}
+  .field-item:nth-child(2n){border-right:none}
+  .field-item.full{grid-column:1/-1;border-right:none}
+  .fl{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--texto-suave);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+  .fl-icon{opacity:.5;font-size:10px}
+  .fv{font-size:15px;color:var(--texto);font-weight:500;line-height:1.3}
+  .fv.dni-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;letter-spacing:4px;color:var(--azul)}
+  .fv.nombre-val{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--negro);letter-spacing:-0.01em}
+  .fv.tel-val{font-family:'DM Mono',monospace;font-size:16px;letter-spacing:2px}
 
-  .input-label { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--azul); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-  .input-label::after { content: ''; flex: 1; height: 1px; background: var(--gris-borde); }
-  .input-row { display: flex; gap: 14px; align-items: flex-end; }
-  .input-group { flex: 1; }
+  /* SEGURO BADGE */
+  .seguro-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;margin-top:2px}
+  .seguro-badge.sis{background:#e0f2fe;color:#0369a1;border:1.5px solid #bae6fd}
+  .seguro-badge.essalud{background:#dcfce7;color:#15803d;border:1.5px solid #bbf7d0}
+  .seguro-badge.ninguno{background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0}
+  .seguro-badge.pendiente{background:#fef9c3;color:#854d0e;border:1.5px solid #fde68a}
 
-  .dni-field {
-    display: flex; align-items: stretch;
-    border: 1.5px solid var(--gris-borde); border-radius: 10px; overflow: hidden;
-    transition: border-color 0.25s, box-shadow 0.25s; background: var(--blanco);
-  }
-  .dni-field:focus-within { border-color: var(--azul-claro); box-shadow: 0 0 0 4px rgba(45,111,207,0.1); }
-  .dni-prefix {
-    background: var(--azul); color: var(--amarillo);
-    font-family: 'DM Mono', monospace; font-weight: 500; font-size: 11px; letter-spacing: 2px;
-    padding: 0 20px; height: 56px; display: flex; align-items: center; flex-shrink: 0; user-select: none;
-  }
-  #dniInput {
-    flex: 1; border: none; outline: none; font-family: 'DM Mono', monospace;
-    font-size: 24px; font-weight: 400; letter-spacing: 6px; color: var(--negro);
-    padding: 0 20px; height: 56px; background: transparent; width: 100%;
-  }
-  #dniInput::placeholder { color: #c8d0e0; letter-spacing: 5px; font-size: 22px; }
-  #dniInput::-webkit-outer-spin-button, #dniInput::-webkit-inner-spin-button { -webkit-appearance: none; }
-  #dniInput[type=number] { -moz-appearance: textfield; }
+  /* FOOTER FICHA */
+  .ficha-footer{background:#f8f9fc;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--gris-borde)}
+  .estado-ok{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;color:#15803d}
+  .estado-dot{width:7px;height:7px;background:#22c55e;border-radius:50%;box-shadow:0 0 0 3px rgba(34,197,94,0.2);animation:pulseGreen 2s infinite}
+  .footer-actions{display:flex;align-items:center;gap:10px}
+  .btn-nueva{background:transparent;border:1.5px solid var(--gris-borde);color:var(--texto-suave);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:6px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+  .btn-nueva:hover{border-color:var(--azul);color:var(--azul)}
+  .btn-volver{background:rgba(26,58,107,0.06);border:1.5px solid rgba(26,58,107,0.15);color:var(--azul);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:6px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+  .btn-volver:hover{background:var(--azul);color:var(--blanco)}
 
-  /* ═══ CAMPOS NOMBRE/APELLIDO ═══ */
-  .nombre-fields-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 0;
-  }
+  /* SITE FOOTER */
+  .site-footer{background:var(--negro)}
+  .footer-top{max-width:1100px;margin:0 auto;padding:28px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .footer-brand{display:flex;align-items:center;gap:14px}
+  .footer-logo{width:36px;height:36px;background:var(--azul);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .footer-brand-text{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:rgba(255,255,255,0.6);line-height:1.2}
+  .footer-flag{display:flex;gap:3px}
+  .ff{width:10px;height:10px;border-radius:2px}
+  .ff.a{background:var(--azul-claro)}
+  .ff.r{background:var(--rojo)}
+  .ff.y{background:var(--amarillo)}
+  .footer-bottom{padding:14px 40px;text-align:center}
+  .footer-text{font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase}
 
-  .nombre-field-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulseGreen{0%,100%{opacity:1}50%{opacity:.4}}
+  @keyframes loadBar{0%{width:0%;transform:translateX(0)}50%{width:70%}100%{width:100%;transform:translateX(100%)}}
 
-  .nombre-field-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--texto-suave);
-  }
-
-  .nombre-input-box {
-    display: flex;
-    align-items: stretch;
-    border: 1.5px solid var(--gris-borde);
-    border-radius: 10px;
-    overflow: hidden;
-    transition: border-color 0.25s, box-shadow 0.25s;
-    background: var(--blanco);
-  }
-
-  .nombre-input-box:focus-within {
-    border-color: var(--azul-claro);
-    box-shadow: 0 0 0 4px rgba(45,111,207,0.1);
-  }
-
-  .nombre-prefix {
-    background: var(--azul);
-    color: var(--amarillo);
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    padding: 0 14px;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    user-select: none;
-  }
-
-  .nombre-input-box input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--negro);
-    padding: 0 16px;
-    height: 52px;
-    background: transparent;
-    width: 100%;
-    text-transform: uppercase;
-  }
-
-  .nombre-input-box input::placeholder {
-    color: #c8d0e0;
-    font-weight: 400;
-    text-transform: none;
-    font-size: 13px;
-  }
-
-  .nombre-search-row {
-    display: flex;
-    gap: 14px;
-    align-items: flex-end;
-    margin-top: 14px;
-  }
-
-  .hint-text {
-    font-size: 11px;
-    color: var(--texto-suave);
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .hint-text::before { content: 'ℹ'; font-size: 12px; color: var(--azul-claro); }
-
-  /* ═══ RESULTADOS MÚLTIPLES ═══ */
-  .resultados-lista {
-    display: none;
-    animation: fadeUp 0.4s ease both;
-    margin-bottom: 28px;
-  }
-
-  .resultados-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    padding: 0 2px;
-  }
-
-  .resultados-titulo {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--azul);
-    letter-spacing: 0.5px;
-  }
-
-  .resultados-count {
-    background: var(--azul);
-    color: var(--amarillo);
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 20px;
-    letter-spacing: 1px;
-  }
-
-  .resultado-item {
-    background: var(--blanco);
-    border: 1.5px solid var(--gris-borde);
-    border-radius: 12px;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 8px;
-    box-shadow: var(--sombra);
-  }
-
-  .resultado-item:hover {
-    border-color: var(--azul-claro);
-    box-shadow: 0 4px 20px rgba(26,58,107,0.12);
-    transform: translateY(-1px);
-  }
-
-  .resultado-avatar {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, var(--azul), var(--azul-medio));
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .resultado-info { flex: 1; min-width: 0; }
-
-  .resultado-nombre {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--negro);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .resultado-meta {
-    display: flex;
-    gap: 14px;
-    margin-top: 3px;
-    flex-wrap: wrap;
-  }
-
-  .resultado-meta span {
-    font-size: 11px;
-    color: var(--texto-suave);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .resultado-dni {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--azul);
-    background: rgba(26,58,107,0.06);
-    padding: 2px 8px;
-    border-radius: 4px;
-    letter-spacing: 2px;
-    flex-shrink: 0;
-  }
-
-  .resultado-arrow {
-    font-size: 16px;
-    color: var(--gris-borde);
-    transition: color 0.2s, transform 0.2s;
-    flex-shrink: 0;
-  }
-
-  .resultado-item:hover .resultado-arrow {
-    color: var(--azul-claro);
-    transform: translateX(3px);
-  }
-
-  .btn-buscar {
-    background: var(--rojo); color: var(--blanco); border: none;
-    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 12px;
-    letter-spacing: 2px; text-transform: uppercase; padding: 0 32px; height: 56px;
-    border-radius: 10px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
-    display: flex; align-items: center; gap: 10px;
-    box-shadow: 0 4px 16px rgba(192,32,44,0.3); flex-shrink: 0;
-  }
-  .btn-buscar:hover { background: var(--rojo-claro); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(192,32,44,0.4); }
-  .btn-buscar:active { transform: translateY(0); box-shadow: none; }
-  .btn-buscar-nombre {
-    background: var(--rojo); color: var(--blanco); border: none;
-    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 12px;
-    letter-spacing: 2px; text-transform: uppercase; padding: 0 28px; height: 52px;
-    border-radius: 10px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
-    display: flex; align-items: center; gap: 10px;
-    box-shadow: 0 4px 16px rgba(192,32,44,0.3); flex-shrink: 0;
-  }
-  .btn-buscar-nombre:hover { background: var(--rojo-claro); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(192,32,44,0.4); }
-  .btn-buscar-nombre:active { transform: translateY(0); }
-  .btn-icon { font-size: 16px; }
-
-  .sample-section { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--gris-bg); }
-  .sample-label { font-size: 10px; font-weight: 600; letter-spacing: 2.5px; color: var(--texto-suave); text-transform: uppercase; margin-bottom: 10px; }
-  .chips-row { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip {
-    background: var(--gris-bg); border: 1.5px solid var(--gris-borde); color: var(--azul);
-    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 2px;
-    padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: all 0.18s;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .chip::before { content: '#'; color: var(--azul-claro); opacity: 0.5; font-size: 10px; }
-  .chip:hover { background: var(--azul); border-color: var(--azul); color: var(--blanco); transform: translateY(-1px); }
-  .chip:hover::before { color: var(--amarillo); opacity: 0.7; }
-
-  /* Chips de nombre */
-  .chip-nombre {
-    background: var(--gris-bg); border: 1.5px solid var(--gris-borde); color: var(--azul);
-    font-family: 'DM Sans', monospace; font-size: 11px; font-weight: 500;
-    padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: all 0.18s;
-    display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px;
-  }
-  .chip-nombre::before { content: '👤'; font-size: 10px; }
-  .chip-nombre:hover { background: var(--azul); border-color: var(--azul); color: var(--blanco); transform: translateY(-1px); }
-
-  .loading { display: none; align-items: center; gap: 16px; padding: 24px 28px; background: var(--blanco); border-radius: 12px; border: 1px solid var(--gris-borde); margin-bottom: 20px; box-shadow: var(--sombra); }
-  .spinner-wrap { position: relative; width: 28px; height: 28px; flex-shrink: 0; }
-  .spinner { width: 28px; height: 28px; border: 2.5px solid rgba(26,58,107,0.1); border-top-color: var(--azul); border-radius: 50%; animation: spin 0.8s linear infinite; }
-  .loading-info { flex: 1; }
-  .loading-title { font-size: 13px; font-weight: 600; color: var(--azul); letter-spacing: 0.3px; }
-  .loading-sub { font-size: 11px; color: var(--texto-suave); margin-top: 2px; }
-  .loading-bar { width: 100%; height: 2px; background: var(--gris-bg); border-radius: 2px; margin-top: 10px; overflow: hidden; }
-  .loading-bar-fill { height: 100%; background: linear-gradient(90deg, var(--azul), var(--azul-claro)); border-radius: 2px; animation: loadBar 1.5s ease-in-out infinite; }
-  @keyframes loadBar { 0% { width: 0%; transform: translateX(0); } 50% { width: 70%; } 100% { width: 100%; transform: translateX(100%); } }
-
-  .error-box { display: none; gap: 16px; padding: 20px 24px; background: #fff5f6; border: 1px solid rgba(192,32,44,0.15); border-left: 4px solid var(--rojo); border-radius: 0 12px 12px 0; margin-bottom: 20px; animation: fadeUp 0.3s ease both; }
-  .error-inner { display: flex; align-items: flex-start; gap: 14px; }
-  .error-icon-wrap { width: 36px; height: 36px; background: rgba(192,32,44,0.08); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .error-title { font-size: 13px; font-weight: 600; color: var(--rojo); margin-bottom: 3px; }
-  .error-sub { font-size: 12px; color: #a0535a; line-height: 1.4; }
-
-  .ficha { display: none; animation: fadeUp 0.6s ease both; }
-  .ficha-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 0 2px; flex-wrap: wrap; gap: 8px; }
-  .ficha-id-wrap { display: flex; align-items: center; gap: 10px; }
-  .ficha-id-label { font-size: 10px; font-weight: 600; letter-spacing: 2px; color: var(--texto-suave); text-transform: uppercase; }
-  .badge-id { background: var(--azul); color: var(--amarillo); font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 4px; letter-spacing: 2px; }
-  .ficha-ts { font-size: 11px; color: var(--texto-suave); display: flex; align-items: center; gap: 6px; }
-  .ficha-ts::before { content: '●'; color: #22c55e; font-size: 8px; animation: pulseGreen 2s infinite; }
-
-  .ficha-card { background: var(--blanco); border-radius: 16px; border: 1px solid var(--gris-borde); overflow: hidden; box-shadow: var(--sombra-lg); }
-  .ficha-top { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 60%, var(--azul-claro) 100%); padding: 36px 36px 32px; display: flex; align-items: flex-start; gap: 24px; position: relative; overflow: hidden; }
-  .ficha-top::before { content: ''; position: absolute; right: -60px; top: -60px; width: 240px; height: 240px; border: 50px solid rgba(255,255,255,0.04); border-radius: 50%; }
-  .ficha-top::after { content: ''; position: absolute; left: 0; bottom: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(245,200,0,0.3), transparent); }
-  .avatar { width: 72px; height: 72px; background: rgba(245,200,0,0.15); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; border: 2px solid rgba(245,200,0,0.2); position: relative; z-index: 1; }
-  .ficha-info { position: relative; z-index: 1; flex: 1; }
-  .ficha-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 3px; color: var(--amarillo); text-transform: uppercase; opacity: 0.8; margin-bottom: 6px; }
-  .ficha-nombre { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.4rem, 3.5vw, 2rem); font-weight: 700; color: var(--blanco); line-height: 1.15; letter-spacing: -0.01em; }
-  .ficha-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-  .ficha-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; padding: 5px 12px; border-radius: 5px; text-transform: uppercase; }
-  .ficha-tag.grado { background: var(--amarillo); color: var(--negro); }
-  .ficha-tag.nivel { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.1); }
-  .ficha-stripe { height: 3px; background: linear-gradient(90deg, var(--rojo) 0%, var(--rojo) 60%, var(--amarillo) 100%); }
-  .section-label { background: #f8f9fc; padding: 12px 28px; font-size: 10px; font-weight: 600; letter-spacing: 3px; color: var(--azul); text-transform: uppercase; border-bottom: 1px solid var(--gris-borde); border-top: 1px solid var(--gris-borde); display: flex; align-items: center; gap: 10px; }
-  .section-bullet { width: 3px; height: 14px; background: var(--rojo); border-radius: 2px; flex-shrink: 0; }
-  .fields-grid { display: grid; grid-template-columns: 1fr 1fr; }
-  .field-item { padding: 20px 28px; border-right: 1px solid #f0f2f8; border-bottom: 1px solid #f0f2f8; transition: background 0.15s; }
-  .field-item:hover { background: #fafbfd; }
-  .field-item:nth-child(2n) { border-right: none; }
-  .field-item.full { grid-column: 1 / -1; border-right: none; }
-  .fl { font-size: 9px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--texto-suave); margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
-  .fl-icon { opacity: 0.5; font-size: 10px; }
-  .fv { font-size: 15px; color: var(--texto); font-weight: 500; line-height: 1.3; }
-  .fv.dni-val { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; letter-spacing: 4px; color: var(--azul); }
-  .fv.nombre-val { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; color: var(--negro); letter-spacing: -0.01em; }
-  .fv.tel-val { font-family: 'DM Mono', monospace; font-size: 16px; letter-spacing: 2px; }
-
-  .ficha-footer { background: #f8f9fc; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-top: 1px solid var(--gris-borde); }
-  .estado-ok { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: #15803d; letter-spacing: 0.5px; }
-  .estado-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 0 3px rgba(34,197,94,0.2); animation: pulseGreen 2s infinite; }
-  .footer-actions { display: flex; align-items: center; gap: 10px; }
-  .btn-nueva { background: transparent; border: 1.5px solid var(--gris-borde); color: var(--texto-suave); font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
-  .btn-nueva:hover { border-color: var(--azul); color: var(--azul); background: rgba(26,58,107,0.03); }
-  .btn-volver { background: rgba(26,58,107,0.06); border: 1.5px solid rgba(26,58,107,0.15); color: var(--azul); font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
-  .btn-volver:hover { background: var(--azul); color: var(--blanco); }
-
-  /* ═══ BADGE SEGURO ═══ */
-  .seguro-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    margin-top: 2px;
-  }
-  .seguro-badge.sis {
-    background: #e0f2fe;
-    color: #0369a1;
-    border: 1.5px solid #bae6fd;
-  }
-  .seguro-badge.essalud {
-    background: #dcfce7;
-    color: #15803d;
-    border: 1.5px solid #bbf7d0;
-  }
-  .seguro-badge.ninguno {
-    background: #f1f5f9;
-    color: #64748b;
-    border: 1.5px solid #e2e8f0;
-  }
-  .seguro-badge.desconocido {
-    background: #fef9c3;
-    color: #854d0e;
-    border: 1.5px solid #fde68a;
-  }
-  .seguro-icon { font-size: 16px; }
-
-  .site-footer { background: var(--negro); padding: 0; }
-  .footer-top { max-width: 1100px; margin: 0 auto; padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .footer-brand { display: flex; align-items: center; gap: 14px; }
-  .footer-logo { width: 36px; height: 36px; background: var(--azul); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .footer-brand-text { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.6); line-height: 1.2; }
-  .footer-flag { display: flex; gap: 3px; }
-  .ff { width: 10px; height: 10px; border-radius: 2px; }
-  .ff.a { background: var(--azul-claro); }
-  .ff.r { background: var(--rojo); }
-  .ff.y { background: var(--amarillo); }
-  .footer-bottom { padding: 14px 40px; text-align: center; }
-  .footer-text { font-size: 10px; color: rgba(255,255,255,0.2); letter-spacing: 2px; text-transform: uppercase; }
-
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes pulseGreen { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-  @media (max-width: 700px) {
-    .header-inner { padding: 24px 20px; gap: 16px; }
-    .header-sello { display: none; }
-    .band { padding: 0 20px; }
-    .band-right { display: none; }
-    .nav-sec { padding: 0 20px; }
-    .main { padding: 28px 20px 60px; }
-    .section-head { grid-template-columns: auto 1fr; }
-    .section-badge { display: none; }
-    .panel-body { padding: 24px 20px 20px; }
-    .input-row { flex-direction: column; }
-    .btn-buscar { width: 100%; justify-content: center; height: 50px; }
-    .nombre-fields-row { grid-template-columns: 1fr; }
-    .nombre-search-row { flex-direction: column; }
-    .btn-buscar-nombre { width: 100%; justify-content: center; }
-    .fields-grid { grid-template-columns: 1fr; }
-    .field-item { border-right: none; }
-    .field-item.full { grid-column: 1; }
-    .ficha-top { flex-direction: column; padding: 24px 20px; }
-    .ficha-footer { padding: 14px 20px; }
-    .footer-top { padding: 20px; }
-    .footer-bottom { padding: 12px 20px; }
-    .escudo { width: 68px; height: 68px; }
-    .search-tabs { flex-wrap: wrap; }
-    .search-tab { flex: 1; justify-content: center; font-size: 10px; padding: 10px 12px; }
-    .resultado-item { flex-wrap: wrap; }
+  @media(max-width:700px){
+    .header-inner{padding:24px 20px;gap:16px}
+    .header-sello{display:none}
+    .band{padding:0 20px}
+    .band-right{display:none}
+    .nav-sec{padding:0 20px}
+    .main{padding:28px 20px 60px}
+    .section-head{grid-template-columns:auto 1fr}
+    .section-badge{display:none}
+    .panel-body{padding:24px 20px 20px}
+    .input-row{flex-direction:column}
+    .btn-buscar{width:100%;justify-content:center;height:50px}
+    .nombre-fields-row{grid-template-columns:1fr}
+    .nombre-search-row{flex-direction:column}
+    .btn-buscar-nombre{width:100%;justify-content:center}
+    .fields-grid{grid-template-columns:1fr}
+    .field-item{border-right:none}
+    .field-item.full{grid-column:1}
+    .ficha-top{flex-direction:column;padding:24px 20px}
+    .ficha-footer{padding:14px 20px}
+    .footer-top{padding:20px}
+    .footer-bottom{padding:12px 20px}
+    .search-tabs{flex-wrap:wrap}
+    .search-tab{flex:1;justify-content:center;font-size:10px;padding:10px 12px}
   }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="t1"></div>
-  <div class="t2"></div>
-  <div class="t3"></div>
-</div>
+<div class="topbar"><div class="t1"></div><div class="t2"></div><div class="t3"></div></div>
 
 <header class="site-header">
   <div class="header-bg-line"></div>
   <div class="header-inner">
     <div class="escudo">
-      <img src="logo.png" alt="Logo I.E." style="width:70px; margin-top: 15px; margin-left: 1px;" />
+      <img src="logo.png" alt="Logo I.E." style="width:70px;margin-top:15px;margin-left:1px" />
     </div>
     <div class="header-info">
       <div class="header-eyebrow">Institución Educativa Pública · Lima, Perú</div>
@@ -628,7 +284,7 @@
       <div class="header-divider"></div>
       <div class="colegio-datos">
         <span class="dato-item"><span class="dot"></span><strong>(01) 345-6789</strong></span>
-        <span class="dato-item"><span class="dot"></span><strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a2cbc78cd4cbc1d6cdd0d2cbccc7c6c3d6c3c5cec7e2cfcbccc7c6d78cc5cdc08cd2c7">[email&#160;protected]</a></strong></span>
+        <span class="dato-item"><span class="dot"></span><strong>ie.victorpinedatagle@minedu.gob.pe</strong></span>
         <span class="dato-item"><span class="dot"></span><strong>Lima, Perú</strong></span>
       </div>
     </div>
@@ -641,11 +297,7 @@
 
 <div class="band">
   <div class="band-left">Sistema de Gestión Estudiantil</div>
-  <div class="band-right">
-    Año Académico 2026
-    <div class="band-sep"></div>
-    Nivel Primaria y Secundaria
-  </div>
+  <div class="band-right">Año Académico 2026<div class="band-sep"></div>Nivel Primaria y Secundaria</div>
 </div>
 
 <nav class="nav-sec">
@@ -658,12 +310,9 @@
 </nav>
 
 <main class="main">
-
   <div class="breadcrumb">
-    <a href="#">Inicio</a>
-    <span class="sep">›</span>
-    <a href="#">Estudiantes</a>
-    <span class="sep">›</span>
+    <a href="#">Inicio</a><span class="sep">›</span>
+    <a href="#">Estudiantes</a><span class="sep">›</span>
     <span class="current">Consulta de Alumno</span>
   </div>
 
@@ -676,24 +325,22 @@
     <div class="section-badge">Módulo Activo</div>
   </div>
 
-  <!-- Tabs -->
+  <!-- TABS -->
   <div class="search-tabs">
-    <div class="search-tab active" id="tabDni" onclick="cambiarTab('dni')">
+    <div class="search-tab active" id="tabDni">
       <span class="tab-icon">🪪</span> Buscar por DNI
     </div>
-    <div class="search-tab" id="tabNombre" onclick="cambiarTab('nombre')">
+    <div class="search-tab" id="tabNombre">
       <span class="tab-icon">👤</span> Buscar por Nombre y Apellido
     </div>
   </div>
 
-  <!-- Panel búsqueda -->
+  <!-- PANEL -->
   <div class="search-panel">
     <div class="panel-header">
       <div class="panel-header-left">
         <div class="panel-dots">
-          <div class="panel-dot"></div>
-          <div class="panel-dot"></div>
-          <div class="panel-dot"></div>
+          <div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-dot"></div>
         </div>
         <h3 id="panelTitle">Búsqueda por Documento de Identidad</h3>
       </div>
@@ -701,38 +348,35 @@
     </div>
 
     <div class="panel-body">
-
-      <!-- Tab DNI -->
+      <!-- PANE DNI -->
       <div class="tab-pane active" id="paneDni">
         <div class="input-label">Número de DNI del Estudiante</div>
         <div class="input-row">
           <div class="input-group">
             <div class="dni-field">
               <div class="dni-prefix">DNI</div>
-              <input type="number" id="dniInput" placeholder="00000000" autocomplete="off" maxlength="8" />
+              <input type="number" id="dniInput" placeholder="00000000" autocomplete="off" />
             </div>
           </div>
-          <button class="btn-buscar" onclick="buscarPorDni()">
+          <button class="btn-buscar" id="btnBuscarDni">
             <span class="btn-icon">🔍</span> Buscar
           </button>
         </div>
-
         <div class="sample-section">
           <div class="sample-label">Consultas de ejemplo</div>
           <div class="chips-row">
-            <span class="chip" onclick="probarDni('73760791')">73760791</span>
-            <span class="chip" onclick="probarDni('72654321')">72654321</span>
-            <span class="chip" onclick="probarDni('61987432')">61987432</span>
-            <span class="chip" onclick="probarDni('83241567')">83241567</span>
-            <span class="chip" onclick="probarDni('54876230')">54876230</span>
+            <span class="chip" data-dni="73760791">73760791</span>
+            <span class="chip" data-dni="72654321">72654321</span>
+            <span class="chip" data-dni="61987432">61987432</span>
+            <span class="chip" data-dni="83241567">83241567</span>
+            <span class="chip" data-dni="54876230">54876230</span>
           </div>
         </div>
       </div>
 
-      <!-- Tab Nombre -->
+      <!-- PANE NOMBRE -->
       <div class="tab-pane" id="paneNombre">
         <div class="input-label">Nombre y Apellido del Estudiante</div>
-
         <div class="nombre-fields-row">
           <div class="nombre-field-wrap">
             <div class="nombre-field-label">Apellidos</div>
@@ -749,31 +393,28 @@
             </div>
           </div>
         </div>
-
         <div class="nombre-search-row">
-          <div style="flex:1;">
-            <div class="hint-text">Puede ingresar solo apellido, solo nombre, o ambos. La búsqueda no distingue mayúsculas.</div>
+          <div style="flex:1">
+            <div class="hint-text">Puede ingresar solo apellido, solo nombre o ambos.</div>
           </div>
-          <button class="btn-buscar-nombre" onclick="buscarPorNombre()">
+          <button class="btn-buscar-nombre" id="btnBuscarNombre">
             <span class="btn-icon">🔍</span> Buscar
           </button>
         </div>
-
         <div class="sample-section">
           <div class="sample-label">Ejemplos de búsqueda</div>
           <div class="chips-row">
-            <span class="chip-nombre" onclick="probarNombre('García','')">García</span>
-            <span class="chip-nombre" onclick="probarNombre('','Juan')">Juan</span>
-            <span class="chip-nombre" onclick="probarNombre('López','María')">López, María</span>
-            <span class="chip-nombre" onclick="probarNombre('Quispe','')">Quispe</span>
+            <span class="chip-nombre" data-ape="Sabino" data-nom="">Sabino</span>
+            <span class="chip-nombre" data-ape="" data-nom="Jean">Jean</span>
+            <span class="chip-nombre" data-ape="Obregon" data-nom="">Obregon</span>
+            <span class="chip-nombre" data-ape="villanera" data-nom="">Villanera</span>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- Cargando -->
+  <!-- LOADING -->
   <div class="loading" id="loadingEl">
     <div class="spinner-wrap"><div class="spinner"></div></div>
     <div class="loading-info">
@@ -783,18 +424,18 @@
     </div>
   </div>
 
-  <!-- Error -->
+  <!-- ERROR -->
   <div class="error-box" id="errorEl">
     <div class="error-inner">
       <div class="error-icon-wrap">⚠️</div>
       <div>
         <div class="error-title" id="errorMsg">No se encontró ningún alumno.</div>
-        <div class="error-sub" id="errorSub">Verifique los datos ingresados e intente nuevamente. Si el problema persiste, consulte con secretaría.</div>
+        <div class="error-sub" id="errorSub">Verifique los datos ingresados e intente nuevamente.</div>
       </div>
     </div>
   </div>
 
-  <!-- Resultados múltiples (búsqueda por nombre) -->
+  <!-- RESULTADOS LISTA -->
   <div class="resultados-lista" id="resultadosEl">
     <div class="resultados-header">
       <div class="resultados-titulo">Resultados encontrados</div>
@@ -803,7 +444,7 @@
     <div id="resultadosList"></div>
   </div>
 
-  <!-- Ficha resultado -->
+  <!-- FICHA -->
   <div class="ficha" id="fichaEl">
     <div class="ficha-meta">
       <div class="ficha-id-wrap">
@@ -812,7 +453,6 @@
       </div>
       <div class="ficha-ts" id="tsEl">Consultado ahora</div>
     </div>
-
     <div class="ficha-card">
       <div class="ficha-top">
         <div class="avatar">👤</div>
@@ -825,9 +465,7 @@
           </div>
         </div>
       </div>
-
       <div class="ficha-stripe"></div>
-
       <div class="ficha-section">
         <div class="section-label"><span class="section-bullet"></span>Datos del Estudiante</div>
         <div class="fields-grid">
@@ -845,7 +483,6 @@
           </div>
         </div>
       </div>
-
       <div class="ficha-section">
         <div class="section-label"><span class="section-bullet"></span>Datos del Padre / Apoderado</div>
         <div class="fields-grid">
@@ -859,7 +496,6 @@
           </div>
         </div>
       </div>
-
       <div class="ficha-section">
         <div class="section-label"><span class="section-bullet"></span>Datos de Contacto y Estado</div>
         <div class="fields-grid">
@@ -881,301 +517,245 @@
           </div>
         </div>
       </div>
-
       <div class="ficha-footer">
-        <div class="estado-ok">
-          <div class="estado-dot"></div>
-          Registro encontrado — Datos verificados
-        </div>
+        <div class="estado-ok"><div class="estado-dot"></div>Registro encontrado — Datos verificados</div>
         <div class="footer-actions">
-          <button class="btn-volver" id="btnVolver" onclick="volverAResultados()" style="display:none;">← Volver a resultados</button>
-          <button class="btn-nueva" onclick="limpiar()">↺ Nueva Búsqueda</button>
+          <button class="btn-volver" id="btnVolver">← Volver a resultados</button>
+          <button class="btn-nueva" id="btnNueva">↺ Nueva Búsqueda</button>
         </div>
       </div>
     </div>
   </div>
-
 </main>
 
 <footer class="site-footer">
   <div class="footer-top">
     <div class="footer-brand">
       <div class="footer-logo">🏫</div>
-      <div class="footer-brand-text">
-        I.E. Victor Armando Pineda Tagle<br>
-        <span style="font-size:11px; font-family:'DM Sans', sans-serif; font-weight:400;">Sistema de Gestión Escolar</span>
+      <div class="footer-brand-text">I.E. Victor Armando Pineda Tagle<br>
+        <span style="font-size:11px;font-family:'DM Sans',sans-serif;font-weight:400">Sistema de Gestión Escolar</span>
       </div>
     </div>
-    <div class="footer-flag">
-      <div class="ff a"></div>
-      <div class="ff r"></div>
-      <div class="ff y"></div>
-    </div>
+    <div class="footer-flag"><div class="ff a"></div><div class="ff r"></div><div class="ff y"></div></div>
   </div>
   <div class="footer-bottom">
     <div class="footer-text">© 2026 · I.E. Victor Armando Pineda Tagle · Lima, Perú · MINEDU</div>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-const API_URL = "https://script.google.com/macros/s/AKfycbykmI99Nb3blMKsj5nRp4IBSsK0a7s5ZEsyfKTEYCihF9LOr6Xh8y-C6eyTgy3LeTxV/exec";
+<script>
+(function() {
+  var API_URL = "https://script.google.com/macros/s/AKfycbykmI99Nb3blMKsj5nRp4IBSsK0a7s5ZEsyfKTEYCihF9LOr6Xh8y-C6eyTgy3LeTxV/exec";
+  var tabActual = 'dni';
+  var ultimosResultados = [];
 
-// Guarda los últimos resultados por nombre para poder volver a ellos
-let ultimosResultados = [];
-let tabActual = 'dni';
-
-/* ═══════════════════════════
-   TABS
-═══════════════════════════ */
-function cambiarTab(tab) {
-  tabActual = tab;
-  limpiarResultados();
-
-  document.getElementById('tabDni').classList.toggle('active', tab === 'dni');
-  document.getElementById('tabNombre').classList.toggle('active', tab === 'nombre');
-  document.getElementById('paneDni').classList.toggle('active', tab === 'dni');
-  document.getElementById('paneNombre').classList.toggle('active', tab === 'nombre');
-
-  if (tab === 'dni') {
-    document.getElementById('panelTitle').textContent = 'Búsqueda por Documento de Identidad';
-    document.getElementById('panelTag').textContent = 'DNI · 8 dígitos';
-    setTimeout(() => document.getElementById('dniInput').focus(), 100);
-  } else {
-    document.getElementById('panelTitle').textContent = 'Búsqueda por Nombre y Apellido';
-    document.getElementById('panelTag').textContent = 'Nombre · Apellido';
-    setTimeout(() => document.getElementById('apellidoInput').focus(), 100);
-  }
-}
-
-/* ═══════════════════════════
-   UTILIDADES
-═══════════════════════════ */
-function generarId(seed) {
-  return "REG-" + (1000 + (seed * 137 + seed * seed * 7) % 8999);
-}
-
-function fechaHora() {
-  return new Date().toLocaleString('es-PE', {
-    day:'2-digit', month:'long', year:'numeric',
-    hour:'2-digit', minute:'2-digit'
-  });
-}
-
-function limpiarResultados() {
-  document.getElementById('fichaEl').style.display = 'none';
-  document.getElementById('errorEl').style.display = 'none';
-  document.getElementById('resultadosEl').style.display = 'none';
-  document.getElementById('resultadosList').innerHTML = '';
-  document.getElementById('btnVolver').style.display = 'none';
-  ultimosResultados = [];
-}
-
-function mostrarError(msg, sub) {
-  document.getElementById('loadingEl').style.display = 'none';
-  document.getElementById('errorMsg').textContent = msg;
-  document.getElementById('errorSub').textContent = sub || 'Verifique los datos ingresados e intente nuevamente. Si el problema persiste, consulte con secretaría.';
-  document.getElementById('errorEl').style.display = 'block';
-}
-
-/* ═══════════════════════════
-   BÚSQUEDA POR DNI
-═══════════════════════════ */
-async function buscarPorDni() {
-  const val = document.getElementById('dniInput').value.trim();
-  limpiarResultados();
-
-  if (!val || val.length < 7 || val.length > 8) {
-    mostrarError('El DNI debe contener entre 7 y 8 dígitos numéricos.');
-    return;
-  }
-
-  document.getElementById('loadingEl').style.display = 'flex';
-  document.getElementById('loadingTitle').textContent = 'Consultando registro escolar…';
-
-  try {
-    const respuesta = await fetch(`${API_URL}?dni=${val}`, { redirect: 'follow' });
-    const datos = await respuesta.json();
-    document.getElementById('loadingEl').style.display = 'none';
-
-    if (datos.ok && datos.alumno) {
-      rellenarFicha(datos.alumno, false);
+  /* ── TABS ── */
+  function cambiarTab(tab) {
+    tabActual = tab;
+    limpiarResultados();
+    document.getElementById('tabDni').classList.toggle('active', tab === 'dni');
+    document.getElementById('tabNombre').classList.toggle('active', tab === 'nombre');
+    document.getElementById('paneDni').classList.toggle('active', tab === 'dni');
+    document.getElementById('paneNombre').classList.toggle('active', tab === 'nombre');
+    if (tab === 'dni') {
+      document.getElementById('panelTitle').textContent = 'Búsqueda por Documento de Identidad';
+      document.getElementById('panelTag').textContent = 'DNI · 8 dígitos';
+      setTimeout(function(){ document.getElementById('dniInput').focus(); }, 100);
     } else {
-      mostrarError(`No se encontró ningún alumno registrado con el DNI ${val}.`);
+      document.getElementById('panelTitle').textContent = 'Búsqueda por Nombre y Apellido';
+      document.getElementById('panelTag').textContent = 'Nombre · Apellido';
+      setTimeout(function(){ document.getElementById('apellidoInput').focus(); }, 100);
     }
-  } catch (error) {
-    mostrarError('Error de conexión. Verifique su internet e intente nuevamente.');
-    console.error('Error:', error);
-  }
-}
-
-function probarDni(dni) {
-  document.getElementById('dniInput').value = dni;
-  buscarPorDni();
-}
-
-/* ═══════════════════════════
-   BÚSQUEDA POR NOMBRE
-═══════════════════════════ */
-async function buscarPorNombre() {
-  const apellido = document.getElementById('apellidoInput').value.trim();
-  const nombre   = document.getElementById('nombreInput').value.trim();
-  limpiarResultados();
-
-  if (!apellido && !nombre) {
-    mostrarError('Ingrese al menos un apellido o nombre para realizar la búsqueda.');
-    return;
   }
 
-  document.getElementById('loadingEl').style.display = 'flex';
-  document.getElementById('loadingTitle').textContent = 'Buscando por nombre…';
+  document.getElementById('tabDni').addEventListener('click', function(){ cambiarTab('dni'); });
+  document.getElementById('tabNombre').addEventListener('click', function(){ cambiarTab('nombre'); });
 
-  // Construir parámetros
-  const params = new URLSearchParams();
-  if (apellido) params.append('apellido', apellido);
-  if (nombre)   params.append('nombre', nombre);
-
-  try {
-    const respuesta = await fetch(`${API_URL}?${params.toString()}`, { redirect: 'follow' });
-    const datos = await respuesta.json();
+  /* ── UTILS ── */
+  function generarId(seed) {
+    return "REG-" + (1000 + (seed * 137 + seed * seed * 7) % 8999);
+  }
+  function fechaHora() {
+    return new Date().toLocaleString('es-PE', { day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  }
+  function limpiarResultados() {
+    document.getElementById('fichaEl').style.display = 'none';
+    document.getElementById('errorEl').style.display = 'none';
+    document.getElementById('resultadosEl').style.display = 'none';
+    document.getElementById('resultadosList').innerHTML = '';
+    document.getElementById('btnVolver').style.display = 'none';
+    ultimosResultados = [];
+  }
+  function mostrarError(msg, sub) {
     document.getElementById('loadingEl').style.display = 'none';
+    document.getElementById('errorMsg').textContent = msg;
+    document.getElementById('errorSub').textContent = sub || 'Verifique los datos e intente nuevamente.';
+    document.getElementById('errorEl').style.display = 'block';
+  }
 
-    if (datos.ok && datos.alumnos && datos.alumnos.length > 0) {
-      ultimosResultados = datos.alumnos;
-
-      if (datos.alumnos.length === 1) {
-        // Solo un resultado → mostrar ficha directo
-        rellenarFicha(datos.alumnos[0], false);
+  /* ── BÚSQUEDA POR DNI ── */
+  async function buscarPorDni() {
+    var val = document.getElementById('dniInput').value.trim();
+    limpiarResultados();
+    if (!val || val.length < 7 || val.length > 8) {
+      mostrarError('El DNI debe contener entre 7 y 8 dígitos numéricos.');
+      return;
+    }
+    document.getElementById('loadingEl').style.display = 'flex';
+    document.getElementById('loadingTitle').textContent = 'Consultando registro escolar…';
+    try {
+      var r = await fetch(API_URL + '?dni=' + val, { redirect: 'follow' });
+      var datos = await r.json();
+      document.getElementById('loadingEl').style.display = 'none';
+      if (datos.ok && datos.alumno) {
+        rellenarFicha(datos.alumno, false);
       } else {
-        // Múltiples resultados → mostrar lista
-        mostrarListaResultados(datos.alumnos);
+        mostrarError('No se encontró ningún alumno con el DNI ' + val + '.');
       }
-    } else if (datos.ok && datos.alumno) {
-      // Compatibilidad: si la API devuelve un solo objeto con "alumno"
-      rellenarFicha(datos.alumno, false);
-    } else {
-      const termino = [apellido, nombre].filter(Boolean).join(', ');
-      mostrarError(
-        `No se encontró ningún alumno con "${termino}".`,
-        'Intente con otro nombre, verifique la ortografía o use la búsqueda por DNI.'
-      );
+    } catch(e) {
+      mostrarError('Error de conexión. Verifique su internet e intente nuevamente.');
     }
-  } catch (error) {
-    mostrarError('Error de conexión. Verifique su internet e intente nuevamente.');
-    console.error('Error:', error);
   }
-}
 
-function probarNombre(apellido, nombre) {
-  document.getElementById('apellidoInput').value = apellido;
-  document.getElementById('nombreInput').value = nombre;
-  buscarPorNombre();
-}
+  /* ── BÚSQUEDA POR NOMBRE ── */
+  async function buscarPorNombre() {
+    var apellido = document.getElementById('apellidoInput').value.trim();
+    var nombre   = document.getElementById('nombreInput').value.trim();
+    limpiarResultados();
+    if (!apellido && !nombre) {
+      mostrarError('Ingrese al menos un apellido o nombre para buscar.');
+      return;
+    }
+    document.getElementById('loadingEl').style.display = 'flex';
+    document.getElementById('loadingTitle').textContent = 'Buscando por nombre…';
+    var url = API_URL + '?busqApellido=' + encodeURIComponent(apellido) + '&busqNombre=' + encodeURIComponent(nombre);
+    try {
+      var r = await fetch(url, { redirect: 'follow' });
+      var datos = await r.json();
+      document.getElementById('loadingEl').style.display = 'none';
+      if (datos.ok && datos.alumnos && datos.alumnos.length > 0) {
+        ultimosResultados = datos.alumnos;
+        if (datos.alumnos.length === 1) {
+          rellenarFicha(datos.alumnos[0], false);
+        } else {
+          mostrarListaResultados(datos.alumnos);
+        }
+      } else if (datos.ok && datos.alumno) {
+        rellenarFicha(datos.alumno, false);
+      } else {
+        mostrarError('No se encontró ningún alumno con "' + [apellido, nombre].filter(Boolean).join(', ') + '".',
+          'Intente con otro nombre o use la búsqueda por DNI.');
+      }
+    } catch(e) {
+      mostrarError('Error de conexión. Verifique su internet e intente nuevamente.');
+    }
+  }
 
-/* ═══════════════════════════
-   LISTA DE RESULTADOS
-═══════════════════════════ */
-function mostrarListaResultados(alumnos) {
-  const count = alumnos.length;
-  document.getElementById('resultadosCount').textContent = count + (count === 1 ? ' resultado' : ' resultados');
-
-  const lista = document.getElementById('resultadosList');
-  lista.innerHTML = '';
-
-  alumnos.forEach((alumno, i) => {
-    const item = document.createElement('div');
-    item.className = 'resultado-item';
-    item.innerHTML = `
-      <div class="resultado-avatar">👤</div>
-      <div class="resultado-info">
-        <div class="resultado-nombre">${alumno.nombre || '—'}</div>
-        <div class="resultado-meta">
-          <span>📚 ${alumno.grado || '—'}° Grado · Secc. "${alumno.seccion || '—'}"</span>
-          <span>🏫 ${alumno.nivel || '—'}</span>
-        </div>
-      </div>
-      <div class="resultado-dni">${alumno.dni || '—'}</div>
-      <div class="resultado-arrow">›</div>
-    `;
-    item.addEventListener('click', () => {
-      document.getElementById('resultadosEl').style.display = 'none';
-      rellenarFicha(alumno, count > 1);
+  /* ── LISTA RESULTADOS ── */
+  function mostrarListaResultados(alumnos) {
+    var count = alumnos.length;
+    document.getElementById('resultadosCount').textContent = count + (count === 1 ? ' resultado' : ' resultados');
+    var lista = document.getElementById('resultadosList');
+    lista.innerHTML = '';
+    alumnos.forEach(function(alumno) {
+      var item = document.createElement('div');
+      item.className = 'resultado-item';
+      item.innerHTML =
+        '<div class="resultado-avatar">👤</div>' +
+        '<div class="resultado-info">' +
+          '<div class="resultado-nombre">' + (alumno.nombre || '—') + '</div>' +
+          '<div class="resultado-meta">' +
+            '<span>📚 ' + (alumno.grado || '—') + '° · Secc. "' + (alumno.seccion || '—') + '"</span>' +
+            '<span>🏫 ' + (alumno.nivel || '—') + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="resultado-dni">' + (alumno.dni || '—') + '</div>' +
+        '<div class="resultado-arrow">›</div>';
+      item.addEventListener('click', function() {
+        document.getElementById('resultadosEl').style.display = 'none';
+        rellenarFicha(alumno, count > 1);
+      });
+      lista.appendChild(item);
     });
-    lista.appendChild(item);
+    var el = document.getElementById('resultadosEl');
+    el.style.display = 'block';
+    setTimeout(function(){ el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 60);
+  }
+
+  /* ── RELLENAR FICHA ── */
+  function rellenarFicha(a, hayVolver) {
+    document.getElementById('recordId').textContent    = generarId(a.id);
+    document.getElementById('tsEl').textContent        = 'Consultado: ' + fechaHora();
+    document.getElementById('fichaNumbre').textContent = a.nombre;
+    document.getElementById('fichaGrado').textContent  = a.grado + '° Grado · Sección "' + a.seccion + '"';
+    document.getElementById('fichaNivel').textContent  = a.nivel;
+    document.getElementById('fNombre').textContent     = a.nombre;
+    document.getElementById('fDni').textContent        = a.dni;
+    document.getElementById('fGrado').textContent      = a.grado + '° Grado, Sección "' + a.seccion + '" — ' + a.nivel;
+    document.getElementById('fPadre').textContent      = a.padre;
+    document.getElementById('fDniPadre').textContent   = a.dniPadre;
+    document.getElementById('fDireccion').textContent  = a.direccion;
+    document.getElementById('fTelefono').textContent   = a.telefono;
+    document.getElementById('fEstado').innerHTML       = '<span style="color:#15803d;font-weight:600">✔ ' + a.estado + '</span>';
+
+    // Seguro badge
+    var seguro = (a.seguro || '').trim().toLowerCase();
+    var seguroHTML;
+    if (seguro.indexOf('sis') !== -1) {
+      seguroHTML = '<span class="seguro-badge sis">🟦 SIS — Seguro Integral de Salud</span>';
+    } else if (seguro.indexOf('essalud') !== -1 || seguro.indexOf('es salud') !== -1) {
+      seguroHTML = '<span class="seguro-badge essalud">🟩 EsSalud</span>';
+    } else if (seguro.indexOf('ninguno') !== -1 || seguro.indexOf('no') !== -1) {
+      seguroHTML = '<span class="seguro-badge ninguno">⬜ Sin seguro registrado</span>';
+    } else {
+      seguroHTML = '<span class="seguro-badge pendiente">⚠️ Pendiente de registro</span>';
+    }
+    document.getElementById('fSeguro').innerHTML = seguroHTML;
+
+    document.getElementById('btnVolver').style.display = hayVolver ? 'flex' : 'none';
+    var fichaEl = document.getElementById('fichaEl');
+    fichaEl.style.display = 'block';
+    setTimeout(function(){ fichaEl.scrollIntoView({ behavior:'smooth', block:'start' }); }, 60);
+  }
+
+  /* ── EVENTOS BOTONES ── */
+  document.getElementById('btnBuscarDni').addEventListener('click', buscarPorDni);
+  document.getElementById('btnBuscarNombre').addEventListener('click', buscarPorNombre);
+  document.getElementById('btnNueva').addEventListener('click', function() {
+    document.getElementById('dniInput').value = '';
+    document.getElementById('apellidoInput').value = '';
+    document.getElementById('nombreInput').value = '';
+    limpiarResultados();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  document.getElementById('btnVolver').addEventListener('click', function() {
+    document.getElementById('fichaEl').style.display = 'none';
+    mostrarListaResultados(ultimosResultados);
   });
 
-  const resultadosEl = document.getElementById('resultadosEl');
-  resultadosEl.style.display = 'block';
-  setTimeout(() => resultadosEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
-}
+  // Chips DNI
+  document.querySelectorAll('.chip[data-dni]').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      document.getElementById('dniInput').value = chip.getAttribute('data-dni');
+      buscarPorDni();
+    });
+  });
 
-/* ═══════════════════════════
-   VOLVER A RESULTADOS
-═══════════════════════════ */
-function volverAResultados() {
-  document.getElementById('fichaEl').style.display = 'none';
-  mostrarListaResultados(ultimosResultados);
-}
+  // Chips Nombre
+  document.querySelectorAll('.chip-nombre[data-ape]').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      document.getElementById('apellidoInput').value = chip.getAttribute('data-ape');
+      document.getElementById('nombreInput').value   = chip.getAttribute('data-nom');
+      buscarPorNombre();
+    });
+  });
 
-/* ═══════════════════════════
-   RELLENAR FICHA
-═══════════════════════════ */
-function rellenarFicha(a, hayVolver) {
-  document.getElementById('recordId').textContent    = generarId(a.id);
-  document.getElementById('tsEl').textContent        = 'Consultado: ' + fechaHora();
-  document.getElementById('fichaNumbre').textContent = a.nombre;
-  document.getElementById('fichaGrado').textContent  = `${a.grado}° Grado · Sección "${a.seccion}"`;
-  document.getElementById('fichaNivel').textContent  = a.nivel;
-  document.getElementById('fNombre').textContent     = a.nombre;
-  document.getElementById('fDni').textContent        = a.dni;
-  document.getElementById('fGrado').textContent      = `${a.grado}° Grado, Sección "${a.seccion}" — ${a.nivel}`;
-  document.getElementById('fPadre').textContent      = a.padre;
-  document.getElementById('fDniPadre').textContent   = a.dniPadre;
-  document.getElementById('fDireccion').textContent  = a.direccion;
-  document.getElementById('fTelefono').textContent   = a.telefono;
-  document.getElementById('fEstado').innerHTML       = `<span style="color:#15803d; font-weight:600;">✔ ${a.estado}</span>`;
+  // Enter
+  document.getElementById('dniInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorDni(); });
+  document.getElementById('apellidoInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorNombre(); });
+  document.getElementById('nombreInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorNombre(); });
 
-  // ── Seguro de salud con badge de color ──
-  const seguro = (a.seguro || '').trim();
-  let seguroHTML = '';
-  if (seguro.toLowerCase().includes('sis')) {
-    seguroHTML = `<span class="seguro-badge sis"><span class="seguro-icon">🟦</span> SIS — Seguro Integral de Salud</span>`;
-  } else if (seguro.toLowerCase().includes('essalud') || seguro.toLowerCase().includes('es salud')) {
-    seguroHTML = `<span class="seguro-badge essalud"><span class="seguro-icon">🟩</span> EsSalud</span>`;
-  } else if (seguro.toLowerCase().includes('ninguno') || seguro.toLowerCase().includes('no')) {
-    seguroHTML = `<span class="seguro-badge ninguno"><span class="seguro-icon">⬜</span> Sin seguro registrado</span>`;
-  } else {
-    seguroHTML = `<span class="seguro-badge desconocido"><span class="seguro-icon">⚠️</span> Pendiente de registro</span>`;
-  }
-  document.getElementById('fSeguro').innerHTML = seguroHTML;
-
-  // Mostrar/ocultar botón "Volver a resultados"
-  document.getElementById('btnVolver').style.display = hayVolver ? 'flex' : 'none';
-
-  const fichaEl = document.getElementById('fichaEl');
-  fichaEl.style.display = 'block';
-  setTimeout(() => fichaEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
-}
-
-/* ═══════════════════════════
-   LIMPIAR TODO
-═══════════════════════════ */
-function limpiar() {
-  document.getElementById('dniInput').value = '';
-  document.getElementById('apellidoInput').value = '';
-  document.getElementById('nombreInput').value = '';
-  limpiarResultados();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (tabActual === 'dni') {
-    document.getElementById('dniInput').focus();
-  } else {
-    document.getElementById('apellidoInput').focus();
-  }
-}
-
-/* ═══════════════════════════
-   ENTER para buscar
-═══════════════════════════ */
-document.getElementById('dniInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') buscarPorDni();
-});
-document.getElementById('ap
+})();
+</script>
+</body>
+</html>
