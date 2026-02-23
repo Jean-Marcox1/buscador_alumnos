@@ -528,6 +528,40 @@
   .btn-volver { background: rgba(26,58,107,0.06); border: 1.5px solid rgba(26,58,107,0.15); color: var(--azul); font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
   .btn-volver:hover { background: var(--azul); color: var(--blanco); }
 
+  /* ═══ BADGE SEGURO ═══ */
+  .seguro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+  .seguro-badge.sis {
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1.5px solid #bae6fd;
+  }
+  .seguro-badge.essalud {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1.5px solid #bbf7d0;
+  }
+  .seguro-badge.ninguno {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1.5px solid #e2e8f0;
+  }
+  .seguro-badge.desconocido {
+    background: #fef9c3;
+    color: #854d0e;
+    border: 1.5px solid #fde68a;
+  }
+  .seguro-icon { font-size: 16px; }
+
   .site-footer { background: var(--negro); padding: 0; }
   .footer-top { max-width: 1100px; margin: 0 auto; padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
   .footer-brand { display: flex; align-items: center; gap: 14px; }
@@ -594,7 +628,7 @@
       <div class="header-divider"></div>
       <div class="colegio-datos">
         <span class="dato-item"><span class="dot"></span><strong>(01) 345-6789</strong></span>
-        <span class="dato-item"><span class="dot"></span><strong>ie.victorpinedatagle@minedu.gob.pe</strong></span>
+        <span class="dato-item"><span class="dot"></span><strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a2cbc78cd4cbc1d6cdd0d2cbccc7c6c3d6c3c5cec7e2cfcbccc7c6d78cc5cdc08cd2c7">[email&#160;protected]</a></strong></span>
         <span class="dato-item"><span class="dot"></span><strong>Lima, Perú</strong></span>
       </div>
     </div>
@@ -841,6 +875,10 @@
             <div class="fl"><span class="fl-icon">✅</span> Estado del Registro</div>
             <div class="fv" id="fEstado">—</div>
           </div>
+          <div class="field-item full">
+            <div class="fl"><span class="fl-icon">🏥</span> Seguro de Salud</div>
+            <div class="fv" id="fSeguro">—</div>
+          </div>
         </div>
       </div>
 
@@ -879,7 +917,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const API_URL = "https://script.google.com/macros/s/AKfycbykmI99Nb3blMKsj5nRp4IBSsK0a7s5ZEsyfKTEYCihF9LOr6Xh8y-C6eyTgy3LeTxV/exec";
 
 // Guarda los últimos resultados por nombre para poder volver a ellos
@@ -1096,6 +1134,20 @@ function rellenarFicha(a, hayVolver) {
   document.getElementById('fTelefono').textContent   = a.telefono;
   document.getElementById('fEstado').innerHTML       = `<span style="color:#15803d; font-weight:600;">✔ ${a.estado}</span>`;
 
+  // ── Seguro de salud con badge de color ──
+  const seguro = (a.seguro || '').trim();
+  let seguroHTML = '';
+  if (seguro.toLowerCase().includes('sis')) {
+    seguroHTML = `<span class="seguro-badge sis"><span class="seguro-icon">🟦</span> SIS — Seguro Integral de Salud</span>`;
+  } else if (seguro.toLowerCase().includes('essalud') || seguro.toLowerCase().includes('es salud')) {
+    seguroHTML = `<span class="seguro-badge essalud"><span class="seguro-icon">🟩</span> EsSalud</span>`;
+  } else if (seguro.toLowerCase().includes('ninguno') || seguro.toLowerCase().includes('no')) {
+    seguroHTML = `<span class="seguro-badge ninguno"><span class="seguro-icon">⬜</span> Sin seguro registrado</span>`;
+  } else {
+    seguroHTML = `<span class="seguro-badge desconocido"><span class="seguro-icon">⚠️</span> Pendiente de registro</span>`;
+  }
+  document.getElementById('fSeguro').innerHTML = seguroHTML;
+
   // Mostrar/ocultar botón "Volver a resultados"
   document.getElementById('btnVolver').style.display = hayVolver ? 'flex' : 'none';
 
@@ -1126,12 +1178,4 @@ function limpiar() {
 document.getElementById('dniInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') buscarPorDni();
 });
-document.getElementById('apellidoInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') buscarPorNombre();
-});
-document.getElementById('nombreInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') buscarPorNombre();
-});
-</script>
-</body>
-</html>
+document.getElementById('ap
