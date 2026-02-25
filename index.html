@@ -114,7 +114,7 @@
   #dniInput::-webkit-outer-spin-button,#dniInput::-webkit-inner-spin-button{-webkit-appearance:none}
   #dniInput[type=number]{-moz-appearance:textfield}
 
-  /* NOMBRE */
+  /* BÚSQUEDA POR NOMBRE Y APELLIDO */
   .nombre-fields-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .nombre-field-wrap{display:flex;flex-direction:column;gap:6px}
   .nombre-field-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave)}
@@ -127,23 +127,22 @@
   .hint-text{font-size:11px;color:var(--texto-suave);margin-top:8px;display:flex;align-items:center;gap:6px}
   .hint-text::before{content:'ℹ';font-size:12px;color:var(--azul-claro)}
 
-  /* BOTONES */
-  .btn-buscar{background:var(--rojo);color:var(--blanco);border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:0 28px;height:52px;border-radius:10px;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(192,32,44,0.3);flex-shrink:0}
-  .btn-buscar:hover{background:var(--rojo-claro);transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,32,44,0.4)}
-  .btn-buscar-nombre{background:var(--rojo);color:var(--blanco);border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:0 26px;height:50px;border-radius:10px;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(192,32,44,0.3);flex-shrink:0}
-  .btn-buscar-nombre:hover{background:var(--rojo-claro);transform:translateY(-2px)}
+  /* BOTONES BÚSQUEDA */
+  .btn-buscar,.btn-buscar-nombre{background:var(--rojo);color:var(--blanco);border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:2px;text-transform:uppercase;border-radius:10px;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(192,32,44,0.3);flex-shrink:0}
+  .btn-buscar{padding:0 28px;height:52px}
+  .btn-buscar-nombre{padding:0 26px;height:50px}
+  .btn-buscar:hover,.btn-buscar-nombre:hover{background:var(--rojo-claro);transform:translateY(-2px)}
+  .btn-buscar:hover{box-shadow:0 8px 24px rgba(192,32,44,0.4)}
   .btn-icon{font-size:16px}
 
-  /* SAMPLES */
-  .sample-section{margin-top:22px;padding-top:18px;border-top:1px solid var(--gris-bg)}
-  .sample-label{font-size:10px;font-weight:600;letter-spacing:2.5px;color:var(--texto-suave);text-transform:uppercase;margin-bottom:10px}
+  /* CHIPS BÚSQUEDA */
   .chips-row{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{background:var(--gris-bg);border:1.5px solid var(--gris-borde);color:var(--azul);font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:2px;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:6px}
+  .chip,.chip-nombre{background:var(--gris-bg);border:1.5px solid var(--gris-borde);color:var(--azul);padding:6px 14px;border-radius:6px;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500}
+  .chip{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px}
+  .chip-nombre{font-family:'DM Sans',sans-serif}
   .chip::before{content:'#';color:var(--azul-claro);opacity:.5;font-size:10px}
-  .chip:hover{background:var(--azul);border-color:var(--azul);color:var(--blanco);transform:translateY(-1px)}
-  .chip-nombre{background:var(--gris-bg);border:1.5px solid var(--gris-borde);color:var(--azul);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:6px}
   .chip-nombre::before{content:'👤';font-size:10px}
-  .chip-nombre:hover{background:var(--azul);border-color:var(--azul);color:var(--blanco);transform:translateY(-1px)}
+  .chip:hover,.chip-nombre:hover{background:var(--azul);border-color:var(--azul);color:var(--blanco);transform:translateY(-1px)}
 
   /* LOADING */
   .loading{display:none;align-items:center;gap:16px;padding:22px 24px;background:var(--blanco);border-radius:12px;border:1px solid var(--gris-borde);margin-bottom:20px;box-shadow:var(--sombra)}
@@ -260,9 +259,8 @@
   @media(max-width:600px){
     .nombre-fields-row{grid-template-columns:1fr}
     .input-row{flex-direction:column}
-    .btn-buscar{width:100%;justify-content:center}
     .nombre-search-row{flex-direction:column}
-    .btn-buscar-nombre{width:100%;justify-content:center}
+    .btn-buscar,.btn-buscar-nombre{width:100%;justify-content:center}
     .ficha-top{flex-direction:column;padding:20px}
     .band-right{display:none}
     .header-eyebrow{letter-spacing:2px}
@@ -371,16 +369,7 @@
             <span class="btn-icon">🔍</span> Buscar
           </button>
         </div>
-        <div class="sample-section">
-          <div class="sample-label">Consultas de ejemplo</div>
-          <div class="chips-row">
-            <span class="chip" data-dni="73760791">73760791</span>
-            <span class="chip" data-dni="72654321">72654321</span>
-            <span class="chip" data-dni="61987432">61987432</span>
-            <span class="chip" data-dni="83241567">83241567</span>
-            <span class="chip" data-dni="54876230">54876230</span>
-          </div>
-        </div>
+
       </div>
 
       <!-- PANE NOMBRE -->
@@ -410,15 +399,7 @@
             <span class="btn-icon">🔍</span> Buscar
           </button>
         </div>
-        <div class="sample-section">
-          <div class="sample-label">Ejemplos de búsqueda</div>
-          <div class="chips-row">
-            <span class="chip-nombre" data-ape="Sabino" data-nom="">Sabino</span>
-            <span class="chip-nombre" data-ape="" data-nom="Jean">Jean</span>
-            <span class="chip-nombre" data-ape="Obregon" data-nom="">Obregon</span>
-            <span class="chip-nombre" data-ape="villanera" data-nom="">Villanera</span>
-          </div>
-        </div>
+
       </div>
     </div>
   </div>
@@ -759,8 +740,6 @@
   });
 
   // Enter
-  document.getElementById('dniInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorDni(); });
-  document.getElementById('apellidoInput
   document.getElementById('dniInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorDni(); });
   document.getElementById('apellidoInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorNombre(); });
   document.getElementById('nombreInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorNombre(); });
