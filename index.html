@@ -16,8 +16,8 @@
     --sombra-lg:0 4px 8px rgba(26,58,107,0.08),0 24px 64px rgba(26,58,107,0.14);
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth;overflow-x:hidden}
-  body{background:var(--gris-bg);color:var(--texto);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6;overflow-x:hidden}
+  html{scroll-behavior:smooth;overflow-x:hidden;-webkit-text-size-adjust:100%}
+  body{background:var(--gris-bg);color:var(--texto);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
   .topbar{display:flex;height:4px;position:sticky;top:0;z-index:100}
   .topbar div{flex:1}
@@ -256,6 +256,20 @@
     .field-item{border-right:none}
     .field-item.full{grid-column:1}
   }
+  @media(max-width:768px){
+    .escudo{width:60px;height:60px}
+    .colegio-nombre{font-size:clamp(1rem,2vw,1.6rem)}
+    .header-inner{gap:16px;padding:16px 20px}
+    .dato-item{font-size:9px;gap:4px}
+    .header-eyebrow{font-size:8px;letter-spacing:2px}
+    .header-divider{width:36px}
+    .user-badge{padding:6px 10px;gap:8px}
+    .user-badge-name{font-size:10px}
+    .user-badge-label{font-size:8px}
+    .band{padding:0 16px}
+    .band-left{font-size:9px;letter-spacing:2px}
+    .nav-item{font-size:10px;padding:12px 14px}
+  }
   @media(max-width:600px){
     .nombre-fields-row{grid-template-columns:1fr}
     .input-row{flex-direction:column}
@@ -265,6 +279,30 @@
     .band-right{display:none}
     .header-eyebrow{letter-spacing:2px}
     .colegio-datos{gap:8px}
+    .escudo{width:50px;height:50px;box-shadow:0 0 0 2px rgba(245,200,0,0.3),0 4px 16px rgba(0,0,0,0.2)}
+    .colegio-nombre{font-size:clamp(0.9rem,1.8vw,1.3rem);line-height:1}
+    .header-inner{flex-direction:column;gap:12px;align-items:flex-start;padding:12px 16px}
+    .colegio-datos{flex-direction:column;gap:6px}
+    .dato-item{font-size:8px}
+    .header-eyebrow{font-size:7px;margin-bottom:4px}
+    .header-divider{display:none}
+    .main{padding:20px 16px 60px}
+    .section-head{gap:12px;margin-bottom:20px}
+    .section-icon-wrap{width:44px;height:44px;font-size:18px}
+    .section-title h2{font-size:clamp(1.2rem,2.5vw,1.6rem)}
+    .search-tab{padding:10px 16px;font-size:10px;gap:6px}
+    .panel-body{padding:20px 16px 16px}
+    .input-group{min-width:160px}
+    .dni-field,.nombre-input-box{height:48px}
+    #dniInput,.nombre-input-box input{font-size:16px;height:48px}
+    .nav-sec{padding:0 16px}
+    .band{padding:0 16px}
+  }
+  @media(max-width:400px){
+    .escudo{width:45px;height:45px;font-size:20px}
+    .colegio-nombre{font-size:0.9rem}
+    .header-inner{padding:10px 12px}
+    .user-badge{font-size:8px;padding:4px 8px}
   }
 </style>
 </head>
