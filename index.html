@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link rel="icon" type="image/png" href="LogoIE.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>I.E. Victor Armando Pineda Tagle — Consulta Estudiantil</title>
@@ -84,9 +85,28 @@
   .search-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--blanco)}
   .tab-icon{font-size:14px}
 
-  /* PANEL */
-  .search-panel{background:var(--blanco);border-radius:0 16px 16px 16px;border:1px solid var(--gris-borde);box-shadow:var(--sombra);animation:fadeUp 0.6s 0.1s ease both;margin-bottom:28px}
-  .panel-header{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-medio) 100%);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-radius:0 12px 0 0;flex-wrap:wrap;gap:8px}
+  /* PANEL CON IMAGEN DE FONDO */
+  .search-panel{background:var(--blanco);border-radius:0 16px 16px 16px;border:1px solid var(--gris-borde);box-shadow:var(--sombra);animation:fadeUp 0.6s 0.1s ease both;margin-bottom:28px;position:relative;overflow:hidden}
+  
+  /* Imagen de fondo acoplada al panel */
+  .search-panel::before{
+    content:'';
+    position:absolute;
+    top:0;
+    right:0;
+    width:45%;
+    height:100%;
+    background-image:url('imagen-fondo.png');
+    background-size:cover;
+    background-position:center right;
+    background-repeat:no-repeat;
+    opacity:0.12;
+    pointer-events:none;
+    z-index:0;
+    border-radius:0 12px 12px 0;
+  }
+
+  .panel-header{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-medio) 100%);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-radius:0 12px 0 0;flex-wrap:wrap;gap:8px;position:relative;z-index:2}
   .panel-header-left{display:flex;align-items:center;gap:12px}
   .panel-dots{display:flex;gap:5px}
   .panel-dot{width:8px;height:8px;border-radius:50%}
@@ -95,7 +115,7 @@
   .panel-dot:nth-child(3){background:rgba(255,255,255,0.25)}
   .panel-header h3{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--blanco);letter-spacing:.5px}
   .panel-header-tag{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.07);padding:4px 10px;border-radius:4px}
-  .panel-body{padding:28px 24px 24px}
+  .panel-body{padding:28px 24px 24px;position:relative;z-index:2}
 
   /* TAB PANES */
   .tab-pane{display:none}
@@ -334,7 +354,7 @@
   <div class="header-bg-line"></div>
   <div class="header-inner">
     <div class="escudo">
-      <img src="logo.png" alt="Logo I.E." style="width:64px;margin-top:12px;margin-left:1px" />
+      <img src="LogoIE.png" alt="logo I.E." style="width:64px;margin-top:12px;margin-left:1px" />
     </div>
     <div class="header-info">
       <div class="header-eyebrow">Institución Educativa Pública · Lima, Perú</div>
@@ -400,7 +420,7 @@
     </div>
   </div>
 
-  <!-- PANEL -->
+  <!-- PANEL CON IMAGEN DE FONDO -->
   <div class="search-panel">
     <div class="panel-header">
       <div class="panel-header-left">
