@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link rel="icon" type="image/png" href="LogoIE.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>I.E. Victor Armando Pineda Tagle — Acceso al Sistema</title>
@@ -49,7 +50,7 @@
 
   /* Línea peruana tricolor vertical */
   .tricolor {
-    position: absolute;
+    position: absolute; 
     left: 0; top: 0; bottom: 0;
     width: 4px;
     display: flex;
@@ -70,7 +71,12 @@
     margin-bottom: 28px;
     backdrop-filter: blur(8px);
   }
-  .escudo-wrap img { width: 56px; margin-top:10px; }
+  .escudo-wrap img { 
+    width: 56px; 
+    height: 56px; 
+    object-fit: contain; 
+    margin: 0;
+  }
 
   .left-eyebrow {
     font-size: 9px; font-weight: 600; letter-spacing: 4px;
@@ -394,7 +400,7 @@
 
   <div class="left-top">
     <div class="escudo-wrap">
-      <img src="logo.png" alt="logo" onerror="this.style.display='none';this.parentNode.innerHTML='🏫';" />
+      <img src="LogoIE.png" alt="logo I.E." onerror="this.style.display='none';this.parentNode.innerHTML='';" />
     </div>
     <div class="left-eyebrow">Sistema de Gestión Escolar · 2026</div>
     <div class="left-title">
@@ -526,11 +532,16 @@
     { usuario: 'docente.aula',     clave: 'docente2026' },
   ];
 
+  // ── Variable global para el rol seleccionado ──
+  var rolSeleccionado = 'director';
+
   // ── Selector de rol ──
   document.querySelectorAll('.rol-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
       document.querySelectorAll('.rol-btn').forEach(function(b){ b.classList.remove('selected'); });
       btn.classList.add('selected');
+      rolSeleccionado = btn.getAttribute('data-rol');
+      console.log('Rol seleccionado:', rolSeleccionado);
     });
   });
 
@@ -550,6 +561,25 @@
   // ── Autocompletar demo ──
   document.querySelectorAll('.demo-item').forEach(function(item){
     item.addEventListener('click', function(){
+      var rol = item.querySelector('.demo-role').textContent.trim().toLowerCase();
+      
+      // Actualizar rol seleccionado
+      document.querySelectorAll('.rol-btn').forEach(function(btn){
+        var btnRol = btn.getAttribute('data-rol');
+        if(btnRol === 'director' && rol.includes('director')){
+          btn.classList.add('selected');
+          rolSeleccionado = 'director';
+        } else if(btnRol === 'secretaria' && rol.includes('secretaría')){
+          btn.classList.add('selected');
+          rolSeleccionado = 'secretaria';
+        } else if(btnRol === 'docente' && rol.includes('docente')){
+          btn.classList.add('selected');
+          rolSeleccionado = 'docente';
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+
       document.getElementById('usuarioInput').value = item.getAttribute('data-u');
       document.getElementById('claveInput').value   = item.getAttribute('data-p');
       claveInput.type = 'password';
@@ -587,9 +617,11 @@
       var ok = CREDS.some(function(c){ return c.usuario === usuario && c.clave === clave; });
       btn.classList.remove('loading');
       if(ok){
-        // Guardar sesión y redirigir
+        // Guardar sesión con rol seleccionado
         sessionStorage.setItem('ie_auth', '1');
         sessionStorage.setItem('ie_usuario', usuario);
+        sessionStorage.setItem('ie_rol', rolSeleccionado);
+        console.log('Login exitoso. Rol:', rolSeleccionado);
         window.location.href = 'index.html';
       } else {
         mostrarError('Usuario o contraseña incorrectos. Verifique sus datos.');
