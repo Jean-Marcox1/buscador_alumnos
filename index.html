@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <link rel="icon" type="image/png" href="LogoIE.png">
+  <link rel="icon" type="image/png" href="logo.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>I.E. Victor Armando Pineda Tagle — Consulta Estudiantil</title>
@@ -29,9 +29,8 @@
   .site-header{background:var(--azul);position:relative;overflow:hidden}
   .site-header::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border:60px solid rgba(255,255,255,0.03);border-radius:50%;pointer-events:none}
   .header-bg-line{position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,200,0,0.3),transparent)}
-  .header-inner{max-width:1100px;margin:0 auto;padding:24px 24px;display:flex;align-items:center;gap:24px;position:relative;z-index:1;flex-wrap:wrap}
+  .header-inner{max-width:1100px;margin:0 auto;padding:24px;display:flex;align-items:center;gap:24px;position:relative;z-index:1;flex-wrap:wrap}
   .escudo{flex-shrink:0;width:80px;height:80px;background:var(--blanco);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px rgba(245,200,0,0.4),0 8px 32px rgba(0,0,0,0.3);position:relative;overflow:hidden}
-  .escudo::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(245,200,0,0.25)}
   .header-info{flex:1;min-width:0}
   .header-eyebrow{font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--amarillo);margin-bottom:6px;opacity:.9}
   .colegio-nombre{font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,2.5vw,2.1rem);font-weight:700;color:var(--blanco);line-height:1.1;letter-spacing:-0.02em}
@@ -43,8 +42,6 @@
   .header-sello{flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
   .sello-year{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:700;color:rgba(255,255,255,0.06);line-height:1;letter-spacing:-4px}
   .sello-label{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25)}
-
-  /* USUARIO LOGUEADO */
   .user-badge{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 14px;flex-shrink:0}
   .user-badge-info{display:flex;flex-direction:column}
   .user-badge-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--amarillo);opacity:.7;font-weight:600}
@@ -57,27 +54,25 @@
   .band-left::before{content:'';width:18px;height:2px;background:var(--azul);opacity:.4;flex-shrink:0}
   .band-right{font-size:11px;color:rgba(0,0,0,0.5);display:flex;align-items:center;gap:8px;padding:10px 0}
   .band-sep{width:1px;height:14px;background:rgba(0,0,0,0.2)}
-
   .nav-sec{background:var(--negro-suave);padding:0 24px;display:flex;overflow-x:auto;border-bottom:1px solid rgba(255,255,255,0.04);scrollbar-width:none}
   .nav-sec::-webkit-scrollbar{display:none}
-  .nav-item{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);padding:14px 18px;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap}
+
+  /* ── NAV CORREGIDO: ahora son <a> con text-decoration none ── */
+  .nav-item{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);padding:14px 18px;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;text-decoration:none;display:flex;align-items:center}
   .nav-item:hover{color:rgba(255,255,255,0.7)}
   .nav-item.active{color:var(--amarillo);border-bottom-color:var(--amarillo)}
 
   .main{max-width:1100px;margin:0 auto;padding:36px 24px 80px}
-
   .breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--texto-suave);margin-bottom:28px;flex-wrap:wrap}
   .breadcrumb a{color:var(--azul-claro);text-decoration:none}
   .breadcrumb .sep{color:var(--gris-borde);font-size:14px}
   .breadcrumb .current{color:var(--rojo);font-weight:600}
-
   .section-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin-bottom:28px;animation:fadeUp 0.6s ease both}
   .section-icon-wrap{width:52px;height:52px;background:var(--rojo);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 24px rgba(192,32,44,0.3);flex-shrink:0}
   .section-title h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:700;color:var(--azul);line-height:1.1;letter-spacing:-0.02em}
   .section-title p{font-size:13px;color:var(--texto-suave);margin-top:4px}
   .section-badge{background:var(--azul);color:var(--amarillo);font-size:10px;font-weight:600;letter-spacing:2px;padding:6px 14px;border-radius:4px;text-transform:uppercase;white-space:nowrap}
 
-  /* TABS */
   .search-tabs{display:flex;gap:0;margin-bottom:-1px;position:relative;z-index:1;flex-wrap:wrap}
   .search-tab{display:flex;align-items:center;gap:8px;padding:12px 22px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid var(--gris-borde);border-bottom:none;border-radius:10px 10px 0 0;background:#e8eaf2;color:var(--texto-suave);transition:all 0.2s;user-select:none;white-space:nowrap}
   .search-tab:hover{background:#dde0ef;color:var(--azul)}
@@ -85,28 +80,9 @@
   .search-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--blanco)}
   .tab-icon{font-size:14px}
 
-  /* PANEL CON IMAGEN DE FONDO */
   .search-panel{background:var(--blanco);border-radius:0 16px 16px 16px;border:1px solid var(--gris-borde);box-shadow:var(--sombra);animation:fadeUp 0.6s 0.1s ease both;margin-bottom:28px;position:relative;overflow:hidden}
-  
-  /* Imagen de fondo acoplada al panel */
-  .search-panel::before{
-    content:'';
-    position:absolute;
-    top:0;
-    right:0;
-    width:45%;
-    height:100%;
-    background-image:url('imagen-fondo.png');
-    background-size:cover;
-    background-position:center right;
-    background-repeat:no-repeat;
-    opacity:0.12;
-    pointer-events:none;
-    z-index:0;
-    border-radius:0 12px 12px 0;
-  }
-
-  .panel-header{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-medio) 100%);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-radius:0 12px 0 0;flex-wrap:wrap;gap:8px;position:relative;z-index:2}
+  .search-panel::before{content:'';position:absolute;top:0;right:0;width:45%;height:100%;background-image:url('imagen-fondo.png');background-size:cover;background-position:center right;background-repeat:no-repeat;opacity:0.12;pointer-events:none;z-index:0;border-radius:0 12px 12px 0}
+  .panel-header{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-medio) 100%);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:relative;z-index:2}
   .panel-header-left{display:flex;align-items:center;gap:12px}
   .panel-dots{display:flex;gap:5px}
   .panel-dot{width:8px;height:8px;border-radius:50%}
@@ -116,12 +92,9 @@
   .panel-header h3{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--blanco);letter-spacing:.5px}
   .panel-header-tag{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.07);padding:4px 10px;border-radius:4px}
   .panel-body{padding:28px 24px 24px;position:relative;z-index:2}
-
-  /* TAB PANES */
   .tab-pane{display:none}
   .tab-pane.active{display:block}
 
-  /* DNI */
   .input-label{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--azul);margin-bottom:10px;display:flex;align-items:center;gap:8px}
   .input-label::after{content:'';flex:1;height:1px;background:var(--gris-borde)}
   .input-row{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
@@ -134,7 +107,6 @@
   #dniInput::-webkit-outer-spin-button,#dniInput::-webkit-inner-spin-button{-webkit-appearance:none}
   #dniInput[type=number]{-moz-appearance:textfield}
 
-  /* BÚSQUEDA POR NOMBRE Y APELLIDO */
   .nombre-fields-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .nombre-field-wrap{display:flex;flex-direction:column;gap:6px}
   .nombre-field-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave)}
@@ -147,24 +119,12 @@
   .hint-text{font-size:11px;color:var(--texto-suave);margin-top:8px;display:flex;align-items:center;gap:6px}
   .hint-text::before{content:'ℹ';font-size:12px;color:var(--azul-claro)}
 
-  /* BOTONES BÚSQUEDA */
   .btn-buscar,.btn-buscar-nombre{background:var(--rojo);color:var(--blanco);border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:2px;text-transform:uppercase;border-radius:10px;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(192,32,44,0.3);flex-shrink:0}
   .btn-buscar{padding:0 28px;height:52px}
   .btn-buscar-nombre{padding:0 26px;height:50px}
   .btn-buscar:hover,.btn-buscar-nombre:hover{background:var(--rojo-claro);transform:translateY(-2px)}
-  .btn-buscar:hover{box-shadow:0 8px 24px rgba(192,32,44,0.4)}
   .btn-icon{font-size:16px}
 
-  /* CHIPS BÚSQUEDA */
-  .chips-row{display:flex;flex-wrap:wrap;gap:8px}
-  .chip,.chip-nombre{background:var(--gris-bg);border:1.5px solid var(--gris-borde);color:var(--azul);padding:6px 14px;border-radius:6px;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500}
-  .chip{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px}
-  .chip-nombre{font-family:'DM Sans',sans-serif}
-  .chip::before{content:'#';color:var(--azul-claro);opacity:.5;font-size:10px}
-  .chip-nombre::before{content:'👤';font-size:10px}
-  .chip:hover,.chip-nombre:hover{background:var(--azul);border-color:var(--azul);color:var(--blanco);transform:translateY(-1px)}
-
-  /* LOADING */
   .loading{display:none;align-items:center;gap:16px;padding:22px 24px;background:var(--blanco);border-radius:12px;border:1px solid var(--gris-borde);margin-bottom:20px;box-shadow:var(--sombra)}
   .spinner-wrap{position:relative;width:28px;height:28px;flex-shrink:0}
   .spinner{width:28px;height:28px;border:2.5px solid rgba(26,58,107,0.1);border-top-color:var(--azul);border-radius:50%;animation:spin 0.8s linear infinite}
@@ -173,15 +133,12 @@
   .loading-sub{font-size:11px;color:var(--texto-suave);margin-top:2px}
   .loading-bar{width:100%;height:2px;background:var(--gris-bg);border-radius:2px;margin-top:10px;overflow:hidden}
   .loading-bar-fill{height:100%;background:linear-gradient(90deg,var(--azul),var(--azul-claro));border-radius:2px;animation:loadBar 1.5s ease-in-out infinite}
-
-  /* ERROR */
   .error-box{display:none;padding:18px 22px;background:#fff5f6;border:1px solid rgba(192,32,44,0.15);border-left:4px solid var(--rojo);border-radius:0 12px 12px 0;margin-bottom:20px;animation:fadeUp 0.3s ease both}
   .error-inner{display:flex;align-items:flex-start;gap:14px}
   .error-icon-wrap{width:36px;height:36px;background:rgba(192,32,44,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
   .error-title{font-size:13px;font-weight:600;color:var(--rojo);margin-bottom:3px}
   .error-sub{font-size:12px;color:#a0535a;line-height:1.4}
 
-  /* RESULTADOS LISTA */
   .resultados-lista{display:none;animation:fadeUp 0.4s ease both;margin-bottom:28px}
   .resultados-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px;flex-wrap:wrap;gap:8px}
   .resultados-titulo{font-size:12px;font-weight:600;color:var(--azul)}
@@ -197,7 +154,6 @@
   .resultado-arrow{font-size:16px;color:var(--gris-borde);transition:color 0.2s,transform 0.2s;flex-shrink:0}
   .resultado-item:hover .resultado-arrow{color:var(--azul-claro);transform:translateX(3px)}
 
-  /* FICHA */
   .ficha{display:none;animation:fadeUp 0.6s ease both}
   .ficha-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px;flex-wrap:wrap;gap:8px}
   .ficha-id-wrap{display:flex;align-items:center;gap:10px}
@@ -206,7 +162,7 @@
   .ficha-ts{font-size:11px;color:var(--texto-suave);display:flex;align-items:center;gap:6px}
   .ficha-ts::before{content:'●';color:#22c55e;font-size:8px;animation:pulseGreen 2s infinite}
   .ficha-card{background:var(--blanco);border-radius:16px;border:1px solid var(--gris-borde);overflow:hidden;box-shadow:var(--sombra-lg)}
-  .ficha-top{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-medio) 60%,var(--azul-claro) 100%);padding:28px 28px 26px;display:flex;align-items:flex-start;gap:20px;position:relative;overflow:hidden;flex-wrap:wrap}
+  .ficha-top{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-medio) 60%,var(--azul-claro) 100%);padding:28px;display:flex;align-items:flex-start;gap:20px;position:relative;overflow:hidden;flex-wrap:wrap}
   .ficha-top::before{content:'';position:absolute;right:-60px;top:-60px;width:240px;height:240px;border:50px solid rgba(255,255,255,0.04);border-radius:50%;pointer-events:none}
   .ficha-top::after{content:'';position:absolute;left:0;bottom:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,200,0,0.3),transparent)}
   .avatar{width:68px;height:68px;background:rgba(245,200,0,0.15);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:2px solid rgba(245,200,0,0.2);position:relative;z-index:1}
@@ -232,14 +188,12 @@
   .fv.nombre-val{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--negro);letter-spacing:-0.01em}
   .fv.tel-val{font-family:'DM Mono',monospace;font-size:15px;letter-spacing:2px}
 
-  /* SEGURO BADGE */
   .seguro-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;margin-top:2px}
   .seguro-badge.sis{background:#e0f2fe;color:#0369a1;border:1.5px solid #bae6fd}
   .seguro-badge.essalud{background:#dcfce7;color:#15803d;border:1.5px solid #bbf7d0}
   .seguro-badge.ninguno{background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0}
   .seguro-badge.pendiente{background:#fef9c3;color:#854d0e;border:1.5px solid #fde68a}
 
-  /* FOOTER FICHA */
   .ficha-footer{background:#f8f9fc;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--gris-borde)}
   .estado-ok{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;color:#15803d}
   .estado-dot{width:7px;height:7px;background:#22c55e;border-radius:50%;box-shadow:0 0 0 3px rgba(34,197,94,0.2);animation:pulseGreen 2s infinite;flex-shrink:0}
@@ -249,7 +203,6 @@
   .btn-volver{background:rgba(26,58,107,0.06);border:1.5px solid rgba(26,58,107,0.15);color:var(--azul);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:8px 16px;border-radius:6px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px}
   .btn-volver:hover{background:var(--azul);color:var(--blanco)}
 
-  /* SITE FOOTER */
   .site-footer{background:var(--negro)}
   .footer-top{max-width:1100px;margin:0 auto;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;border-bottom:1px solid rgba(255,255,255,0.06)}
   .footer-brand{display:flex;align-items:center;gap:14px}
@@ -257,9 +210,7 @@
   .footer-brand-text{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:rgba(255,255,255,0.6);line-height:1.2}
   .footer-flag{display:flex;gap:3px}
   .ff{width:10px;height:10px;border-radius:2px}
-  .ff.a{background:var(--azul-claro)}
-  .ff.r{background:var(--rojo)}
-  .ff.y{background:var(--amarillo)}
+  .ff.a{background:var(--azul-claro)}.ff.r{background:var(--rojo)}.ff.y{background:var(--amarillo)}
   .footer-bottom{padding:14px 24px;text-align:center}
   .footer-text{font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase}
 
@@ -276,73 +227,18 @@
     .field-item{border-right:none}
     .field-item.full{grid-column:1}
   }
-  @media(max-width:768px){
-    .escudo{width:60px;height:60px}
-    .colegio-nombre{font-size:clamp(1rem,2vw,1.6rem)}
-    .header-inner{gap:16px;padding:16px 20px}
-    .dato-item{font-size:9px;gap:4px}
-    .header-eyebrow{font-size:8px;letter-spacing:2px}
-    .header-divider{width:36px}
-    .user-badge{padding:6px 10px;gap:8px}
-    .user-badge-name{font-size:10px}
-    .user-badge-label{font-size:8px}
-    .band{padding:0 16px}
-    .band-left{font-size:9px;letter-spacing:2px}
-    .nav-item{font-size:10px;padding:12px 14px}
-  }
   @media(max-width:600px){
     .nombre-fields-row{grid-template-columns:1fr}
-    .input-row{flex-direction:column}
-    .nombre-search-row{flex-direction:column}
+    .input-row,.nombre-search-row{flex-direction:column}
     .btn-buscar,.btn-buscar-nombre{width:100%;justify-content:center}
     .ficha-top{flex-direction:column;padding:20px}
     .band-right{display:none}
-    .escudo{width:45px;height:45px;box-shadow:0 0 0 1px rgba(245,200,0,0.3),0 2px 8px rgba(0,0,0,0.15)}
-    .colegio-nombre{font-size:1rem;line-height:1.1;letter-spacing:-0.01em}
-    .header-inner{flex-direction:row;gap:10px;align-items:center;padding:8px 12px;flex-wrap:nowrap}
-    .header-info{gap:2px}
-    .colegio-datos{flex-direction:row;gap:12px;flex-wrap:wrap;margin-top:4px}
-    .dato-item{font-size:7px;gap:3px}
-    .dato-item .dot{width:3px;height:3px}
-    .header-eyebrow{font-size:6px;margin-bottom:2px;letter-spacing:1px}
-    .header-divider{width:24px;height:1px;margin:4px 0}
+    .escudo{width:50px;height:50px}
+    .colegio-nombre{font-size:1rem}
+    .header-inner{gap:10px;padding:12px}
     .main{padding:16px 12px 60px}
-    .section-head{gap:10px;margin-bottom:16px}
-    .section-icon-wrap{width:40px;height:40px;font-size:16px}
-    .section-title h2{font-size:1.2rem}
-    .section-title p{font-size:12px}
-    .search-tabs{gap:2px;margin-bottom:-2px}
-    .search-tab{padding:8px 12px;font-size:9px;gap:4px;border-radius:6px 6px 0 0}
-    .panel-body{padding:16px 12px}
-    .input-label{font-size:9px;gap:6px}
-    .input-group{min-width:140px}
-    .dni-field,.nombre-input-box{height:44px}
-    .dni-prefix,.nombre-prefix{font-size:9px;padding:0 10px;height:44px}
-    #dniInput,.nombre-input-box input{font-size:14px;height:44px;padding:0 10px;letter-spacing:3px}
-    #dniInput::placeholder{font-size:14px}
-    .btn-buscar{height:44px;padding:0 20px;font-size:11px}
-    .btn-buscar-nombre{height:44px;padding:0 18px;font-size:11px}
-    .nombre-fields-row{gap:10px}
-    .nombre-field-label{font-size:9px}
-    .hint-text{font-size:10px}
-    .nav-sec{padding:0 12px}
-    .nav-item{font-size:9px;padding:10px 12px}
-    .band{padding:0 12px}
-    .band-left{font-size:8px;gap:6px}
-    .band-left::before{width:12px;height:1px}
-    .breadcrumb{font-size:10px;margin-bottom:16px}
-    .user-badge{padding:4px 8px;gap:6px}
-    .user-badge-name{font-size:9px}
-    .user-badge-label{font-size:7px}
-    .btn-logout{font-size:8px;padding:4px 10px}
-  }
-  @media(max-width:400px){
-    .escudo{width:40px;height:40px}
-    .colegio-nombre{font-size:0.85rem}
-    .header-inner{padding:6px 10px;gap:8px}
-    .colegio-datos{gap:10px}
-    .main{padding:12px 10px 50px}
-    .section-title h2{font-size:1rem}
+    .search-tab{padding:8px 12px;font-size:9px}
+    .panel-body{padding:18px 14px}
   }
 </style>
 </head>
@@ -354,7 +250,7 @@
   <div class="header-bg-line"></div>
   <div class="header-inner">
     <div class="escudo">
-      <img src="LogoIE.png" alt="logo I.E." style="width:64px;margin-top:12px;margin-left:1px" />
+      <img src="logo.png" alt="logo" style="width:64px;margin-top:12px;margin-left:1px" />
     </div>
     <div class="header-info">
       <div class="header-eyebrow">Institución Educativa Pública · Lima, Perú</div>
@@ -362,7 +258,7 @@
       <div class="header-divider"></div>
       <div class="colegio-datos">
         <span class="dato-item"><span class="dot"></span><strong>(01) 345-6789</strong></span>
-        <span class="dato-item"><span class="dot"></span><strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="234a460d554a40574c51534a4d4647425742444f46634e4a4d4647560d444c410d5346">[email&#160;protected]</a></strong></span>
+        <span class="dato-item"><span class="dot"></span><strong>contacto@iepinedatagle.edu.pe</strong></span>
         <span class="dato-item"><span class="dot"></span><strong>Lima, Perú</strong></span>
       </div>
     </div>
@@ -385,18 +281,19 @@
   <div class="band-right">Año Académico 2026<div class="band-sep"></div>Nivel Primaria y Secundaria</div>
 </div>
 
+<!-- ✅ NAV CORREGIDO: <a href> en vez de <div> -->
 <nav class="nav-sec">
-  <div class="nav-item">Inicio</div>
-  <div class="nav-item">Matrícula</div>
-  <div class="nav-item active">Consulta de Alumnos</div>
-  <div class="nav-item">Notas</div>
-  <div class="nav-item">Asistencia</div>
-  <div class="nav-item">Reportes</div>
+  <a class="nav-item" href="inicio.html">Inicio</a>
+  <a class="nav-item" href="matricula.html">Matrícula</a>
+  <a class="nav-item active" href="index.html">Consulta de Alumnos</a>
+  <a class="nav-item" href="notas.html">Notas</a>
+  <a class="nav-item" href="asistencia.html">Asistencia</a>
+  <a class="nav-item" href="reportes.html">Reportes</a>
 </nav>
 
 <main class="main">
   <div class="breadcrumb">
-    <a href="#">Inicio</a><span class="sep">›</span>
+    <a href="inicio.html">Inicio</a><span class="sep">›</span>
     <a href="#">Estudiantes</a><span class="sep">›</span>
     <span class="current">Consulta de Alumno</span>
   </div>
@@ -405,24 +302,18 @@
     <div class="section-icon-wrap">🔍</div>
     <div class="section-title">
       <h2>Consulta de Alumno</h2>
-      <p>Busque al estudiante por su DNI o por nombre y apellido para acceder a su ficha completa.</p>
+      <p>Busque al estudiante por DNI o por nombre.</p>
     </div>
     <div class="section-badge">Módulo Activo</div>
   </div>
 
-  <!-- TABS -->
   <div class="search-tabs">
-    <div class="search-tab active" id="tabDni">
-      <span class="tab-icon">🪪</span> Buscar por DNI
-    </div>
-    <div class="search-tab" id="tabNombre">
-      <span class="tab-icon">👤</span> Buscar por Nombre y Apellido
-    </div>
+    <div class="search-tab active" id="tabDni"><span class="tab-icon">🪪</span> Buscar por DNI</div>
+    <div class="search-tab" id="tabNombre"><span class="tab-icon">👤</span> Buscar por Nombre</div>
   </div>
 
-  <!-- PANEL CON IMAGEN DE FONDO -->
   <div class="search-panel">
-    <div class="panel-header">
+    <div class="panel-header" id="panelHeader">
       <div class="panel-header-left">
         <div class="panel-dots">
           <div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-dot"></div>
@@ -443,11 +334,8 @@
               <input type="number" id="dniInput" placeholder="00000000" autocomplete="off" />
             </div>
           </div>
-          <button class="btn-buscar" id="btnBuscarDni">
-            <span class="btn-icon">🔍</span> Buscar
-          </button>
+          <button class="btn-buscar" id="btnBuscarDni"><span class="btn-icon">🔍</span> Buscar</button>
         </div>
-
       </div>
 
       <!-- PANE NOMBRE -->
@@ -470,14 +358,9 @@
           </div>
         </div>
         <div class="nombre-search-row">
-          <div style="flex:1;min-width:0">
-            <div class="hint-text">Puede ingresar solo apellido, solo nombre o ambos.</div>
-          </div>
-          <button class="btn-buscar-nombre" id="btnBuscarNombre">
-            <span class="btn-icon">🔍</span> Buscar
-          </button>
+          <div style="flex:1;min-width:0"><div class="hint-text">Puede ingresar solo apellido, solo nombre o ambos.</div></div>
+          <button class="btn-buscar-nombre" id="btnBuscarNombre"><span class="btn-icon">🔍</span> Buscar</button>
         </div>
-
       </div>
     </div>
   </div>
@@ -588,7 +471,7 @@
       <div class="ficha-footer">
         <div class="estado-ok"><div class="estado-dot"></div>Registro encontrado — Datos verificados</div>
         <div class="footer-actions">
-          <button class="btn-volver" id="btnVolver">← Volver a resultados</button>
+          <button class="btn-volver" id="btnVolver" style="display:none">← Volver a resultados</button>
           <button class="btn-nueva" id="btnNueva">↺ Nueva Búsqueda</button>
         </div>
       </div>
@@ -599,7 +482,7 @@
 <footer class="site-footer">
   <div class="footer-top">
     <div class="footer-brand">
-      <div class="footer-logo">🏫</div>
+      <div class="escudo"><img src="logo.png" alt="logo" style="width:64px;margin-top:12px;margin-left:1px"/></div>
       <div class="footer-brand-text">I.E. Victor Armando Pineda Tagle<br>
         <span style="font-size:11px;font-family:'DM Sans',sans-serif;font-weight:400">Sistema de Gestión Escolar</span>
       </div>
@@ -611,41 +494,32 @@
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 (function() {
   var API_URL = "https://script.google.com/macros/s/AKfycbykmI99Nb3blMKsj5nRp4IBSsK0a7s5ZEsyfKTEYCihF9LOr6Xh8y-C6eyTgy3LeTxV/exec";
-  var tabActual = 'dni';
   var ultimosResultados = [];
 
-  /* ── TABS ── */
   function cambiarTab(tab) {
-    tabActual = tab;
     limpiarResultados();
-    document.getElementById('tabDni').classList.toggle('active', tab === 'dni');
-    document.getElementById('tabNombre').classList.toggle('active', tab === 'nombre');
-    document.getElementById('paneDni').classList.toggle('active', tab === 'dni');
-    document.getElementById('paneNombre').classList.toggle('active', tab === 'nombre');
+    ['tabDni','tabNombre'].forEach(function(id){ document.getElementById(id).classList.remove('active'); });
+    ['paneDni','paneNombre'].forEach(function(id){ document.getElementById(id).classList.remove('active'); });
     if (tab === 'dni') {
+      document.getElementById('tabDni').classList.add('active');
+      document.getElementById('paneDni').classList.add('active');
       document.getElementById('panelTitle').textContent = 'Búsqueda por Documento de Identidad';
       document.getElementById('panelTag').textContent = 'DNI · 8 dígitos';
       setTimeout(function(){ document.getElementById('dniInput').focus(); }, 100);
     } else {
+      document.getElementById('tabNombre').classList.add('active');
+      document.getElementById('paneNombre').classList.add('active');
       document.getElementById('panelTitle').textContent = 'Búsqueda por Nombre y Apellido';
       document.getElementById('panelTag').textContent = 'Nombre · Apellido';
       setTimeout(function(){ document.getElementById('apellidoInput').focus(); }, 100);
     }
   }
-
   document.getElementById('tabDni').addEventListener('click', function(){ cambiarTab('dni'); });
   document.getElementById('tabNombre').addEventListener('click', function(){ cambiarTab('nombre'); });
 
-  /* ── UTILS ── */
-  function generarId(seed) {
-    return "REG-" + (1000 + (seed * 137 + seed * seed * 7) % 8999);
-  }
-  function fechaHora() {
-    return new Date().toLocaleString('es-PE', { day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' });
-  }
   function limpiarResultados() {
     document.getElementById('fichaEl').style.display = 'none';
     document.getElementById('errorEl').style.display = 'none';
@@ -661,85 +535,66 @@
     document.getElementById('errorEl').style.display = 'block';
   }
 
-  /* ── BÚSQUEDA POR DNI ── */
   async function buscarPorDni() {
     var val = document.getElementById('dniInput').value.trim();
     limpiarResultados();
-    if (!val || val.length < 7 || val.length > 8) {
-      mostrarError('El DNI debe contener entre 7 y 8 dígitos numéricos.');
-      return;
-    }
+    if (!val || val.length < 7 || val.length > 8) { mostrarError('El DNI debe contener entre 7 y 8 dígitos numéricos.'); return; }
     document.getElementById('loadingEl').style.display = 'flex';
     document.getElementById('loadingTitle').textContent = 'Consultando registro escolar…';
     try {
-      var r = await fetch(API_URL + '?dni=' + val, { redirect: 'follow' });
+      var r = await fetch(API_URL + '?dni=' + val, { redirect:'follow' });
       var datos = await r.json();
       document.getElementById('loadingEl').style.display = 'none';
-      if (datos.ok && datos.alumno) {
-        rellenarFicha(datos.alumno, false);
-      } else {
-        mostrarError('No se encontró ningún alumno con el DNI ' + val + '.');
-      }
-    } catch(e) {
-      mostrarError('Error de conexión. Verifique su internet e intente nuevamente.');
-    }
+      if (datos.ok && datos.alumno) rellenarFicha(datos.alumno, false);
+      else mostrarError('No se encontró ningún alumno con el DNI ' + val + '.');
+    } catch(e) { mostrarError('Error de conexión. Verifique su internet e intente nuevamente.'); }
   }
 
-  /* ── BÚSQUEDA POR NOMBRE ── */
   async function buscarPorNombre() {
     var apellido = document.getElementById('apellidoInput').value.trim();
     var nombre   = document.getElementById('nombreInput').value.trim();
     limpiarResultados();
-    if (!apellido && !nombre) {
-      mostrarError('Ingrese al menos un apellido o nombre para buscar.');
-      return;
-    }
+    if (!apellido && !nombre) { mostrarError('Ingrese al menos un apellido o nombre para buscar.'); return; }
     document.getElementById('loadingEl').style.display = 'flex';
     document.getElementById('loadingTitle').textContent = 'Buscando por nombre…';
     var url = API_URL + '?busqApellido=' + encodeURIComponent(apellido) + '&busqNombre=' + encodeURIComponent(nombre);
     try {
-      var r = await fetch(url, { redirect: 'follow' });
+      var r = await fetch(url, { redirect:'follow' });
       var datos = await r.json();
       document.getElementById('loadingEl').style.display = 'none';
       if (datos.ok && datos.alumnos && datos.alumnos.length > 0) {
         ultimosResultados = datos.alumnos;
-        if (datos.alumnos.length === 1) {
-          rellenarFicha(datos.alumnos[0], false);
-        } else {
-          mostrarListaResultados(datos.alumnos);
-        }
+        if (datos.alumnos.length === 1) rellenarFicha(datos.alumnos[0], false);
+        else mostrarListaResultados(datos.alumnos);
       } else if (datos.ok && datos.alumno) {
         rellenarFicha(datos.alumno, false);
       } else {
-        mostrarError('No se encontró ningún alumno con "' + [apellido, nombre].filter(Boolean).join(', ') + '".',
+        mostrarError('No se encontró ningún alumno con "' + [apellido,nombre].filter(Boolean).join(', ') + '".',
           'Intente con otro nombre o use la búsqueda por DNI.');
       }
-    } catch(e) {
-      mostrarError('Error de conexión. Verifique su internet e intente nuevamente.');
-    }
+    } catch(e) { mostrarError('Error de conexión. Verifique su internet e intente nuevamente.'); }
   }
 
-  /* ── LISTA RESULTADOS ── */
   function mostrarListaResultados(alumnos) {
     var count = alumnos.length;
-    document.getElementById('resultadosCount').textContent = count + (count === 1 ? ' resultado' : ' resultados');
+    document.getElementById('resultadosCount').textContent = count + (count===1?' resultado':' resultados');
     var lista = document.getElementById('resultadosList');
     lista.innerHTML = '';
-    alumnos.forEach(function(alumno) {
+    alumnos.forEach(function(alumno){
       var item = document.createElement('div');
       item.className = 'resultado-item';
       item.innerHTML =
-        '<div class="resultado-avatar">👤</div>' +
-        '<div class="resultado-info">' +
-          '<div class="resultado-nombre">' + (alumno.nombre || '—') + '</div>' +
-          '<div class="resultado-meta">' +
-            '<span>📚 ' + (alumno.grado || '—') + '° · Secc. "' + (alumno.seccion || '—') + '"</span>' +
-            '<span>🏫 ' + (alumno.nivel || '—') + '</span>' +
-          '</div>' +
-        '</div>' +
-        '<div class="resultado-dni">' + (alumno.dni || '—') + '</div>' +
+        '<div class="resultado-avatar">👤</div>'+
+        '<div class="resultado-info">'+
+          '<div class="resultado-nombre">'+(alumno.nombre||'—')+'</div>'+
+          '<div class="resultado-meta">'+
+            '<span>📚 '+(alumno.grado||'—')+'° · Secc. "'+(alumno.seccion||'—')+'"</span>'+
+            '<span>🏫 '+(alumno.nivel||'—')+'</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="resultado-dni">'+(alumno.dni||'—')+'</div>'+
         '<div class="resultado-arrow">›</div>';
-      item.addEventListener('click', function() {
+      item.addEventListener('click', function(){
         document.getElementById('resultadosEl').style.display = 'none';
         rellenarFicha(alumno, count > 1);
       });
@@ -747,10 +602,12 @@
     });
     var el = document.getElementById('resultadosEl');
     el.style.display = 'block';
-    setTimeout(function(){ el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 60);
+    setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'start'}); }, 60);
   }
 
-  /* ── RELLENAR FICHA ── */
+  function generarId(seed){ return "REG-"+(1000+(seed*137+seed*seed*7)%8999); }
+  function fechaHora(){ return new Date().toLocaleString('es-PE',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+
   function rellenarFicha(a, hayVolver) {
     document.getElementById('recordId').textContent    = generarId(a.id);
     document.getElementById('tsEl').textContent        = 'Consultado: ' + fechaHora();
@@ -765,73 +622,42 @@
     document.getElementById('fDireccion').textContent  = a.direccion;
     document.getElementById('fTelefono').textContent   = a.telefono;
     document.getElementById('fEstado').innerHTML       = '<span style="color:#15803d;font-weight:600">✔ ' + a.estado + '</span>';
-
     var seguro = (a.seguro || '').trim().toLowerCase();
     var seguroHTML;
-    if (seguro.indexOf('sis') !== -1) {
-      seguroHTML = '<span class="seguro-badge sis">🟦 SIS — Seguro Integral de Salud</span>';
-    } else if (seguro.indexOf('essalud') !== -1 || seguro.indexOf('es salud') !== -1) {
-      seguroHTML = '<span class="seguro-badge essalud">🟩 EsSalud</span>';
-    } else if (seguro.indexOf('ninguno') !== -1 || seguro.indexOf('no') !== -1) {
-      seguroHTML = '<span class="seguro-badge ninguno">⬜ Sin seguro registrado</span>';
-    } else {
-      seguroHTML = '<span class="seguro-badge pendiente">⚠️ Pendiente de registro</span>';
-    }
+    if (seguro.indexOf('sis') !== -1) seguroHTML = '<span class="seguro-badge sis">🟦 SIS — Seguro Integral de Salud</span>';
+    else if (seguro.indexOf('essalud') !== -1 || seguro.indexOf('es salud') !== -1) seguroHTML = '<span class="seguro-badge essalud">🟩 EsSalud</span>';
+    else if (seguro.indexOf('ninguno') !== -1 || seguro.indexOf('no') !== -1) seguroHTML = '<span class="seguro-badge ninguno">⬜ Sin seguro registrado</span>';
+    else seguroHTML = '<span class="seguro-badge pendiente">⚠️ Pendiente de registro</span>';
     document.getElementById('fSeguro').innerHTML = seguroHTML;
-
     document.getElementById('btnVolver').style.display = hayVolver ? 'flex' : 'none';
     var fichaEl = document.getElementById('fichaEl');
     fichaEl.style.display = 'block';
-    setTimeout(function(){ fichaEl.scrollIntoView({ behavior:'smooth', block:'start' }); }, 60);
+    setTimeout(function(){ fichaEl.scrollIntoView({behavior:'smooth',block:'start'}); }, 60);
   }
 
-  /* ── EVENTOS BOTONES ── */
   document.getElementById('btnBuscarDni').addEventListener('click', buscarPorDni);
   document.getElementById('btnBuscarNombre').addEventListener('click', buscarPorNombre);
-  document.getElementById('btnNueva').addEventListener('click', function() {
+  document.getElementById('btnNueva').addEventListener('click', function(){
     document.getElementById('dniInput').value = '';
     document.getElementById('apellidoInput').value = '';
     document.getElementById('nombreInput').value = '';
     limpiarResultados();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({top:0,behavior:'smooth'});
   });
-  document.getElementById('btnVolver').addEventListener('click', function() {
+  document.getElementById('btnVolver').addEventListener('click', function(){
     document.getElementById('fichaEl').style.display = 'none';
     mostrarListaResultados(ultimosResultados);
   });
-
-  // Chips DNI
-  document.querySelectorAll('.chip[data-dni]').forEach(function(chip) {
-    chip.addEventListener('click', function() {
-      document.getElementById('dniInput').value = chip.getAttribute('data-dni');
-      buscarPorDni();
-    });
-  });
-
-  // Chips Nombre
-  document.querySelectorAll('.chip-nombre[data-ape]').forEach(function(chip) {
-    chip.addEventListener('click', function() {
-      document.getElementById('apellidoInput').value = chip.getAttribute('data-ape');
-      document.getElementById('nombreInput').value   = chip.getAttribute('data-nom');
-      buscarPorNombre();
-    });
-  });
-
-  // Enter
   document.getElementById('dniInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorDni(); });
   document.getElementById('apellidoInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorNombre(); });
   document.getElementById('nombreInput').addEventListener('keydown', function(e){ if(e.key==='Enter') buscarPorNombre(); });
-
 })();
 </script>
 
+<!-- GUARDIA DE SESIÓN -->
 <script>
-// ── GUARDIA DE SESIÓN ──
 (function(){
-  if(!sessionStorage.getItem('ie_auth')){
-    window.location.replace('login.html');
-    return;
-  }
+  if(!sessionStorage.getItem('ie_auth')){ window.location.replace('login.html'); return; }
   var usuario = sessionStorage.getItem('ie_usuario') || 'usuario';
   var sello = document.querySelector('.header-sello');
   var badge = document.getElementById('userBadge');
@@ -839,11 +665,11 @@
   if(badge) badge.style.display = 'flex';
   document.getElementById('userBadgeName').textContent = usuario;
   document.getElementById('btnLogout').addEventListener('click', function(){
-    sessionStorage.removeItem('ie_auth');
-    sessionStorage.removeItem('ie_usuario');
-    window.location.href = 'login.html';
+    sessionStorage.clear();
+    window.location.replace('login.html');
   });
 })();
 </script>
+
 </body>
 </html>
