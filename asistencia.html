@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asistencia - Control estudiantil diario</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2547;
+    --navy-light: #2d3a6b;
+    --accent: #1a7a4a;
+    --accent2: #e8b84b;
+    --danger: #e05252;
+    --success: #3dbf82;
+    --warning: #f0a500;
+    --absent: #e05252;
+    --late: #f0a500;
+    --bg: #eef0f6;
+    --card: #ffffff;
+    --text: #1a2547;
+    --muted: #7b84a3;
+    --border: #dde1ef;
+    --red-bar: #d63031;
+    --yellow-bar: #f9ca24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .topbar { height: 5px; background: linear-gradient(90deg, var(--red-bar) 0%, var(--red-bar) 60%, var(--yellow-bar) 60%); }
+  .breadcrumb { padding: 14px 48px; font-size: 13px; color: var(--muted); }
+  .breadcrumb a { color: #1a7a4a; text-decoration: none; }
+  .page-header { display: flex; align-items: center; justify-content: space-between; padding: 0 48px 28px; }
+  .header-left { display: flex; align-items: center; gap: 18px; }
+  .module-icon { width: 62px; height: 62px; border-radius: 16px; background: linear-gradient(135deg, #1a7a4a, #27ae60); display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 8px 24px rgba(26,122,74,0.3); }
+  .header-title h1 { font-size: 28px; font-weight: 800; color: var(--navy); }
+  .header-title p { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  .badge-active { background: var(--navy); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 10px 20px; border-radius: 8px; }
+  .main-card { margin: 0 48px 40px; background: var(--card); border-radius: 20px; box-shadow: 0 2px 20px rgba(26,37,71,0.07); overflow: hidden; }
+  .nav-tabs { display: flex; border-bottom: 2px solid var(--border); padding: 0 24px; gap: 2px; background: #f8f9fd; overflow-x: auto; }
+  .nav-tab { padding: 15px 18px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all .2s; display: flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0; }
+  .nav-tab:hover { color: var(--navy); }
+  .nav-tab.active { color: #1a7a4a; border-bottom-color: #1a7a4a; }
+  .panel { display: none; padding: 32px; }
+  .panel.active { display: block; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .section-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; align-items: flex-end; }
+  .filter-group { display: flex; flex-direction: column; gap: 5px; }
+  .filter-group label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; }
+  select, input[type="text"], input[type="date"] { padding: 9px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 13px; color: var(--text); background: #fff; outline: none; transition: border .2s; }
+  select:focus, input:focus { border-color: #1a7a4a; }
+  .btn { padding: 10px 20px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; display: inline-flex; align-items: center; gap: 7px; }
+  .btn-primary { background: var(--navy); color: #fff; }
+  .btn-primary:hover { background: var(--navy-light); transform: translateY(-1px); }
+  .btn-green { background: #1a7a4a; color: #fff; }
+  .btn-green:hover { background: #156038; transform: translateY(-1px); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: #1a7a4a; color: #1a7a4a; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+  .table-wrap { overflow-x: auto; border-radius: 12px; border: 1.5px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: #f4f6fb; padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; border-bottom: 1.5px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f8f9fd; }
+  tbody td { padding: 12px 16px; vertical-align: middle; }
+
+  /* ESTADO ASISTENCIA */
+  .asis-btn { width: 36px; height: 36px; border-radius: 8px; border: 2px solid var(--border); background: #f8f9fd; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all .15s; font-weight: 700; }
+  .asis-btn:hover { transform: scale(1.08); }
+  .asis-btn.P { background: #d1fae5; border-color: #6ee7b7; color: #065f46; }
+  .asis-btn.A { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+  .asis-btn.T { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
+  .asis-btn.J { background: #dbeafe; border-color: #93c5fd; color: #1e40af; }
+
+  /* BADGES */
+  .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+  .badge-p { background: #d1fae5; color: #065f46; }
+  .badge-a { background: #fee2e2; color: #991b1b; }
+  .badge-t { background: #fef3c7; color: #92400e; }
+  .badge-j { background: #dbeafe; color: #1e40af; }
+  .badge-ok { background: #d1fae5; color: #065f46; }
+  .badge-warn { background: #fef3c7; color: #92400e; }
+  .badge-bad { background: #fee2e2; color: #991b1b; }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: #f8f9fd; border-radius: 14px; padding: 18px 20px; border: 1.5px solid var(--border); }
+  .stat-card .val { font-size: 28px; font-weight: 800; color: var(--navy); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 500; }
+  .stat-card.green { background: #1a7a4a; border-color: #1a7a4a; }
+  .stat-card.green .val, .stat-card.green .lbl { color: #fff; }
+  .stat-card.danger { background: var(--danger); border-color: var(--danger); }
+  .stat-card.danger .val, .stat-card.danger .lbl { color: #fff; }
+  .stat-card.warning { background: var(--warning); border-color: var(--warning); }
+  .stat-card.warning .val, .stat-card.warning .lbl { color: #fff; }
+  .stat-card.accent { background: #4f6ef7; border-color: #4f6ef7; }
+  .stat-card.accent .val, .stat-card.accent .lbl { color: #fff; }
+
+  /* PROGRESS */
+  .progress-wrap { background: var(--border); border-radius: 99px; height: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width .4s; }
+
+  /* ALERT */
+  .alert-card { display: flex; gap: 14px; padding: 16px; border-radius: 12px; border: 1.5px solid; margin-bottom: 12px; align-items: flex-start; }
+  .alert-card.risk-high { background: #fff5f5; border-color: #fca5a5; }
+  .alert-card.risk-med { background: #fffbeb; border-color: #fcd34d; }
+  .alert-icon { font-size: 22px; flex-shrink: 0; }
+  .alert-name { font-weight: 700; font-size: 14px; }
+  .alert-detail { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* CALENDAR MINI */
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-top: 10px; }
+  .cal-day { height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+  .cal-p { background: #d1fae5; color: #065f46; }
+  .cal-a { background: #fee2e2; color: #991b1b; }
+  .cal-t { background: #fef3c7; color: #92400e; }
+  .cal-j { background: #dbeafe; color: #1e40af; }
+  .cal-x { background: #f1f3f9; color: var(--muted); }
+  .cal-hdr { font-size: 10px; font-weight: 700; color: var(--muted); text-align: center; }
+
+  /* REPORTE SECTION */
+  .rep-card { background: #f8f9fd; border-radius: 14px; padding: 20px; border: 1.5px solid var(--border); margin-bottom: 16px; }
+  .rep-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+
+  /* BAR CHART */
+  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 140px; padding: 0 4px; }
+  .bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bar-fill { width: 100%; border-radius: 6px 6px 0 0; min-height: 4px; transition: height .5s; }
+  .bar-label { font-size: 10px; color: var(--muted); font-weight: 600; }
+  .bar-value { font-size: 11px; font-weight: 700; color: var(--navy); }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 28px; right: 28px; background: var(--navy); color: #fff; padding: 14px 22px; border-radius: 12px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 28px rgba(26,37,71,0.25); transform: translateY(80px); opacity: 0; transition: all .3s; z-index: 9999; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty .emoji { font-size: 48px; margin-bottom: 16px; }
+
+  /* LEYENDA */
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .leg-item { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; }
+  .leg-dot { width: 14px; height: 14px; border-radius: 4px; }
+
+  @media(max-width:768px){
+    .breadcrumb,.page-header{padding-left:16px;padding-right:16px}
+    .main-card{margin:0 12px 32px}
+    .panel{padding:20px}
+    .stats-grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+<div class="topbar"></div>
+
+<div class="breadcrumb">
+  <a href="index.html">Inicio</a> › <strong style="color:var(--navy)">Asistencia</strong>
+</div>
+
+<div class="page-header">
+  <div class="header-left">
+    <div class="module-icon">📅</div>
+    <div class="header-title">
+      <h1>Asistencia</h1>
+      <p>Control de asistencia estudiantil diaria</p>
+    </div>
+  </div>
+  <div class="badge-active">MÓDULO ACTIVO</div>
+</div>
+
+<div class="main-card">
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showPanel('diario',this)">✅ Registro diario</div>
+    <div class="nav-tab" onclick="showPanel('inasistencias',this)">❌ Control de inasistencias</div>
+    <div class="nav-tab" onclick="showPanel('porcentaje',this)">📊 Porcentaje de asistencia</div>
+    <div class="nav-tab" onclick="showPanel('alertas',this)">📬 Alertas a apoderados</div>
+    <div class="nav-tab" onclick="showPanel('reporte',this)">📋 Reporte mensual</div>
+  </div>
+
+  <!-- PANEL 1: REGISTRO DIARIO -->
+  <div class="panel active" id="panel-diario">
+    <div class="section-title">Registro Diario de Asistencia</div>
+    <div class="section-sub">Marca la asistencia de cada alumno. Haz clic en el estado para cambiarlo.</div>
+
+    <div class="filters">
+      <div class="filter-group"><label>Fecha</label>
+        <input type="date" id="dia-fecha">
+      </div>
+      <div class="filter-group"><label>Sección</label>
+        <select id="dia-seccion" onchange="renderDiario()">
+          <option value="1A">1° A</option><option value="1B">1° B</option>
+          <option value="2A">2° A</option><option value="2B">2° B</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>&nbsp;</label>
+        <button class="btn btn-primary" onclick="marcarTodos('P')">✅ Todos presentes</button>
+      </div>
+      <div class="filter-group"><label>&nbsp;</label>
+        <button class="btn btn-green" onclick="guardarDia()">💾 Guardar registro</button>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#d1fae5;border:2px solid #6ee7b7"></div>P = Presente</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#fee2e2;border:2px solid #fca5a5"></div>A = Ausente</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#fef3c7;border:2px solid #fcd34d"></div>T = Tardanza</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#dbeafe;border:2px solid #93c5fd"></div>J = Justificado</div>
+    </div>
+
+    <div class="stats-grid" id="dia-stats"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Alumno</th><th>Estado</th><th>Obs. del día</th><th>Asistencia del mes</th></tr></thead>
+        <tbody id="diario-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PANEL 2: INASISTENCIAS -->
+  <div class="panel" id="panel-inasistencias">
+    <div class="section-title">Control de Inasistencias</div>
+    <div class="section-sub">Historial de faltas por alumno con justificaciones y observaciones.</div>
+    <div class="filters">
+      <div class="filter-group"><label>Sección</label>
+        <select id="inas-seccion" onchange="renderInasistencias()">
+          <option value="1A">1° A</option><option value="1B">1° B</option><option value="2A">2° A</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Mes</label>
+        <select id="inas-mes" onchange="renderInasistencias()">
+          <option value="3">Marzo</option><option value="4">Abril</option>
+          <option value="5">Mayo</option><option value="6">Junio</option>
+          <option value="7">Julio</option><option value="8">Agosto</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Filtrar</label>
+        <select id="inas-filtro" onchange="renderInasistencias()">
+          <option value="all">Todos</option>
+          <option value="high">Con muchas faltas (&gt;3)</option>
+          <option value="just">Con justificadas</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Alumno</th><th>Total Faltas</th><th>Justificadas</th><th>Injustificadas</th><th>Tardanzas</th><th>Estado</th><th>Acción</th></tr></thead>
+        <tbody id="inas-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PANEL 3: PORCENTAJE -->
+  <div class="panel" id="panel-porcentaje">
+    <div class="section-title">Porcentaje de Asistencia</div>
+    <div class="section-sub">Estadísticas de asistencia por alumno y sección.</div>
+    <div class="filters">
+      <div class="filter-group"><label>Sección</label>
+        <select id="pct-seccion" onchange="renderPorcentaje()">
+          <option value="1A">1° A</option><option value="1B">1° B</option><option value="2A">2° A</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Período</label>
+        <select id="pct-periodo" onchange="renderPorcentaje()">
+          <option value="mes">Este mes</option>
+          <option value="bim1">1er Bimestre</option>
+          <option value="bim2">2do Bimestre</option>
+          <option value="anual">Anual</option>
+        </select>
+      </div>
+    </div>
+    <div class="stats-grid" id="pct-stats"></div>
+    <div style="background:#f8f9fd;border-radius:14px;padding:24px;margin-bottom:24px;border:1.5px solid var(--border)">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:16px;letter-spacing:.8px;text-transform:uppercase">Asistencia por semana</div>
+      <div class="bar-chart" id="pct-chart"></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Alumno</th><th>Presentes</th><th>Ausentes</th><th>Tardanzas</th><th>Justificados</th><th>% Asistencia</th><th>Estado</th></tr></thead>
+        <tbody id="pct-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PANEL 4: ALERTAS -->
+  <div class="panel" id="panel-alertas">
+    <div class="section-title">Alertas a Apoderados</div>
+    <div class="section-sub">Envío automático de notificaciones a apoderados de alumnos con muchas faltas.</div>
+    <div class="filters">
+      <div class="filter-group"><label>Sección</label>
+        <select id="alerta-seccion" onchange="renderAlertas()">
+          <option value="all">Todas</option>
+          <option value="1A">1° A</option><option value="1B">1° B</option><option value="2A">2° A</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Umbral (faltas)</label>
+        <select id="alerta-umbral" onchange="renderAlertas()">
+          <option value="3">≥ 3 faltas</option>
+          <option value="5">≥ 5 faltas</option>
+          <option value="7">≥ 7 faltas</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>&nbsp;</label>
+        <button class="btn btn-green" onclick="enviarTodas()">📤 Enviar todas las alertas</button>
+      </div>
+    </div>
+    <div class="stats-grid" id="alerta-stats"></div>
+    <div id="alerta-list"></div>
+  </div>
+
+  <!-- PANEL 5: REPORTE -->
+  <div class="panel" id="panel-reporte">
+    <div class="section-title">Reporte Mensual</div>
+    <div class="section-sub">Resumen completo de asistencia del mes seleccionado.</div>
+    <div class="filters">
+      <div class="filter-group"><label>Mes</label>
+        <select id="rep-mes" onchange="renderReporte()">
+          <option value="3">Marzo 2024</option><option value="4">Abril 2024</option>
+          <option value="5">Mayo 2024</option><option value="6">Junio 2024</option>
+          <option value="7">Julio 2024</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Sección</label>
+        <select id="rep-seccion" onchange="renderReporte()">
+          <option value="all">Todas</option>
+          <option value="1A">1° A</option><option value="1B">1° B</option><option value="2A">2° A</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>&nbsp;</label>
+        <button class="btn btn-outline" onclick="window.print()">🖨️ Imprimir reporte</button>
+      </div>
+    </div>
+    <div id="reporte-container"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== DATA ==========
+const SECCIONES = ['1A','1B','2A','2B'];
+const MESES_DIAS = 22; // días hábiles por mes
+
+// Alumnos por sección
+const ALUMNOS = {
+  '1A': ['Quispe Mamani, Ana','Torres Huanca, Luis','Flores Condori, María','Mamani Cruz, Pedro','Rojas Villca, Sandra','Condori López, Carlos'],
+  '1B': ['Vargas Apaza, Carmen','Choque Lima, Roberto','Poma Tito, Lucía','Ticona Ramos, Emilio'],
+  '2A': ['García Ticona, Miguel','Huanca Soliz, Valentina','Condori Quispe, Julio','Mamani Torres, Sofía'],
+  '2B': ['Cruz Vargas, Diego','Apaza Flores, Rosa','Lima Choque, Fernando'],
+};
+
+// Registro diario en memoria (sección -> fecha -> alumno -> estado)
+let registros = {};
+
+// Generar datos de muestra para el mes
+function genDatos() {
+  Object.keys(ALUMNOS).forEach(sec => {
+    registros[sec] = registros[sec] || {};
+    ALUMNOS[sec].forEach((_, idx) => {
+      for(let dia=1; dia<=22; dia++) {
+        const fecha = `2024-03-${String(dia).padStart(2,'0')}`;
+        if(!registros[sec][fecha]) registros[sec][fecha] = {};
+        // Generar estado aleatorio con sesgo hacia presentes
+        const r = Math.random();
+        let estado = 'P';
+        if(idx === 1 || idx === 4) { // alumnos con más faltas
+          if(r < 0.25) estado = 'A';
+          else if(r < 0.35) estado = 'T';
+          else if(r < 0.38) estado = 'J';
+        } else {
+          if(r < 0.06) estado = 'A';
+          else if(r < 0.10) estado = 'T';
+          else if(r < 0.12) estado = 'J';
+        }
+        registros[sec][fecha][idx] = estado;
+      }
+    });
+  });
+}
+genDatos();
+
+// Hoy
+const hoy = new Date();
+const fechaHoy = hoy.toISOString().split('T')[0];
+
+// Estado cíclico
+const ciclo = {P:'A', A:'T', T:'J', J:'P'};
+
+function getRegistroDia(sec, fecha) {
+  if(!registros[sec]) registros[sec] = {};
+  if(!registros[sec][fecha]) {
+    registros[sec][fecha] = {};
+    ALUMNOS[sec].forEach((_,i) => registros[sec][fecha][i] = 'P');
+  }
+  return registros[sec][fecha];
+}
+
+function getAlumnoStats(sec, alumnoIdx) {
+  let p=0, a=0, t=0, j=0;
+  if(!registros[sec]) return {p,a,t,j};
+  Object.values(registros[sec]).forEach(dia => {
+    const e = dia[alumnoIdx];
+    if(e==='P') p++;
+    else if(e==='A') a++;
+    else if(e==='T') t++;
+    else if(e==='J') j++;
+  });
+  return {p,a,t,j};
+}
+
+function pct(p,total) { return total ? Math.round(p/total*100) : 0; }
+function pctColor(p) { return p>=95?'#3dbf82':p>=85?'#f0a500':'#e05252'; }
+
+// ========== PANEL NAV ==========
+function showPanel(name, tab) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  tab.classList.add('active');
+  if(name==='inasistencias') renderInasistencias();
+  if(name==='porcentaje') renderPorcentaje();
+  if(name==='alertas') renderAlertas();
+  if(name==='reporte') renderReporte();
+}
+
+// ========== PANEL 1: REGISTRO DIARIO ==========
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dia-fecha').value = fechaHoy;
+  renderDiario();
+});
+
+function renderDiario() {
+  const sec = document.getElementById('dia-seccion').value;
+  const fecha = document.getElementById('dia-fecha').value || fechaHoy;
+  const lista = ALUMNOS[sec] || [];
+  const reg = getRegistroDia(sec, fecha);
+
+  // Stats del día
+  let p=0,a=0,t=0,j=0;
+  lista.forEach((_,i) => {
+    const e = reg[i]||'P';
+    if(e==='P')p++;else if(e==='A')a++;else if(e==='T')t++;else if(e==='J')j++;
+  });
+  document.getElementById('dia-stats').innerHTML = `
+    <div class="stat-card green"><div class="val">${p}</div><div class="lbl">✅ Presentes</div></div>
+    <div class="stat-card danger"><div class="val">${a}</div><div class="lbl">❌ Ausentes</div></div>
+    <div class="stat-card warning"><div class="val">${t}</div><div class="lbl">⏰ Tardanzas</div></div>
+    <div class="stat-card accent"><div class="val">${j}</div><div class="lbl">📝 Justificados</div></div>
+  `;
+
+  const tbody = document.getElementById('diario-tbody');
+  tbody.innerHTML = lista.map((nombre, idx) => {
+    const estado = reg[idx] || 'P';
+    const stats = getAlumnoStats(sec, idx);
+    const total = stats.p+stats.a+stats.t+stats.j;
+    const pp = pct(stats.p, total);
+    return `<tr>
+      <td style="color:var(--muted);font-weight:600">${idx+1}</td>
+      <td style="font-weight:600">${nombre}</td>
+      <td>
+        <button class="asis-btn ${estado}" id="btn_${idx}" onclick="toggleEstado('${sec}','${fecha}',${idx},this)" title="Clic para cambiar">
+          ${estado}
+        </button>
+      </td>
+      <td>
+        <input type="text" style="width:180px;padding:6px 10px;border-radius:8px;font-size:12px" 
+          placeholder="Observación..." id="obs_${idx}">
+      </td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="progress-wrap" style="width:80px">
+            <div class="progress-fill" style="width:${pp}%;background:${pctColor(pp)}"></div>
+          </div>
+          <span style="font-size:12px;font-weight:700;color:${pctColor(pp)}">${pp}%</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleEstado(sec, fecha, idx, btn) {
+  const reg = getRegistroDia(sec, fecha);
+  const actual = reg[idx] || 'P';
+  const nuevo = ciclo[actual];
+  reg[idx] = nuevo;
+  btn.textContent = nuevo;
+  btn.className = `asis-btn ${nuevo}`;
+  renderDiario();
+}
+
+function marcarTodos(estado) {
+  const sec = document.getElementById('dia-seccion').value;
+  const fecha = document.getElementById('dia-fecha').value || fechaHoy;
+  const reg = getRegistroDia(sec, fecha);
+  ALUMNOS[sec].forEach((_,i) => reg[i] = estado);
+  renderDiario();
+  showToast(`✅ Todos marcados como ${estado==='P'?'Presentes':estado==='A'?'Ausentes':'Tardanza'}`);
+}
+
+function guardarDia() {
+  showToast('💾 Registro del día guardado correctamente');
+}
+
+// ========== PANEL 2: INASISTENCIAS ==========
+function renderInasistencias() {
+  const sec = document.getElementById('inas-seccion').value;
+  const filtro = document.getElementById('inas-filtro').value;
+  const lista = ALUMNOS[sec] || [];
+
+  let rows = lista.map((nombre, idx) => {
+    const s = getAlumnoStats(sec, idx);
+    return { nombre, idx, ...s };
+  });
+
+  if(filtro === 'high') rows = rows.filter(r => r.a > 3);
+  if(filtro === 'just') rows = rows.filter(r => r.j > 0);
+
+  rows.sort((a,b) => b.a - a.a);
+
+  const tbody = document.getElementById('inas-tbody');
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="8"><div class="empty"><div class="emoji">✅</div><p>Sin registros con este filtro</p></div></td></tr>`;return;}
+  tbody.innerHTML = rows.map((r,i) => {
+    const inj = r.a - r.j < 0 ? 0 : r.a;
+    const estado = r.a >= 5 ? 'badge-bad' : r.a >= 3 ? 'badge-warn' : 'badge-ok';
+    const etiqueta = r.a >= 5 ? '⚠️ Crítico' : r.a >= 3 ? '🔶 En seguimiento' : '✅ Normal';
+    return`<tr>
+      <td style="color:var(--muted);font-weight:600">${i+1}</td>
+      <td style="font-weight:600">${r.nombre}</td>
+      <td style="font-weight:700;color:var(--danger)">${r.a}</td>
+      <td><span class="badge badge-j">${r.j}</span></td>
+      <td style="font-weight:700">${Math.max(0, r.a-r.j)}</td>
+      <td><span class="badge badge-t">${r.t}</span></td>
+      <td><span class="badge ${estado}">${etiqueta}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="verHistorial('${r.nombre}')">📋 Historial</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function verHistorial(nombre) {
+  showToast(`📋 Historial de ${nombre.split(',')[0]} cargado`);
+}
+
+// ========== PANEL 3: PORCENTAJE ==========
+function renderPorcentaje() {
+  const sec = document.getElementById('pct-seccion').value;
+  const lista = ALUMNOS[sec] || [];
+
+  let totalP=0, totalA=0, totalT=0, totalJ=0;
+  const rows = lista.map((nombre, idx) => {
+    const s = getAlumnoStats(sec, idx);
+    totalP+=s.p; totalA+=s.a; totalT+=s.t; totalJ+=s.j;
+    const total = s.p+s.a+s.t+s.j;
+    const pp = pct(s.p+s.j, total);
+    return { nombre, ...s, total, pp };
+  });
+
+  const grandTotal = totalP+totalA+totalT+totalJ;
+  const promPct = pct(totalP+totalJ, grandTotal);
+  const criticos = rows.filter(r=>r.pp < 85).length;
+
+  document.getElementById('pct-stats').innerHTML = `
+    <div class="stat-card green"><div class="val">${promPct}%</div><div class="lbl">Asistencia promedio</div></div>
+    <div class="stat-card danger"><div class="val">${criticos}</div><div class="lbl">Alumnos críticos (&lt;85%)</div></div>
+    <div class="stat-card"><div class="val">${totalA}</div><div class="lbl">Total ausencias</div></div>
+    <div class="stat-card warning"><div class="val">${totalT}</div><div class="lbl">Total tardanzas</div></div>
+  `;
+
+  // Bar chart (por semana simulada)
+  const semanas = ['Sem 1','Sem 2','Sem 3','Sem 4'];
+  const semPct = [92, 88, 95, 90];
+  document.getElementById('pct-chart').innerHTML = semanas.map((s,i) => {
+    const h = Math.round(semPct[i]/100*130);
+    return`<div class="bar-item">
+      <div class="bar-value">${semPct[i]}%</div>
+      <div class="bar-fill" style="height:${h}px;background:${pctColor(semPct[i])}"></div>
+      <div class="bar-label">${s}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('pct-tbody').innerHTML = rows.sort((a,b)=>a.pp-b.pp).map(r => {
+    const estadoCls = r.pp >= 95 ? 'badge-ok' : r.pp >= 85 ? 'badge-warn' : 'badge-bad';
+    const estadoLabel = r.pp >= 95 ? '✅ Excelente' : r.pp >= 85 ? '⚠️ Regular' : '🚨 Crítico';
+    return`<tr>
+      <td style="font-weight:600">${r.nombre}</td>
+      <td><span class="badge badge-p">${r.p}</span></td>
+      <td><span class="badge badge-a">${r.a}</span></td>
+      <td><span class="badge badge-t">${r.t}</span></td>
+      <td><span class="badge badge-j">${r.j}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="progress-wrap" style="width:80px">
+            <div class="progress-fill" style="width:${r.pp}%;background:${pctColor(r.pp)}"></div>
+          </div>
+          <strong style="color:${pctColor(r.pp)}">${r.pp}%</strong>
+        </div>
+      </td>
+      <td><span class="badge ${estadoCls}">${estadoLabel}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ========== PANEL 4: ALERTAS ==========
+function renderAlertas() {
+  const secF = document.getElementById('alerta-seccion').value;
+  const umbral = parseInt(document.getElementById('alerta-umbral').value);
+  let alertas = [];
+
+  const secciones = secF === 'all' ? Object.keys(ALUMNOS) : [secF];
+  secciones.forEach(sec => {
+    ALUMNOS[sec].forEach((nombre, idx) => {
+      const s = getAlumnoStats(sec, idx);
+      if(s.a >= umbral) {
+        alertas.push({ nombre, sec, idx, ...s });
+      }
+    });
+  });
+  alertas.sort((a,b) => b.a - a.a);
+
+  const enviadas = alertas.filter(a => a._enviada).length;
+  document.getElementById('alerta-stats').innerHTML = `
+    <div class="stat-card danger"><div class="val">${alertas.length}</div><div class="lbl">Alertas pendientes</div></div>
+    <div class="stat-card green"><div class="val">${enviadas}</div><div class="lbl">Alertas enviadas</div></div>
+    <div class="stat-card accent"><div class="val">${umbral}+</div><div class="lbl">Umbral de faltas</div></div>
+    <div class="stat-card warning"><div class="val">${alertas.filter(a=>a.a>=7).length}</div><div class="lbl">Casos críticos</div></div>
+  `;
+
+  if(!alertas.length){
+    document.getElementById('alerta-list').innerHTML='<div class="empty"><div class="emoji">✅</div><p>No hay alertas para el umbral seleccionado</p></div>';
+    return;
+  }
+
+  document.getElementById('alerta-list').innerHTML = alertas.map((a,i) => `
+    <div class="alert-card risk-${a.a>=7?'high':'med'}" id="alert_${a.sec}_${a.idx}">
+      <div class="alert-icon">${a.a>=7?'🚨':'⚠️'}</div>
+      <div style="flex:1">
+        <div class="alert-name">${a.nombre}</div>
+        <div class="alert-detail">Sección ${a.sec} · <strong>${a.a} faltas</strong> registradas · ${a.t} tardanzas</div>
+        <div style="margin-top:8px;font-size:12px;color:var(--muted)">
+          📱 Apoderado: <strong>Sr(a). ${a.nombre.split(',')[0]}</strong> · Tel: 9XX-XXX-XXX
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+        <button class="btn btn-green btn-sm" onclick="enviarAlerta('${a.sec}',${a.idx},this)">
+          📤 Enviar alerta
+        </button>
+        <span style="font-size:24px;font-weight:800;color:var(--danger)">${a.a}</span>
+        <span style="font-size:11px;color:var(--muted)">faltas</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function enviarAlerta(sec, idx, btn) {
+  btn.textContent = '✅ Enviada';
+  btn.style.background = '#3dbf82';
+  btn.disabled = true;
+  showToast(`📤 Alerta enviada al apoderado de ${ALUMNOS[sec][idx].split(',')[0]}`);
+}
+
+function enviarTodas() {
+  document.querySelectorAll('[id^="alert_"] .btn-green').forEach(btn => {
+    if(!btn.disabled){ btn.textContent='✅ Enviada'; btn.style.background='#3dbf82'; btn.disabled=true; }
+  });
+  showToast('📤 Todas las alertas han sido enviadas');
+}
+
+// ========== PANEL 5: REPORTE ==========
+function renderReporte() {
+  const mes = document.getElementById('rep-mes').value;
+  const secF = document.getElementById('rep-seccion').value;
+  const secciones = secF === 'all' ? Object.keys(ALUMNOS) : [secF];
+  const mesesNom = {3:'Marzo',4:'Abril',5:'Mayo',6:'Junio',7:'Julio'};
+
+  let totalP=0, totalA=0, totalT=0, totalJ=0, totalAlumnos=0;
+  let seccionesData = secciones.map(sec => {
+    const lista = ALUMNOS[sec] || [];
+    let sp=0,sa=0,st=0,sj=0;
+    lista.forEach((_,i) => {
+      const s = getAlumnoStats(sec, i);
+      sp+=s.p; sa+=s.a; st+=s.t; sj+=s.j;
+    });
+    totalP+=sp; totalA+=sa; totalT+=st; totalJ+=sj;
+    totalAlumnos+=lista.length;
+    const total = sp+sa+st+sj;
+    return { sec, lista, sp, sa, st, sj, total, pp: pct(sp+sj, total) };
+  });
+
+  const grandTotal = totalP+totalA+totalT+totalJ;
+  const promTotal = pct(totalP+totalJ, grandTotal);
+
+  document.getElementById('reporte-container').innerHTML = `
+    <div style="background:linear-gradient(135deg,#1a2547,#2d3a6b);color:#fff;border-radius:14px;padding:24px;margin-bottom:24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="font-size:20px;font-weight:800">Reporte de Asistencia · ${mesesNom[mes]} 2024</div>
+          <div style="font-size:13px;opacity:.75;margin-top:4px">Sección: ${secF==='all'?'Todas las secciones':secF} · ${totalAlumnos} alumnos</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:40px;font-weight:800">${promTotal}%</div>
+          <div style="font-size:12px;opacity:.75">Asistencia general</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid" style="margin-bottom:24px">
+      <div class="stat-card green"><div class="val">${totalP}</div><div class="lbl">✅ Total presentes</div></div>
+      <div class="stat-card danger"><div class="val">${totalA}</div><div class="lbl">❌ Total ausencias</div></div>
+      <div class="stat-card warning"><div class="val">${totalT}</div><div class="lbl">⏰ Total tardanzas</div></div>
+      <div class="stat-card accent"><div class="val">${totalJ}</div><div class="lbl">📝 Total justificados</div></div>
+    </div>
+
+    ${seccionesData.map(sd => `
+      <div class="rep-card">
+        <div class="rep-title">📋 Sección ${sd.sec} — ${sd.lista.length} alumnos</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+          <div class="progress-wrap" style="flex:1">
+            <div class="progress-fill" style="width:${sd.pp}%;background:${pctColor(sd.pp)}"></div>
+          </div>
+          <strong style="color:${pctColor(sd.pp)};font-size:18px">${sd.pp}%</strong>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <span class="badge badge-p">✅ ${sd.sp} presentes</span>
+          <span class="badge badge-a">❌ ${sd.sa} ausentes</span>
+          <span class="badge badge-t">⏰ ${sd.st} tardanzas</span>
+          <span class="badge badge-j">📝 ${sd.sj} justificados</span>
+        </div>
+        <div style="margin-top:16px">
+          <table style="width:100%">
+            <thead><tr>
+              <th style="background:#f4f6fb;padding:8px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1.5px solid var(--border)">Alumno</th>
+              <th style="background:#f4f6fb;padding:8px 12px;text-align:center;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1.5px solid var(--border)">P</th>
+              <th style="background:#f4f6fb;padding:8px 12px;text-align:center;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1.5px solid var(--border)">A</th>
+              <th style="background:#f4f6fb;padding:8px 12px;text-align:center;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1.5px solid var(--border)">T</th>
+              <th style="background:#f4f6fb;padding:8px 12px;text-align:center;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1.5px solid var(--border)">%</th>
+            </tr></thead>
+            <tbody>
+              ${sd.lista.map((nombre,i) => {
+                const s = getAlumnoStats(sd.sec, i);
+                const tot = s.p+s.a+s.t+s.j;
+                const pp2 = pct(s.p+s.j, tot);
+                return`<tr style="border-bottom:1px solid var(--border)">
+                  <td style="padding:8px 12px;font-size:12px;font-weight:600">${nombre}</td>
+                  <td style="padding:8px 12px;text-align:center;font-size:12px;color:#065f46;font-weight:700">${s.p}</td>
+                  <td style="padding:8px 12px;text-align:center;font-size:12px;color:#991b1b;font-weight:700">${s.a}</td>
+                  <td style="padding:8px 12px;text-align:center;font-size:12px;color:#92400e;font-weight:700">${s.t}</td>
+                  <td style="padding:8px 12px;text-align:center"><span style="font-weight:700;color:${pctColor(pp2)}">${pp2}%</span></td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Init
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dia-fecha').value = fechaHoy;
+  renderDiario();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta de Alumno</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2547;
+    --navy2: #2d3a6b;
+    --red: #d32f2f;
+    --red2: #e53935;
+    --accent: #f5a623;
+    --blue: #1565c0;
+    --blue2: #1976d2;
+    --success: #2e7d32;
+    --success2: #43a047;
+    --warning: #f57c00;
+    --bg: #eef0f6;
+    --card: #ffffff;
+    --text: #1a2547;
+    --muted: #7b84a3;
+    --border: #dde1ef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* NAVBAR */
+  .navbar { background: var(--navy); padding: 0 40px; display: flex; align-items: center; gap: 0; height: 52px; }
+  .nav-link { color: rgba(255,255,255,.65); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 0 18px; height: 52px; display: flex; align-items: center; cursor: pointer; border-bottom: 3px solid transparent; transition: all .2s; text-decoration: none; }
+  .nav-link:hover { color: #fff; }
+  .nav-link.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* BREADCRUMB */
+  .breadcrumb { padding: 14px 40px; font-size: 13px; color: var(--muted); }
+  .breadcrumb a { color: var(--blue2); text-decoration: none; font-weight: 500; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb span { margin: 0 6px; }
+
+  /* PAGE HEADER */
+  .page-header { display: flex; align-items: center; justify-content: space-between; padding: 0 40px 28px; }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .module-icon { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, var(--red), #e91e63); display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 8px 24px rgba(211,47,47,.3); }
+  .header-title h1 { font-size: 30px; font-weight: 800; color: var(--navy); }
+  .header-title p { font-size: 14px; color: var(--muted); margin-top: 3px; }
+  .badge-active { background: var(--navy); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 10px 20px; border-radius: 8px; }
+
+  /* SEARCH CARD */
+  .search-card { margin: 0 40px 28px; background: var(--card); border-radius: 18px; box-shadow: 0 2px 24px rgba(26,37,71,0.09); overflow: hidden; }
+
+  /* TABS */
+  .search-tabs { display: flex; border-bottom: 1.5px solid var(--border); }
+  .search-tab { display: flex; align-items: center; gap: 10px; padding: 18px 32px; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1.5px; transition: all .2s; letter-spacing: .3px; white-space: nowrap; }
+  .search-tab:hover { color: var(--navy); background: #f8f9fd; }
+  .search-tab.active { color: var(--navy); border-bottom-color: var(--navy); background: #fff; }
+  .search-tab .tab-icon { font-size: 16px; }
+
+  /* SEARCH PANEL */
+  .search-panel { display: none; }
+  .search-panel.active { display: block; }
+
+  /* SEARCH BAR DNI */
+  .search-bar-header { background: var(--navy); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .search-bar-header .dots { display: flex; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-r { background: #ef5350; }
+  .dot-y { background: #ffd600; }
+  .dot-g { background: #69f0ae; opacity: .4; }
+  .search-bar-label { color: rgba(255,255,255,.85); font-size: 13px; font-weight: 700; }
+  .search-bar-tag { background: rgba(255,255,255,.12); color: rgba(255,255,255,.7); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: .8px; }
+
+  .search-body { padding: 28px 28px 32px; }
+  .search-field-label { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+
+  .dni-input-wrap { display: flex; align-items: stretch; border-radius: 12px; overflow: hidden; border: 2px solid var(--border); transition: border .2s; }
+  .dni-input-wrap:focus-within { border-color: var(--blue2); }
+  .dni-prefix { background: var(--navy); color: #fff; font-size: 13px; font-weight: 800; padding: 0 20px; display: flex; align-items: center; letter-spacing: 1px; }
+  .dni-input { flex: 1; border: none; outline: none; font-family: inherit; font-size: 22px; font-weight: 700; color: var(--text); padding: 16px 20px; letter-spacing: 6px; background: #fff; }
+  .dni-input::placeholder { color: #ccc; letter-spacing: 4px; font-size: 20px; }
+  .btn-buscar-dni { background: var(--red); color: #fff; border: none; padding: 0 36px; font-family: inherit; font-size: 14px; font-weight: 800; letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all .2s; }
+  .btn-buscar-dni:hover { background: var(--red2); }
+  .btn-buscar-dni:active { transform: scale(.98); }
+
+  /* NOMBRE INPUT */
+  .nombre-input-wrap { display: flex; gap: 12px; align-items: stretch; }
+  .nombre-input { flex: 1; border: 2px solid var(--border); border-radius: 12px; outline: none; font-family: inherit; font-size: 16px; font-weight: 600; color: var(--text); padding: 15px 20px; transition: border .2s; background: #fff; }
+  .nombre-input:focus { border-color: var(--blue2); }
+  .nombre-input::placeholder { color: #ccc; font-weight: 400; }
+  .btn-buscar-nombre { background: var(--blue); color: #fff; border: none; padding: 0 32px; border-radius: 12px; font-family: inherit; font-size: 14px; font-weight: 800; letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all .2s; }
+  .btn-buscar-nombre:hover { background: var(--blue2); }
+
+  /* RESULTS */
+  .results-area { margin: 0 40px 40px; }
+
+  /* ESTADO INICIAL */
+  .state-box { background: var(--card); border-radius: 18px; padding: 60px 30px; text-align: center; box-shadow: 0 2px 16px rgba(26,37,71,0.06); }
+  .state-emoji { font-size: 56px; margin-bottom: 16px; }
+  .state-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .state-sub { font-size: 14px; color: var(--muted); }
+
+  /* RESULT CARD */
+  .result-card { background: var(--card); border-radius: 18px; box-shadow: 0 2px 24px rgba(26,37,71,0.09); overflow: hidden; margin-bottom: 20px; }
+  .result-card-header { background: linear-gradient(135deg, var(--navy), var(--navy2)); padding: 24px 28px; display: flex; align-items: center; gap: 20px; }
+  .avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--blue2), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: #fff; flex-shrink: 0; border: 3px solid rgba(255,255,255,.2); }
+  .result-name { font-size: 22px; font-weight: 800; color: #fff; }
+  .result-meta { font-size: 13px; color: rgba(255,255,255,.7); margin-top: 4px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .result-meta span { display: flex; align-items: center; gap: 5px; }
+  .result-badge { background: rgba(255,255,255,.15); color: #fff; font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,.2); }
+  .result-body { padding: 28px; }
+
+  /* INFO GRID */
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 24px; }
+  .info-item { background: #f8f9fd; border-radius: 12px; padding: 14px 16px; border: 1.5px solid var(--border); }
+  .info-label { font-size: 10px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+  .info-value { font-size: 14px; font-weight: 700; color: var(--navy); }
+
+  /* TABS RESULTADO */
+  .res-tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+  .res-tab { padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); color: var(--muted); background: #f8f9fd; transition: all .2s; display: flex; align-items: center; gap: 6px; }
+  .res-tab:hover { border-color: var(--blue2); color: var(--blue2); }
+  .res-tab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .res-section { display: none; }
+  .res-section.active { display: block; }
+
+  /* NOTAS TABLE */
+  .notes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 14px; margin-bottom: 20px; }
+  .note-card { background: #f8f9fd; border-radius: 12px; padding: 16px; border: 1.5px solid var(--border); }
+  .note-subject { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
+  .note-bims { display: flex; gap: 8px; }
+  .note-bim { flex: 1; text-align: center; background: #fff; border-radius: 8px; padding: 8px 4px; border: 1.5px solid var(--border); }
+  .note-bim-label { font-size: 9px; font-weight: 700; color: var(--muted); letter-spacing: .5px; }
+  .note-bim-val { font-size: 16px; font-weight: 800; margin-top: 2px; }
+  .note-prom { font-size: 22px; font-weight: 800; text-align: center; margin-top: 10px; }
+  .note-prom-label { font-size: 10px; color: var(--muted); text-align: center; font-weight: 600; }
+
+  /* ASISTENCIA */
+  .asistencia-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .asistencia-row:last-child { border-bottom: none; }
+  .asis-label { font-size: 13px; font-weight: 600; flex: 1; }
+  .progress-wrap { background: var(--border); border-radius: 99px; height: 10px; overflow: hidden; width: 160px; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width .5s; }
+  .asis-pct { font-size: 14px; font-weight: 800; width: 45px; text-align: right; }
+
+  /* MULTIPLE RESULTS */
+  .multi-list { display: flex; flex-direction: column; gap: 12px; }
+  .multi-item { background: #f8f9fd; border-radius: 12px; border: 1.5px solid var(--border); padding: 16px 20px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: all .2s; }
+  .multi-item:hover { background: #fff; border-color: var(--blue2); box-shadow: 0 4px 16px rgba(21,101,192,.1); transform: translateY(-1px); }
+  .multi-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--blue2), #7c3aed); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .multi-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .multi-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* BADGE */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .badge-a { background: #d1fae5; color: #065f46; }
+  .badge-b { background: #dbeafe; color: #1e40af; }
+  .badge-c { background: #fef3c7; color: #92400e; }
+  .badge-d { background: #fee2e2; color: #991b1b; }
+
+  /* SPINNER */
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy); color: #fff; padding: 13px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 28px rgba(26,37,71,.25); transform: translateY(80px); opacity: 0; transition: all .3s; z-index: 9999; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  @media(max-width:768px){
+    .navbar { padding: 0 12px; gap: 0; overflow-x: auto; }
+    .nav-link { padding: 0 10px; font-size: 10px; }
+    .breadcrumb,.page-header,.search-card,.results-area { margin-left: 12px; margin-right: 12px; padding-left: 12px; padding-right: 12px; }
+    .search-card,.results-area { margin-left: 12px; margin-right: 12px; }
+    .header-title h1 { font-size: 22px; }
+    .info-grid { grid-template-columns: 1fr 1fr; }
+    .notes-grid { grid-template-columns: 1fr; }
+    .dni-input { font-size: 16px; letter-spacing: 3px; }
+    .btn-buscar-dni { padding: 0 18px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <a class="nav-link" href="index.html">INICIO</a>
+  <a class="nav-link" href="matricula.html">MATRÍCULA</a>
+  <a class="nav-link active">CONSULTA DE ALUMNOS</a>
+  <a class="nav-link" href="notas.html">NOTAS</a>
+  <a class="nav-link" href="asistencia.html">ASISTENCIA</a>
+  <a class="nav-link" href="reportes.html">REPORTES</a>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb" style="padding:14px 40px">
+  <a href="index.html">Inicio</a>
+  <span>›</span>
+  <a href="#">Estudiantes</a>
+  <span>›</span>
+  <strong style="color:var(--navy)">Consulta de Alumno</strong>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="header-left">
+    <div class="module-icon">🔍</div>
+    <div class="header-title">
+      <h1>Consulta de Alumno</h1>
+      <p>Busque al estudiante por DNI o por nombre.</p>
+    </div>
+  </div>
+  <div class="badge-active">MÓDULO ACTIVO</div>
+</div>
+
+<!-- SEARCH CARD -->
+<div class="search-card">
+  <div class="search-tabs">
+    <div class="search-tab active" id="tab-dni" onclick="switchTab('dni')">
+      <span class="tab-icon">🪪</span> BUSCAR POR DNI
+    </div>
+    <div class="search-tab" id="tab-nombre" onclick="switchTab('nombre')">
+      <span class="tab-icon">👤</span> BUSCAR POR NOMBRE
+    </div>
+  </div>
+
+  <!-- PANEL DNI -->
+  <div class="search-panel active" id="panel-dni">
+    <div class="search-bar-header">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="dots">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+        </div>
+        <span class="search-bar-label">Búsqueda por Documento de Identidad</span>
+      </div>
+      <span class="search-bar-tag">DNI · 8 DÍGITOS</span>
+    </div>
+    <div class="search-body">
+      <div class="search-field-label">Número de DNI del Estudiante</div>
+      <div class="dni-input-wrap">
+        <div class="dni-prefix">DNI</div>
+        <input class="dni-input" type="text" id="input-dni" placeholder="00000000" maxlength="8"
+          oninput="this.value=this.value.replace(/\D/g,'')"
+          onkeydown="if(event.key==='Enter')buscarPorDNI()">
+        <button class="btn-buscar-dni" onclick="buscarPorDNI()" id="btn-dni">
+          <span id="btn-dni-icon">🔍</span> <span id="btn-dni-text">BUSCAR</span>
+        </button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:10px">💡 Ingresa los 8 dígitos del DNI y presiona Buscar o Enter</div>
+    </div>
+  </div>
+
+  <!-- PANEL NOMBRE -->
+  <div class="search-panel" id="panel-nombre">
+    <div class="search-bar-header" style="background:var(--blue)">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="dots">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+        </div>
+        <span class="search-bar-label">Búsqueda por Nombre del Estudiante</span>
+      </div>
+      <span class="search-bar-tag">APELLIDOS O NOMBRES</span>
+    </div>
+    <div class="search-body">
+      <div class="search-field-label">Apellidos y/o Nombres del Estudiante</div>
+      <div class="nombre-input-wrap">
+        <input class="nombre-input" type="text" id="input-nombre" placeholder="Ej: Quispe, García, María..."
+          onkeydown="if(event.key==='Enter')buscarPorNombre()"
+          oninput="buscarPorNombreLive()">
+        <button class="btn-buscar-nombre" onclick="buscarPorNombre()">
+          🔍 BUSCAR
+        </button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:10px">💡 Puedes buscar por apellido paterno, materno o nombre. Mínimo 2 caracteres.</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-area" id="results-area">
+  <div class="state-box">
+    <div class="state-emoji">🔍</div>
+    <div class="state-title">Ingresa el DNI o nombre del estudiante</div>
+    <div class="state-sub">Los resultados aparecerán aquí después de realizar la búsqueda.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ======================== DATA ========================
+const CURSOS = ['Matemática','Comunicación','Ciencias','Historia','Inglés'];
+
+const ALUMNOS = [
+  {
+    id:1, dni:'71234501', apPat:'Quispe', apMat:'Mamani', nombres:'Ana Lucía',
+    sexo:'F', fecNac:'2012-05-14', grado:'1°', seccion:'A', turno:'Mañana',
+    apod:'Mamani Torres, Rosa', tel:'987-111-001', email:'rosa.mt@gmail.com',
+    dir:'Jr. Puno 123, Puno', estado:'Matriculado', fecMat:'2026-01-08',
+    notas:{
+      Matemática:[14,13,12,15], Comunicación:[16,14,15,17],
+      Ciencias:[13,14,12,15], Historia:[15,13,16,14], Inglés:[12,14,11,13]
+    },
+    asistencia:{Marzo:95,Abril:92,Mayo:97,Junio:90,Julio:94}
+  },
+  {
+    id:2, dni:'71234502', apPat:'Torres', apMat:'Huanca', nombres:'Luis Alberto',
+    sexo:'M', fecNac:'2012-08-22', grado:'1°', seccion:'A', turno:'Mañana',
+    apod:'Torres Apaza, Juan', tel:'987-111-002', email:'juan.ta@gmail.com',
+    dir:'Av. Sol 456, Puno', estado:'Matriculado', fecMat:'2026-01-08',
+    notas:{
+      Matemática:[10,8,11,9], Comunicación:[11,9,12,10],
+      Ciencias:[9,10,8,11], Historia:[10,8,11,9], Inglés:[8,10,7,9]
+    },
+    asistencia:{Marzo:82,Abril:78,Mayo:85,Junio:80,Julio:83}
+  },
+  {
+    id:3, dni:'71234503', apPat:'Flores', apMat:'Condori', nombres:'María Elena',
+    sexo:'F', fecNac:'2012-03-10', grado:'1°', seccion:'A', turno:'Mañana',
+    apod:'Condori Quispe, Elena', tel:'987-111-003', email:'elena.cq@gmail.com',
+    dir:'Jr. Lima 789, Puno', estado:'Matriculado', fecMat:'2026-01-09',
+    notas:{
+      Matemática:[17,18,16,19], Comunicación:[18,17,19,18],
+      Ciencias:[16,18,15,17], Historia:[17,16,18,17], Inglés:[15,17,14,16]
+    },
+    asistencia:{Marzo:97,Abril:100,Mayo:96,Junio:98,Julio:97}
+  },
+  {
+    id:4, dni:'71234504', apPat:'Mamani', apMat:'Cruz', nombres:'Pedro Rodrigo',
+    sexo:'M', fecNac:'2012-11-30', grado:'1°', seccion:'A', turno:'Mañana',
+    apod:'Cruz Vargas, Pedro', tel:'987-111-004', email:'pedro.cv@gmail.com',
+    dir:'Av. Ejercito 321, Puno', estado:'Pendiente', fecMat:'2026-01-09',
+    notas:{
+      Matemática:[12,11,13,12], Comunicación:[13,12,14,13],
+      Ciencias:[11,12,10,13], Historia:[12,11,13,12], Inglés:[10,12,9,11]
+    },
+    asistencia:{Marzo:90,Abril:87,Mayo:92,Junio:88,Julio:91}
+  },
+  {
+    id:5, dni:'71234505', apPat:'Rojas', apMat:'Villca', nombres:'Sandra Pamela',
+    sexo:'F', fecNac:'2012-07-18', grado:'1°', seccion:'A', turno:'Tarde',
+    apod:'Villca Quispe, Carmen', tel:'987-111-005', email:'carmen.vq@gmail.com',
+    dir:'Jr. Arequipa 654, Puno', estado:'Matriculado', fecMat:'2026-01-10',
+    notas:{
+      Matemática:[7,9,6,8], Comunicación:[8,7,9,8],
+      Ciencias:[6,8,5,7], Historia:[7,6,8,7], Inglés:[5,7,4,6]
+    },
+    asistencia:{Marzo:78,Abril:72,Mayo:80,Junio:75,Julio:79}
+  },
+  {
+    id:6, dni:'71234506', apPat:'Vargas', apMat:'Apaza', nombres:'Carmen Rosa',
+    sexo:'F', fecNac:'2012-02-25', grado:'1°', seccion:'B', turno:'Mañana',
+    apod:'Apaza Lima, Carlos', tel:'987-111-006', email:'carlos.al@gmail.com',
+    dir:'Av. Floral 111, Puno', estado:'Matriculado', fecMat:'2026-01-08',
+    notas:{
+      Matemática:[15,16,14,17], Comunicación:[14,15,16,14],
+      Ciencias:[13,15,12,14], Historia:[15,13,16,15], Inglés:[13,14,12,14]
+    },
+    asistencia:{Marzo:93,Abril:95,Mayo:91,Junio:94,Julio:93}
+  },
+  {
+    id:7, dni:'71234507', apPat:'Choque', apMat:'Lima', nombres:'Roberto José',
+    sexo:'M', fecNac:'2012-09-05', grado:'1°', seccion:'B', turno:'Mañana',
+    apod:'Lima Choque, María', tel:'987-111-007', email:'maria.lc@gmail.com',
+    dir:'Jr. Tacna 222, Puno', estado:'Traslado', fecMat:'2026-01-09',
+    notas:{
+      Matemática:[9,7,10,8], Comunicación:[10,8,11,9],
+      Ciencias:[8,9,7,10], Historia:[9,8,10,9], Inglés:[7,9,6,8]
+    },
+    asistencia:{Marzo:80,Abril:76,Mayo:82,Junio:78,Julio:81}
+  },
+  {
+    id:8, dni:'71234508', apPat:'Poma', apMat:'Tito', nombres:'Lucía Fernanda',
+    sexo:'F', fecNac:'2012-06-12', grado:'1°', seccion:'B', turno:'Tarde',
+    apod:'Tito Poma, Juana', tel:'987-111-008', email:'juana.tp@gmail.com',
+    dir:'Av. Mariscal 333, Puno', estado:'Matriculado', fecMat:'2026-01-10',
+    notas:{
+      Matemática:[18,19,17,20], Comunicación:[17,18,19,17],
+      Ciencias:[15,17,14,16], Historia:[16,15,17,16], Inglés:[14,16,13,15]
+    },
+    asistencia:{Marzo:98,Abril:100,Mayo:97,Junio:99,Julio:98}
+  },
+  {
+    id:9, dni:'71234509', apPat:'García', apMat:'Ticona', nombres:'Miguel Ángel',
+    sexo:'M', fecNac:'2011-04-17', grado:'2°', seccion:'A', turno:'Mañana',
+    apod:'Ticona García, Abel', tel:'987-111-009', email:'abel.tg@gmail.com',
+    dir:'Jr. Bolívar 444, Puno', estado:'Matriculado', fecMat:'2026-01-08',
+    notas:{
+      Matemática:[11,10,12,11], Comunicación:[12,11,13,12],
+      Ciencias:[10,11,9,12], Historia:[11,10,12,11], Inglés:[9,11,8,10]
+    },
+    asistencia:{Marzo:87,Abril:85,Mayo:90,Junio:86,Julio:88}
+  },
+  {
+    id:10,dni:'71234510', apPat:'Huanca', apMat:'Soliz', nombres:'Valentina Grace',
+    sexo:'F', fecNac:'2011-12-03', grado:'2°', seccion:'A', turno:'Mañana',
+    apod:'Soliz Huanca, Víctor', tel:'987-111-010', email:'victor.sh@gmail.com',
+    dir:'Av. Sesquicentenario 555, Puno', estado:'Matriculado', fecMat:'2026-01-09',
+    notas:{
+      Matemática:[16,17,15,18], Comunicación:[15,16,17,15],
+      Ciencias:[14,16,13,15], Historia:[15,14,16,15], Inglés:[12,14,11,13]
+    },
+    asistencia:{Marzo:96,Abril:98,Mayo:95,Junio:97,Julio:96}
+  },
+  {
+    id:11,dni:'71234511', apPat:'Condori', apMat:'Quispe', nombres:'Julio César',
+    sexo:'M', fecNac:'2011-08-20', grado:'2°', seccion:'A', turno:'Tarde',
+    apod:'Quispe Condori, Nilda', tel:'987-111-011', email:'nilda.qc@gmail.com',
+    dir:'Jr. Moquegua 666, Puno', estado:'Pendiente', fecMat:'2026-01-10',
+    notas:{
+      Matemática:[6,7,5,8], Comunicación:[7,6,8,7],
+      Ciencias:[5,6,4,7], Historia:[6,5,7,6], Inglés:[4,6,3,5]
+    },
+    asistencia:{Marzo:72,Abril:68,Mayo:75,Junio:70,Julio:73}
+  },
+  {
+    id:12,dni:'71234512', apPat:'Cruz', apMat:'Vargas', nombres:'Diego Alonso',
+    sexo:'M', fecNac:'2011-01-28', grado:'2°', seccion:'B', turno:'Mañana',
+    apod:'Vargas Cruz, Diana', tel:'987-111-012', email:'diana.vc@gmail.com',
+    dir:'Av. El Sol 777, Puno', estado:'Matriculado', fecMat:'2026-01-08',
+    notas:{
+      Matemática:[13,12,14,13], Comunicación:[14,13,15,14],
+      Ciencias:[12,13,11,14], Historia:[13,12,14,13], Inglés:[11,13,10,12]
+    },
+    asistencia:{Marzo:89,Abril:91,Mayo:88,Junio:90,Julio:89}
+  },
+  {
+    id:13,dni:'71234513', apPat:'Bernabé', apMat:'Lipa', nombres:'Miriam Soledad',
+    sexo:'F', fecNac:'2010-05-09', grado:'3°', seccion:'A', turno:'Mañana',
+    apod:'Lipa Bernabé, Roberto', tel:'987-111-013', email:'roberto.lb@gmail.com',
+    dir:'Jr. Deustua 888, Puno', estado:'Matriculado', fecMat:'2026-01-09',
+    notas:{
+      Matemática:[14,15,13,14], Comunicación:[15,14,16,15],
+      Ciencias:[13,15,12,14], Historia:[14,13,15,14], Inglés:[12,14,11,13]
+    },
+    asistencia:{Marzo:92,Abril:94,Mayo:91,Junio:93,Julio:92}
+  },
+  {
+    id:14,dni:'71234514', apPat:'Turpo', apMat:'Mamani', nombres:'Nelly Patricia',
+    sexo:'F', fecNac:'2010-10-14', grado:'3°', seccion:'A', turno:'Mañana',
+    apod:'Mamani Turpo, Gladys', tel:'987-111-014', email:'gladys.mt@gmail.com',
+    dir:'Av. Circunvalación 999, Puno', estado:'Matriculado', fecMat:'2026-01-10',
+    notas:{
+      Matemática:[17,18,16,19], Comunicación:[17,16,18,17],
+      Ciencias:[15,17,14,16], Historia:[16,15,17,16], Inglés:[14,16,13,15]
+    },
+    asistencia:{Marzo:97,Abril:99,Mayo:96,Junio:98,Julio:97}
+  },
+];
+
+// ======================== HELPERS ========================
+function nombreCompleto(a){ return `${a.apPat} ${a.apMat}, ${a.nombres}`; }
+function initiales(a){ return (a.apPat[0]||'')+(a.nombres[0]||''); }
+function avgArr(arr){ return arr.length?Math.round(arr.reduce((s,v)=>s+v,0)/arr.length*10)/10:0; }
+function gc(n){ if(n>=17)return'badge-a';if(n>=14)return'badge-b';if(n>=11)return'badge-c';if(n>0)return'badge-d';return''; }
+function gl(n){ if(n>=17)return'AD';if(n>=14)return'A';if(n>=11)return'B';if(n>0)return'C';return'—'; }
+function gColor(n){ return n>=17?'#2e7d32':n>=14?'#1565c0':n>=11?'#f57c00':'#c62828'; }
+function pctColor(p){ return p>=90?'#2e7d32':p>=80?'#f57c00':'#c62828'; }
+
+// ======================== TABS ========================
+function switchTab(tab){
+  document.querySelectorAll('.search-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.search-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+  resetResults();
+}
+
+function resetResults(){
+  document.getElementById('results-area').innerHTML=`
+    <div class="state-box">
+      <div class="state-emoji">🔍</div>
+      <div class="state-title">Ingresa el DNI o nombre del estudiante</div>
+      <div class="state-sub">Los resultados aparecerán aquí después de realizar la búsqueda.</div>
+    </div>`;
+}
+
+// ======================== BUSCAR DNI ========================
+function buscarPorDNI(){
+  const dni=document.getElementById('input-dni').value.trim();
+  if(dni.length!==8){ showToast('⚠️ El DNI debe tener exactamente 8 dígitos'); return; }
+
+  // Animación loading
+  const btn=document.getElementById('btn-dni');
+  document.getElementById('btn-dni-icon').innerHTML='<div class="spinner"></div>';
+  document.getElementById('btn-dni-text').textContent='BUSCANDO...';
+  btn.disabled=true;
+
+  setTimeout(()=>{
+    btn.disabled=false;
+    document.getElementById('btn-dni-icon').textContent='🔍';
+    document.getElementById('btn-dni-text').textContent='BUSCAR';
+
+    const alumno=ALUMNOS.find(a=>a.dni===dni);
+    if(!alumno){
+      document.getElementById('results-area').innerHTML=`
+        <div class="state-box">
+          <div class="state-emoji">😕</div>
+          <div class="state-title">No se encontró ningún alumno</div>
+          <div class="state-sub">No existe un estudiante con DNI <strong>${dni}</strong> en el sistema.<br>Verifica el número e intenta nuevamente.</div>
+        </div>`;
+      showToast('❌ DNI no encontrado en el sistema');
+    } else {
+      renderResultado(alumno);
+      showToast(`✅ Alumno encontrado: ${alumno.apPat} ${alumno.nombres}`);
+    }
+  }, 700);
+}
+
+// ======================== BUSCAR NOMBRE ========================
+let debounceTimer;
+function buscarPorNombreLive(){
+  clearTimeout(debounceTimer);
+  const q=document.getElementById('input-nombre').value.trim();
+  if(q.length<2){ resetResults(); return; }
+  debounceTimer=setTimeout(()=>ejecutarBusquedaNombre(q), 300);
+}
+
+function buscarPorNombre(){
+  const q=document.getElementById('input-nombre').value.trim();
+  if(q.length<2){ showToast('⚠️ Ingresa al menos 2 caracteres'); return; }
+  ejecutarBusquedaNombre(q);
+}
+
+function ejecutarBusquedaNombre(q){
+  const ql=q.toLowerCase();
+  const res=ALUMNOS.filter(a=>
+    a.apPat.toLowerCase().includes(ql)||
+    a.apMat.toLowerCase().includes(ql)||
+    a.nombres.toLowerCase().includes(ql)||
+    nombreCompleto(a).toLowerCase().includes(ql)
+  );
+
+  if(!res.length){
+    document.getElementById('results-area').innerHTML=`
+      <div class="state-box">
+        <div class="state-emoji">😕</div>
+        <div class="state-title">Sin resultados para "${q}"</div>
+        <div class="state-sub">No se encontraron alumnos con ese nombre. Verifica la ortografía.</div>
+      </div>`;
+    return;
+  }
+  if(res.length===1){
+    renderResultado(res[0]);
+    return;
+  }
+  // Múltiples resultados
+  document.getElementById('results-area').innerHTML=`
+    <div class="result-card">
+      <div class="result-card-header">
+        <div style="font-size:20px;font-weight:800;color:#fff">${res.length} alumnos encontrados para "<em>${q}</em>"</div>
+      </div>
+      <div style="padding:22px">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Haz clic en un alumno para ver su perfil completo.</div>
+        <div class="multi-list">
+          ${res.map(a=>`
+            <div class="multi-item" onclick="renderResultado(ALUMNOS.find(x=>x.id===${a.id}))">
+              <div class="multi-avatar">${initiales(a)}</div>
+              <div style="flex:1">
+                <div class="multi-name">${nombreCompleto(a)}</div>
+                <div class="multi-sub">DNI: ${a.dni} · ${a.grado} Sec. ${a.seccion} · ${a.turno}</div>
+              </div>
+              <span style="background:${a.estado==='Matriculado'?'#d1fae5':a.estado==='Pendiente'?'#fef3c7':'#dbeafe'};
+                color:${a.estado==='Matriculado'?'#065f46':a.estado==='Pendiente'?'#92400e':'#1e40af'};
+                padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">
+                ${a.estado==='Matriculado'?'✅':a.estado==='Pendiente'?'⏳':'🔄'} ${a.estado}
+              </span>
+              <div style="color:var(--muted);font-size:18px;margin-left:8px">›</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ======================== RENDER RESULTADO ========================
+let resTabActual = 'perfil';
+
+function renderResultado(a){
+  const promNotas=Object.values(a.notas).map(ns=>avgArr(ns));
+  const promGeneral=avgArr(promNotas);
+  const promAsis=avgArr(Object.values(a.asistencia));
+  const estadoColor=a.estado==='Matriculado'?'#d1fae5':a.estado==='Pendiente'?'#fef3c7':'#dbeafe';
+  const estadoText=a.estado==='Matriculado'?'#065f46':a.estado==='Pendiente'?'#92400e':'#1e40af';
+
+  document.getElementById('results-area').innerHTML=`
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="avatar">${initiales(a)}</div>
+        <div style="flex:1">
+          <div class="result-name">${nombreCompleto(a)}</div>
+          <div class="result-meta">
+            <span>🪪 ${a.dni}</span>
+            <span>📚 ${a.grado} Sec. ${a.seccion}</span>
+            <span>⏰ ${a.turno}</span>
+            <span>📅 Matr. ${a.fecMat}</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+          <span class="result-badge" style="background:${estadoColor};color:${estadoText};border-color:transparent">
+            ${a.estado==='Matriculado'?'✅':a.estado==='Pendiente'?'⏳':'🔄'} ${a.estado}
+          </span>
+          <span class="result-badge">📊 Prom: <strong>${promGeneral}</strong></span>
+          <span class="result-badge">🏫 Asist: <strong>${promAsis.toFixed(0)}%</strong></span>
+        </div>
+      </div>
+
+      <div class="result-body">
+        <div class="res-tabs">
+          <div class="res-tab active" id="restab-perfil" onclick="switchResTab('perfil',${a.id})">👤 Perfil</div>
+          <div class="res-tab" id="restab-notas" onclick="switchResTab('notas',${a.id})">📊 Notas</div>
+          <div class="res-tab" id="restab-asistencia" onclick="switchResTab('asistencia',${a.id})">📅 Asistencia</div>
+          <div class="res-tab" id="restab-apoderado" onclick="switchResTab('apoderado',${a.id})">👨‍👩‍👧 Apoderado</div>
+        </div>
+
+        <!-- PERFIL -->
+        <div class="res-section active" id="ressec-perfil">
+          <div class="info-grid">
+            <div class="info-item"><div class="info-label">DNI</div><div class="info-value">🪪 ${a.dni}</div></div>
+            <div class="info-item"><div class="info-label">Apellidos y Nombres</div><div class="info-value">${nombreCompleto(a)}</div></div>
+            <div class="info-item"><div class="info-label">Fecha de Nacimiento</div><div class="info-value">📅 ${a.fecNac}</div></div>
+            <div class="info-item"><div class="info-label">Sexo</div><div class="info-value">${a.sexo==='F'?'👩 Femenino':'👨 Masculino'}</div></div>
+            <div class="info-item"><div class="info-label">Grado y Sección</div><div class="info-value">📚 ${a.grado} Sec. "${a.seccion}"</div></div>
+            <div class="info-item"><div class="info-label">Turno</div><div class="info-value">⏰ ${a.turno}</div></div>
+            <div class="info-item"><div class="info-label">Estado</div><div class="info-value" style="color:${estadoText}">${a.estado==='Matriculado'?'✅':a.estado==='Pendiente'?'⏳':'🔄'} ${a.estado}</div></div>
+            <div class="info-item"><div class="info-label">Fecha de Matrícula</div><div class="info-value">📋 ${a.fecMat}</div></div>
+            <div class="info-item"><div class="info-label">Dirección</div><div class="info-value">📍 ${a.dir}</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div style="background:#f8f9fd;border-radius:12px;padding:16px;border:1.5px solid var(--border);text-align:center">
+              <div style="font-size:36px;font-weight:800;color:${gColor(promGeneral)}">${promGeneral}</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px">Promedio General · ${gl(promGeneral)}</div>
+            </div>
+            <div style="background:#f8f9fd;border-radius:12px;padding:16px;border:1.5px solid var(--border);text-align:center">
+              <div style="font-size:36px;font-weight:800;color:${pctColor(promAsis)}">${promAsis.toFixed(0)}%</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px">Asistencia Promedio</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTAS -->
+        <div class="res-section" id="ressec-notas">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:16px">📊 Calificaciones por bimestre · Año 2026</div>
+          <div class="notes-grid">
+            ${CURSOS.map(c=>{
+              const ns=a.notas[c]||[0,0,0,0];
+              const prom=avgArr(ns);
+              return`<div class="note-card">
+                <div class="note-subject">📚 ${c}</div>
+                <div class="note-bims">
+                  ${ns.map((n,i)=>`<div class="note-bim">
+                    <div class="note-bim-label">BIM ${i+1}</div>
+                    <div class="note-bim-val" style="color:${gColor(n)}">${n}</div>
+                  </div>`).join('')}
+                </div>
+                <div class="note-prom" style="color:${gColor(prom)}">${prom}</div>
+                <div class="note-prom-label">Promedio · <span class="badge ${gc(prom)}">${gl(prom)}</span></div>
+              </div>`;
+            }).join('')}
+          </div>
+          <div style="background:#f8f9fd;border-radius:12px;padding:16px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div style="font-size:14px;font-weight:700">Promedio General</div>
+            <div style="font-size:32px;font-weight:800;color:${gColor(promGeneral)}">${promGeneral} <span class="badge ${gc(promGeneral)}" style="font-size:14px">${gl(promGeneral)}</span></div>
+          </div>
+        </div>
+
+        <!-- ASISTENCIA -->
+        <div class="res-section" id="ressec-asistencia">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:16px">📅 Registro de asistencia mensual · 2026</div>
+          ${Object.entries(a.asistencia).map(([mes,pct])=>`
+            <div class="asistencia-row">
+              <div class="asis-label">📅 ${mes}</div>
+              <div class="progress-wrap">
+                <div class="progress-fill" style="width:${pct}%;background:${pctColor(pct)}"></div>
+              </div>
+              <div class="asis-pct" style="color:${pctColor(pct)}">${pct}%</div>
+              <span class="badge" style="background:${pct>=90?'#d1fae5':pct>=80?'#fef3c7':'#fee2e2'};color:${pct>=90?'#065f46':pct>=80?'#92400e':'#991b1b'}">
+                ${pct>=90?'✅ Buena':pct>=80?'⚠️ Regular':'🚨 Crítica'}
+              </span>
+            </div>`).join('')}
+          <div style="background:#f8f9fd;border-radius:12px;padding:16px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:14px">
+            <div style="font-size:14px;font-weight:700">Promedio de Asistencia</div>
+            <div style="font-size:32px;font-weight:800;color:${pctColor(promAsis)}">${promAsis.toFixed(1)}%</div>
+          </div>
+        </div>
+
+        <!-- APODERADO -->
+        <div class="res-section" id="ressec-apoderado">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:16px">👨‍👩‍👧 Datos del apoderado registrado</div>
+          <div class="info-grid">
+            <div class="info-item"><div class="info-label">Apellidos y Nombres</div><div class="info-value">👤 ${a.apod}</div></div>
+            <div class="info-item"><div class="info-label">Teléfono / Celular</div><div class="info-value">📱 ${a.tel}</div></div>
+            <div class="info-item"><div class="info-label">Correo Electrónico</div><div class="info-value">📧 ${a.email}</div></div>
+            <div class="info-item"><div class="info-label">Dirección</div><div class="info-value">📍 ${a.dir}</div></div>
+          </div>
+          <div style="background:#f0fdf4;border-radius:12px;padding:16px;border:1.5px solid #86efac;display:flex;align-items:center;gap:12px">
+            <div style="font-size:28px">📬</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#065f46">Enviar notificación al apoderado</div>
+              <div style="font-size:12px;color:#6ee7b7;margin-top:2px">Puedes contactar al apoderado por teléfono o correo electrónico registrado.</div>
+            </div>
+            <button class="btn-buscar-nombre" style="margin-left:auto;background:#2e7d32;padding:0 18px;height:38px;font-size:12px" onclick="showToast('📬 Notificación enviada al apoderado')">
+              📤 Notificar
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+  resTabActual='perfil';
+  window.scrollTo({top:document.getElementById('results-area').offsetTop-20,behavior:'smooth'});
+}
+
+function switchResTab(tab, alumnoId){
+  document.querySelectorAll('.res-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.res-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('restab-'+tab).classList.add('active');
+  document.getElementById('ressec-'+tab).classList.add('active');
+  resTabActual=tab;
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Permitir hacer ALUMNOS accesible desde onclick inline
+window.ALUMNOS=ALUMNOS;
+</script>
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notas - Registro y consulta de calificaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2547;
+    --navy-light: #2d3a6b;
+    --accent: #4f6ef7;
+    --accent2: #e8b84b;
+    --danger: #e05252;
+    --success: #3dbf82;
+    --warning: #f0a500;
+    --bg: #eef0f6;
+    --card: #ffffff;
+    --text: #1a2547;
+    --muted: #7b84a3;
+    --border: #dde1ef;
+    --red-bar: #d63031;
+    --yellow-bar: #f9ca24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .topbar { height: 5px; background: linear-gradient(90deg, var(--red-bar) 0%, var(--red-bar) 60%, var(--yellow-bar) 60%); }
+  .breadcrumb { padding: 14px 48px; font-size: 13px; color: var(--muted); }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+  .page-header { display: flex; align-items: center; justify-content: space-between; padding: 0 48px 28px; }
+  .header-left { display: flex; align-items: center; gap: 18px; }
+  .module-icon { width: 62px; height: 62px; border-radius: 16px; background: linear-gradient(135deg, #7c3aed, #a855f7); display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 8px 24px rgba(124,58,237,0.3); }
+  .header-title h1 { font-size: 28px; font-weight: 800; color: var(--navy); }
+  .header-title p { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  .badge-active { background: var(--navy); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 10px 20px; border-radius: 8px; }
+  .main-card { margin: 0 48px 40px; background: var(--card); border-radius: 20px; box-shadow: 0 2px 20px rgba(26,37,71,0.07); overflow: hidden; }
+  .nav-tabs { display: flex; border-bottom: 2px solid var(--border); padding: 0 24px; gap: 2px; background: #f8f9fd; overflow-x: auto; }
+  .nav-tab { padding: 15px 18px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all .2s; display: flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0; }
+  .nav-tab:hover { color: var(--navy); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .panel { display: none; padding: 32px; }
+  .panel.active { display: block; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .section-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; align-items: flex-end; }
+  .filter-group { display: flex; flex-direction: column; gap: 5px; }
+  .filter-group label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; }
+  select, input[type="text"], input[type="number"] { padding: 9px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 13px; color: var(--text); background: #fff; outline: none; transition: border .2s; }
+  select:focus, input:focus { border-color: var(--accent); }
+  .btn { padding: 10px 20px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; display: inline-flex; align-items: center; gap: 7px; }
+  .btn-primary { background: var(--navy); color: #fff; }
+  .btn-primary:hover { background: var(--navy-light); transform: translateY(-1px); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: var(--danger); color: #fff; border: none; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+  .table-wrap { overflow-x: auto; border-radius: 12px; border: 1.5px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: #f4f6fb; padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; border-bottom: 1.5px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f8f9fd; }
+  tbody td { padding: 12px 16px; vertical-align: middle; }
+  .grade-input { width: 64px; padding: 6px 8px; text-align: center; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 600; }
+  .grade-input:focus { border-color: var(--accent); outline: none; }
+  .grade-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+  .grade-a { background: #d1fae5; color: #065f46; }
+  .grade-b { background: #dbeafe; color: #1e40af; }
+  .grade-c { background: #fef3c7; color: #92400e; }
+  .grade-d { background: #fee2e2; color: #991b1b; }
+  .grade-na { background: #f1f3f9; color: var(--muted); }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: #f8f9fd; border-radius: 14px; padding: 18px 20px; border: 1.5px solid var(--border); }
+  .stat-card .val { font-size: 28px; font-weight: 800; color: var(--navy); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 500; }
+  .stat-card.accent { background: var(--accent); border-color: var(--accent); }
+  .stat-card.accent .val, .stat-card.accent .lbl { color: #fff; }
+  .stat-card.success { background: var(--success); border-color: var(--success); }
+  .stat-card.success .val, .stat-card.success .lbl { color: #fff; }
+  .stat-card.danger { background: var(--danger); border-color: var(--danger); }
+  .stat-card.danger .val, .stat-card.danger .lbl { color: #fff; }
+  .stat-card.warning { background: var(--warning); border-color: var(--warning); }
+  .stat-card.warning .val, .stat-card.warning .lbl { color: #fff; }
+  .progress-wrap { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width .4s; }
+  .rank-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .rank-row:last-child { border-bottom: none; }
+  .rank-num { width: 32px; height: 32px; border-radius: 10px; background: #f4f6fb; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--muted); flex-shrink: 0; }
+  .rank-num.gold { background: #fef3c7; color: #92400e; }
+  .rank-num.silver { background: #e5e7eb; color: #374151; }
+  .rank-num.bronze { background: #fed7aa; color: #9a3412; }
+  .rank-name { flex: 1; font-size: 13px; font-weight: 600; }
+  .rank-score { font-size: 16px; font-weight: 800; color: var(--navy); }
+  .alert-card { display: flex; gap: 14px; padding: 16px; border-radius: 12px; border: 1.5px solid; margin-bottom: 12px; align-items: flex-start; }
+  .alert-card.risk-high { background: #fff5f5; border-color: #fca5a5; }
+  .alert-card.risk-med { background: #fffbeb; border-color: #fcd34d; }
+  .alert-card.risk-low { background: #f0fdf4; border-color: #86efac; }
+  .alert-icon { font-size: 22px; flex-shrink: 0; }
+  .alert-name { font-weight: 700; font-size: 14px; }
+  .alert-detail { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .alert-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .alert-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: #fff; border: 1.5px solid var(--border); }
+  .alert-badge.bad { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+  .libreta-header { background: linear-gradient(135deg, var(--navy), var(--navy-light)); color: #fff; padding: 24px 28px; }
+  .libreta-body { border: 1.5px solid var(--border); border-top: none; overflow: hidden; }
+  .libreta-subject { display: grid; grid-template-columns: 1fr repeat(4, 70px) 80px; border-bottom: 1px solid var(--border); }
+  .libreta-subject:last-child { border-bottom: none; }
+  .ls-cell { padding: 11px 14px; font-size: 13px; border-right: 1px solid var(--border); display: flex; align-items: center; }
+  .ls-cell:last-child { border-right: none; }
+  .ls-head { background: #f4f6fb; font-weight: 700; font-size: 11px; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; }
+  .ls-name { font-weight: 600; }
+  .ls-grade { justify-content: center; font-weight: 700; }
+  .ls-final { justify-content: center; font-weight: 800; font-size: 15px; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 160px; padding: 0 4px; }
+  .bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .bar-fill { width: 100%; border-radius: 6px 6px 0 0; transition: height .5s ease; min-height: 4px; }
+  .bar-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .bar-value { font-size: 12px; font-weight: 700; color: var(--navy); }
+  .toast { position: fixed; bottom: 28px; right: 28px; background: var(--navy); color: #fff; padding: 14px 22px; border-radius: 12px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 28px rgba(26,37,71,0.25); transform: translateY(80px); opacity: 0; transition: all .3s; z-index: 9999; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,15,35,.45); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 20px; padding: 32px; width: 480px; max-width: 95vw; box-shadow: 0 20px 60px rgba(10,15,35,.2); }
+  .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+  .form-group input, .form-group select { width: 100%; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty .emoji { font-size: 48px; margin-bottom: 16px; }
+  @media(max-width:768px){
+    .breadcrumb,.page-header{padding-left:16px;padding-right:16px}
+    .main-card{margin:0 12px 32px}
+    .panel{padding:20px}
+    .stats-grid{grid-template-columns:repeat(2,1fr)}
+    .form-row{grid-template-columns:1fr}
+    #ranking-wrap{grid-template-columns:1fr}
+    .libreta-subject{grid-template-columns:1fr repeat(4,56px) 64px}
+  }
+</style>
+</head>
+<body>
+<div class="topbar"></div>
+
+<div class="breadcrumb">
+  <a href="index.html">Inicio</a> › <strong style="color:var(--navy)">Notas</strong>
+</div>
+
+<div class="page-header">
+  <div class="header-left">
+    <div class="module-icon">📊</div>
+    <div class="header-title">
+      <h1>Notas</h1>
+      <p>Registro y consulta de calificaciones</p>
+    </div>
+  </div>
+  <div class="badge-active">MÓDULO ACTIVO</div>
+</div>
+
+<div class="main-card">
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showPanel('registro',this)">✏️ Registro de calificaciones</div>
+    <div class="nav-tab" onclick="showPanel('promedios',this)">📋 Promedios por bimestre</div>
+    <div class="nav-tab" onclick="showPanel('ranking',this)">🏆 Ranking por sección</div>
+    <div class="nav-tab" onclick="showPanel('libretas',this)">📓 Libretas de notas</div>
+    <div class="nav-tab" onclick="showPanel('riesgo',this)">⚠️ Alumnos en riesgo</div>
+  </div>
+
+  <!-- PANEL 1: REGISTRO -->
+  <div class="panel active" id="panel-registro">
+    <div class="section-title">Registro de Calificaciones</div>
+    <div class="section-sub">Ingresa y edita las notas por alumno, sección y bimestre.</div>
+    <div class="filters">
+      <div class="filter-group"><label>Sección</label>
+        <select id="reg-seccion" onchange="renderRegistroTable()">
+          <option value="1A">1° A</option><option value="1B">1° B</option>
+          <option value="2A">2° A</option><option value="2B">2° B</option><option value="3A">3° A</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Curso</label>
+        <select id="reg-curso" onchange="renderRegistroTable()">
+          <option>Matemática</option><option>Comunicación</option>
+          <option>Ciencias</option><option>Historia</option><option>Inglés</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Bimestre</label>
+        <select id="reg-bimestre" onchange="renderRegistroTable()">
+          <option value="0">1er Bimestre</option><option value="1">2do Bimestre</option>
+          <option value="2">3er Bimestre</option><option value="3">4to Bimestre</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>&nbsp;</label>
+        <button class="btn btn-primary" onclick="guardarNotas()">💾 Guardar notas</button>
+      </div>
+      <div class="filter-group"><label>&nbsp;</label>
+        <button class="btn btn-outline" onclick="openAddModal()">➕ Agregar alumno</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Alumno</th><th>Nota 1</th><th>Nota 2</th><th>Nota 3</th><th>Promedio</th><th>Estado</th><th>Acción</th></tr></thead>
+        <tbody id="registro-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PANEL 2: PROMEDIOS -->
+  <div class="panel" id="panel-promedios">
+    <div class="section-title">Promedios por Bimestre</div>
+    <div class="section-sub">Rendimiento académico por sección y curso a lo largo del año.</div>
+    <div class="filters">
+      <div class="filter-group"><label>Sección</label>
+        <select id="prom-seccion" onchange="renderPromedios()">
+          <option value="1A">1° A</option><option value="1B">1° B</option><option value="2A">2° A</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Curso</label>
+        <select id="prom-curso" onchange="renderPromedios()">
+          <option>Matemática</option><option>Comunicación</option>
+          <option>Ciencias</option><option>Historia</option><option>Inglés</option>
+        </select>
+      </div>
+    </div>
+    <div class="stats-grid" id="prom-stats"></div>
+    <div style="background:#f8f9fd;border-radius:14px;padding:24px;margin-bottom:24px;border:1.5px solid var(--border)">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:16px;letter-spacing:.8px;text-transform:uppercase">Evolución por bimestre</div>
+      <div class="bar-chart" id="prom-chart"></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Alumno</th><th>Bim 1</th><th>Bim 2</th><th>Bim 3</th><th>Bim 4</th><th>Promedio Anual</th><th>Tendencia</th></tr></thead>
+        <tbody id="prom-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PANEL 3: RANKING -->
+  <div class="panel" id="panel-ranking">
+    <div class="section-title">Ranking por Sección</div>
+    <div class="section-sub">Clasificación de alumnos según su promedio general.</div>
+    <div class="filters">
+      <div class="filter-group"><label>Sección</label>
+        <select id="rank-seccion" onchange="renderRanking()">
+          <option value="1A">1° A</option><option value="1B">1° B</option><option value="2A">2° A</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Período</label>
+        <select id="rank-bimestre" onchange="renderRanking()">
+          <option value="-1">Promedio Anual</option>
+          <option value="0">1er Bimestre</option><option value="1">2do Bimestre</option>
+          <option value="2">3er Bimestre</option><option value="3">4to Bimestre</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px" id="ranking-wrap">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:14px;letter-spacing:.8px;text-transform:uppercase">🏆 Clasificación</div>
+        <div id="ranking-list"></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:14px;letter-spacing:.8px;text-transform:uppercase">📊 Distribución</div>
+        <div id="ranking-dist"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 4: LIBRETAS -->
+  <div class="panel" id="panel-libretas">
+    <div class="section-title">Libretas de Notas</div>
+    <div class="section-sub">Reporte individual completo por alumno con todas sus calificaciones.</div>
+    <div class="filters">
+      <div class="filter-group"><label>Sección</label>
+        <select id="lib-seccion" onchange="renderLibretas()">
+          <option value="1A">1° A</option><option value="1B">1° B</option><option value="2A">2° A</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Alumno</label>
+        <select id="lib-alumno" onchange="renderLibreta()"></select>
+      </div>
+      <div class="filter-group"><label>&nbsp;</label>
+        <button class="btn btn-outline" onclick="window.print()">🖨️ Imprimir</button>
+      </div>
+    </div>
+    <div id="libreta-container"></div>
+  </div>
+
+  <!-- PANEL 5: RIESGO -->
+  <div class="panel" id="panel-riesgo">
+    <div class="section-title">Alumnos en Riesgo</div>
+    <div class="section-sub">Identificación automática de alumnos con bajo rendimiento académico.</div>
+    <div class="stats-grid" id="riesgo-stats"></div>
+    <div class="filters">
+      <div class="filter-group"><label>Sección</label>
+        <select id="risk-seccion" onchange="renderRiesgo()">
+          <option value="all">Todas</option>
+          <option value="1A">1° A</option><option value="1B">1° B</option><option value="2A">2° A</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Nivel de riesgo</label>
+        <select id="risk-nivel" onchange="renderRiesgo()">
+          <option value="all">Todos</option>
+          <option value="high">⚠️ Alto riesgo</option>
+          <option value="med">🔶 Riesgo medio</option>
+          <option value="low">✅ Sin riesgo</option>
+        </select>
+      </div>
+    </div>
+    <div id="riesgo-list"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <h3>➕ Agregar Alumno</h3>
+    <div class="form-row">
+      <div class="form-group"><label>Apellidos</label><input type="text" id="m-apellidos" placeholder="García López"></div>
+      <div class="form-group"><label>Nombres</label><input type="text" id="m-nombres" placeholder="Carlos"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Sección</label>
+        <select id="m-seccion">
+          <option value="1A">1° A</option><option value="1B">1° B</option>
+          <option value="2A">2° A</option><option value="2B">2° B</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Código</label><input type="text" id="m-codigo" placeholder="2024001"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="document.getElementById('add-modal').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-primary" onclick="addAlumno()">Agregar alumno</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CURSOS = ['Matemática','Comunicación','Ciencias','Historia','Inglés'];
+
+let DB = {
+  '1A': [
+    {id:1,nombre:'Quispe Mamani, Ana',notas:{Matemática:[[14,16,15],[13,15,14],[12,14,13],[15,17,16]],Comunicación:[[16,15,17],[14,16,15],[15,14,16],[17,16,18]],Ciencias:[[13,12,14],[14,13,15],[12,11,13],[15,14,16]],Historia:[[15,16,14],[13,15,14],[16,15,17],[14,13,15]],Inglés:[[12,11,13],[14,13,15],[11,12,10],[13,14,12]]}},
+    {id:2,nombre:'Torres Huanca, Luis',notas:{Matemática:[[10,9,11],[8,10,9],[11,10,12],[9,8,10]],Comunicación:[[11,10,12],[9,11,10],[12,11,13],[10,9,11]],Ciencias:[[9,8,10],[10,9,11],[8,7,9],[11,10,12]],Historia:[[10,11,9],[8,10,9],[11,10,12],[9,8,10]],Inglés:[[8,9,7],[10,8,9],[7,8,6],[9,10,8]]}},
+    {id:3,nombre:'Flores Condori, María',notas:{Matemática:[[17,18,16],[18,17,19],[16,17,15],[19,18,20]],Comunicación:[[18,17,19],[17,18,16],[19,18,20],[18,17,19]],Ciencias:[[16,17,15],[18,16,17],[15,16,14],[17,18,16]],Historia:[[17,18,16],[16,17,15],[18,17,19],[17,16,18]],Inglés:[[15,16,14],[17,15,16],[14,15,13],[16,17,15]]}},
+    {id:4,nombre:'Mamani Cruz, Pedro',notas:{Matemática:[[12,13,11],[11,12,10],[13,12,14],[12,11,13]],Comunicación:[[13,12,14],[12,13,11],[14,13,15],[13,12,14]],Ciencias:[[11,12,10],[12,11,13],[10,11,9],[13,12,14]],Historia:[[12,13,11],[11,12,10],[13,12,14],[12,11,13]],Inglés:[[10,11,9],[12,10,11],[9,10,8],[11,12,10]]}},
+    {id:5,nombre:'Rojas Villca, Sandra',notas:{Matemática:[[7,6,8],[9,7,8],[6,7,5],[8,9,7]],Comunicación:[[8,7,9],[7,8,6],[9,8,10],[8,7,9]],Ciencias:[[6,7,5],[8,6,7],[5,6,4],[7,8,6]],Historia:[[7,8,6],[6,7,5],[8,7,9],[7,6,8]],Inglés:[[5,6,4],[7,5,6],[4,5,3],[6,7,5]]}},
+  ],
+  '1B': [
+    {id:6,nombre:'Vargas Apaza, Carmen',notas:{Matemática:[[15,14,16],[16,15,17],[14,15,13],[17,16,18]],Comunicación:[[14,15,13],[15,14,16],[16,15,17],[14,13,15]],Ciencias:[[13,14,12],[15,13,14],[12,13,11],[14,15,13]],Historia:[[15,14,16],[13,15,14],[16,15,17],[15,14,16]],Inglés:[[13,12,14],[14,13,15],[12,13,11],[14,15,13]]}},
+    {id:7,nombre:'Choque Lima, Roberto',notas:{Matemática:[[9,8,10],[7,9,8],[10,9,11],[8,7,9]],Comunicación:[[10,9,11],[8,10,9],[11,10,12],[9,8,10]],Ciencias:[[8,9,7],[9,8,10],[7,8,6],[10,9,11]],Historia:[[9,10,8],[8,9,7],[10,9,11],[9,8,10]],Inglés:[[7,8,6],[9,7,8],[6,7,5],[8,9,7]]}},
+    {id:8,nombre:'Poma Tito, Lucía',notas:{Matemática:[[18,17,19],[19,18,20],[17,18,16],[20,19,18]],Comunicación:[[17,18,16],[18,17,19],[19,18,20],[17,16,18]],Ciencias:[[15,16,14],[17,15,16],[14,15,13],[16,17,15]],Historia:[[16,17,15],[15,16,14],[17,16,18],[16,15,17]],Inglés:[[14,15,13],[16,14,15],[13,14,12],[15,16,14]]}},
+  ],
+  '2A': [
+    {id:9,nombre:'García Ticona, Miguel',notas:{Matemática:[[11,12,10],[10,11,9],[12,11,13],[11,10,12]],Comunicación:[[12,11,13],[11,12,10],[13,12,14],[12,11,13]],Ciencias:[[10,11,9],[11,10,12],[9,10,8],[12,11,13]],Historia:[[11,12,10],[10,11,9],[12,11,13],[11,10,12]],Inglés:[[9,10,8],[11,9,10],[8,9,7],[10,11,9]]}},
+    {id:10,nombre:'Huanca Soliz, Valentina',notas:{Matemática:[[16,15,17],[17,16,18],[15,16,14],[18,17,19]],Comunicación:[[15,16,14],[16,15,17],[17,16,18],[15,14,16]],Ciencias:[[14,15,13],[16,14,15],[13,14,12],[15,16,14]],Historia:[[15,16,14],[14,15,13],[16,15,17],[15,14,16]],Inglés:[[12,13,11],[14,12,13],[11,12,10],[13,14,12]]}},
+    {id:11,nombre:'Condori Quispe, Julio',notas:{Matemática:[[6,5,7],[7,6,8],[5,6,4],[8,7,9]],Comunicación:[[7,6,8],[6,7,5],[8,7,9],[7,6,8]],Ciencias:[[5,6,4],[6,5,7],[4,5,3],[7,6,8]],Historia:[[6,7,5],[5,6,4],[7,6,8],[6,5,7]],Inglés:[[4,5,3],[6,4,5],[3,4,2],[5,6,4]]}},
+  ],
+  '2B': [
+    {id:12,nombre:'Mamani Torres, Sofía',notas:{Matemática:[[14,13,15],[15,14,16],[13,14,12],[16,15,17]],Comunicación:[[13,14,12],[14,13,15],[15,14,16],[13,12,14]],Ciencias:[[12,13,11],[14,12,13],[11,12,10],[13,14,12]],Historia:[[13,14,12],[12,13,11],[14,13,15],[13,12,14]],Inglés:[[11,12,10],[13,11,12],[10,11,9],[12,13,11]]}},
+  ],
+  '3A': [
+    {id:13,nombre:'Cruz Vargas, Diego',notas:{Matemática:[[13,14,12],[12,13,11],[14,13,15],[13,12,14]],Comunicación:[[14,13,15],[13,14,12],[15,14,16],[14,13,15]],Ciencias:[[12,13,11],[13,12,14],[11,12,10],[14,13,15]],Historia:[[13,12,14],[12,13,11],[14,13,15],[13,12,14]],Inglés:[[11,10,12],[12,11,13],[10,11,9],[12,13,11]]}},
+  ]
+};
+
+function avg(arr){if(!arr||!arr.length)return 0;let s=arr.reduce((a,b)=>a+b,0);return Math.round(s/arr.length*10)/10;}
+function bimAvg(a,c,b){return avg(a.notas[c]?.[b]||[]);}
+function alumnoPromedio(a,bim=null){
+  let t=0,n=0;
+  CURSOS.forEach(c=>{
+    if(bim!==null){t+=bimAvg(a,c,bim);n++;}
+    else{for(let b=0;b<4;b++){t+=bimAvg(a,c,b);n++;}}
+  });
+  return n?Math.round(t/n*10)/10:0;
+}
+function gc(n){if(n>=17)return'grade-a';if(n>=14)return'grade-b';if(n>=11)return'grade-c';if(n>0)return'grade-d';return'grade-na';}
+function gl(n){if(n>=17)return'AD';if(n>=14)return'A';if(n>=11)return'B';if(n>0)return'C';return'—';}
+function gColor(n){return n>=17?'#3dbf82':n>=14?'#4f6ef7':n>=11?'#f0a500':'#e05252';}
+
+function showPanel(name,tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  tab.classList.add('active');
+  if(name==='promedios')renderPromedios();
+  if(name==='ranking')renderRanking();
+  if(name==='libretas')renderLibretas();
+  if(name==='riesgo')renderRiesgo();
+}
+
+// === PANEL 1 ===
+function renderRegistroTable(){
+  const sec=document.getElementById('reg-seccion').value;
+  const curso=document.getElementById('reg-curso').value;
+  const bim=parseInt(document.getElementById('reg-bimestre').value);
+  const list=DB[sec]||[];
+  const tbody=document.getElementById('registro-tbody');
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="8"><div class="empty"><div class="emoji">📋</div><p>Sin alumnos en esta sección</p></div></td></tr>`;return;}
+  tbody.innerHTML=list.map((a,i)=>{
+    const ns=a.notas[curso]?.[bim]||[0,0,0];
+    const p=avg(ns);
+    return`<tr>
+      <td style="color:var(--muted);font-weight:600">${i+1}</td>
+      <td style="font-weight:600">${a.nombre}</td>
+      <td><input class="grade-input" type="number" min="0" max="20" value="${ns[0]||''}" onchange="updateNota(${a.id},'${curso}',${bim},0,this.value,this)"></td>
+      <td><input class="grade-input" type="number" min="0" max="20" value="${ns[1]||''}" onchange="updateNota(${a.id},'${curso}',${bim},1,this.value,this)"></td>
+      <td><input class="grade-input" type="number" min="0" max="20" value="${ns[2]||''}" onchange="updateNota(${a.id},'${curso}',${bim},2,this.value,this)"></td>
+      <td><span id="avg_${a.id}" class="grade-badge ${gc(p)}">${p||'—'}</span></td>
+      <td><span class="grade-badge ${gc(p)}">${gl(p)}</span></td>
+      <td style="display:flex;gap:6px">
+        <button class="btn btn-danger btn-sm" onclick="deleteAlumno('${sec}',${a.id})">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updateNota(id,curso,bim,idx,val,el){
+  const sec=document.getElementById('reg-seccion').value;
+  const a=DB[sec].find(x=>x.id===id);if(!a)return;
+  if(!a.notas[curso])a.notas[curso]=[[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+  if(!a.notas[curso][bim])a.notas[curso][bim]=[0,0,0];
+  const v=Math.min(20,Math.max(0,parseFloat(val)||0));
+  a.notas[curso][bim][idx]=v;
+  el.value=v;
+  const ns=a.notas[curso][bim];
+  const p=avg(ns);
+  const badge=document.getElementById('avg_'+id);
+  if(badge){badge.textContent=p||'—';badge.className='grade-badge '+gc(p);}
+}
+
+function guardarNotas(){showToast('✅ Notas guardadas correctamente');}
+
+function deleteAlumno(sec,id){
+  if(!confirm('¿Eliminar este alumno del registro?'))return;
+  DB[sec]=DB[sec].filter(a=>a.id!==id);
+  renderRegistroTable();
+  showToast('🗑️ Alumno eliminado');
+}
+
+function openAddModal(){document.getElementById('add-modal').classList.add('open');}
+
+function addAlumno(){
+  const ap=document.getElementById('m-apellidos').value.trim();
+  const nm=document.getElementById('m-nombres').value.trim();
+  const sec=document.getElementById('m-seccion').value;
+  if(!ap||!nm){showToast('⚠️ Completa apellidos y nombres');return;}
+  const notas={};
+  CURSOS.forEach(c=>{notas[c]=[[0,0,0],[0,0,0],[0,0,0],[0,0,0]];});
+  if(!DB[sec])DB[sec]=[];
+  DB[sec].push({id:Date.now(),nombre:`${ap}, ${nm}`,notas});
+  document.getElementById('add-modal').classList.remove('open');
+  document.getElementById('reg-seccion').value=sec;
+  document.getElementById('m-apellidos').value='';
+  document.getElementById('m-nombres').value='';
+  renderRegistroTable();
+  showToast('✅ Alumno agregado correctamente');
+}
+
+// === PANEL 2 ===
+function renderPromedios(){
+  const sec=document.getElementById('prom-seccion').value;
+  const curso=document.getElementById('prom-curso').value;
+  const list=DB[sec]||[];
+  const bimAvgs=[0,1,2,3].map(b=>{
+    const vs=list.map(a=>bimAvg(a,curso,b)).filter(v=>v>0);
+    return vs.length?avg(vs):0;
+  });
+  const totalAvg=avg(bimAvgs.filter(v=>v>0));
+  const aprobados=list.filter(a=>alumnoPromedio(a)>=11).length;
+  const maxB=Math.max(...bimAvgs);
+  const minB=Math.min(...bimAvgs.filter(v=>v>0));
+  document.getElementById('prom-stats').innerHTML=`
+    <div class="stat-card accent"><div class="val">${totalAvg||'—'}</div><div class="lbl">Promedio general</div></div>
+    <div class="stat-card success"><div class="val">${aprobados}/${list.length}</div><div class="lbl">Aprobados</div></div>
+    <div class="stat-card"><div class="val">${maxB||'—'}</div><div class="lbl">Mejor bimestre</div></div>
+    <div class="stat-card ${minB<11?'danger':''}"><div class="val">${minB||'—'}</div><div class="lbl">Bimestre más bajo</div></div>
+  `;
+  const labels=['Bim 1','Bim 2','Bim 3','Bim 4'];
+  document.getElementById('prom-chart').innerHTML=bimAvgs.map((v,i)=>{
+    const h=Math.round((v/20)*140);
+    return`<div class="bar-item">
+      <div class="bar-value">${v||'—'}</div>
+      <div class="bar-fill" style="height:${h}px;background:${gColor(v)}"></div>
+      <div class="bar-label">${labels[i]}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('prom-tbody').innerHTML=list.map(a=>{
+    const bvs=[0,1,2,3].map(b=>bimAvg(a,curso,b));
+    const anual=avg(bvs.filter(v=>v>0));
+    const trend=bvs[3]>bvs[0]?'📈':bvs[3]<bvs[0]?'📉':'➡️';
+    return`<tr>
+      <td style="font-weight:600">${a.nombre}</td>
+      ${bvs.map(v=>`<td><span class="grade-badge ${gc(v)}">${v||'—'}</span></td>`).join('')}
+      <td><strong style="font-size:15px">${anual}</strong></td>
+      <td style="font-size:18px">${trend}</td>
+    </tr>`;
+  }).join('');
+}
+
+// === PANEL 3 ===
+function renderRanking(){
+  const sec=document.getElementById('rank-seccion').value;
+  const bim=parseInt(document.getElementById('rank-bimestre').value);
+  const list=(DB[sec]||[]).map(a=>({...a,prom:bim===-1?alumnoPromedio(a):alumnoPromedio(a,bim)})).sort((a,b)=>b.prom-a.prom);
+  const medals=['gold','silver','bronze'];
+  const emojis=['🥇','🥈','🥉'];
+  document.getElementById('ranking-list').innerHTML=list.map((a,i)=>`
+    <div class="rank-row">
+      <div class="rank-num ${medals[i]||''}">${emojis[i]||i+1}</div>
+      <div class="rank-name">${a.nombre}</div>
+      <div>
+        <div class="rank-score">${a.prom}</div>
+        <div class="progress-wrap" style="width:80px;margin-top:4px">
+          <div class="progress-fill" style="width:${a.prom/20*100}%;background:${gColor(a.prom)}"></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  const ranges=[{l:'AD (17-20)',min:17,max:20,c:'#3dbf82'},{l:'A (14-16)',min:14,max:16,c:'#4f6ef7'},{l:'B (11-13)',min:11,max:13,c:'#f0a500'},{l:'C (0-10)',min:0,max:10,c:'#e05252'}];
+  document.getElementById('ranking-dist').innerHTML=ranges.map(r=>{
+    const cnt=list.filter(a=>a.prom>=r.min&&a.prom<=r.max).length;
+    const pct=list.length?Math.round(cnt/list.length*100):0;
+    return`<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:6px"><span>${r.l}</span><span>${cnt} (${pct}%)</span></div>
+      <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%;background:${r.c}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// === PANEL 4 ===
+function renderLibretas(){
+  const sec=document.getElementById('lib-seccion').value;
+  const list=DB[sec]||[];
+  const sel=document.getElementById('lib-alumno');
+  sel.innerHTML=list.map((a,i)=>`<option value="${i}">${a.nombre}</option>`).join('');
+  renderLibreta();
+}
+function renderLibreta(){
+  const sec=document.getElementById('lib-seccion').value;
+  const idx=parseInt(document.getElementById('lib-alumno').value)||0;
+  const a=(DB[sec]||[])[idx];
+  if(!a){document.getElementById('libreta-container').innerHTML='<div class="empty"><div class="emoji">📓</div><p>Selecciona un alumno</p></div>';return;}
+  const prom=alumnoPromedio(a);
+  const labels=['1er Bim','2do Bim','3er Bim','4to Bim'];
+  document.getElementById('libreta-container').innerHTML=`
+    <div style="border-radius:14px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:20px">
+      <div class="libreta-header" style="border-radius:14px 14px 0 0">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div><div style="font-size:20px;font-weight:800">${a.nombre}</div>
+          <div style="font-size:13px;opacity:.75;margin-top:4px">Sección ${sec} · Año 2024</div></div>
+          <div style="text-align:center">
+            <div style="font-size:36px;font-weight:800">${prom}</div>
+            <div style="font-size:12px;opacity:.75">Promedio anual</div>
+          </div>
+        </div>
+      </div>
+      <div class="libreta-body">
+        <div class="libreta-subject">
+          <div class="ls-cell ls-head">Curso</div>
+          ${labels.map(l=>`<div class="ls-cell ls-head" style="justify-content:center">${l}</div>`).join('')}
+          <div class="ls-cell ls-head" style="justify-content:center">Anual</div>
+        </div>
+        ${CURSOS.map(c=>{
+          const bvs=[0,1,2,3].map(b=>bimAvg(a,c,b));
+          const anual=avg(bvs.filter(v=>v>0));
+          return`<div class="libreta-subject">
+            <div class="ls-cell ls-name">${c}</div>
+            ${bvs.map(v=>`<div class="ls-cell ls-grade"><span class="grade-badge ${gc(v)}">${v||'—'}</span></div>`).join('')}
+            <div class="ls-cell ls-final"><span class="grade-badge ${gc(anual)}">${anual}</span></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="stats-grid">
+      ${CURSOS.map(c=>{const bvs=[0,1,2,3].map(b=>bimAvg(a,c,b));const an=avg(bvs.filter(v=>v>0));return`<div class="stat-card"><div class="val" style="font-size:22px;color:${gColor(an)}">${an}</div><div class="lbl">${c}</div></div>`;}).join('')}
+    </div>
+  `;
+}
+
+// === PANEL 5 ===
+function renderRiesgo(){
+  const secF=document.getElementById('risk-seccion').value;
+  const nivF=document.getElementById('risk-nivel').value;
+  let all=[];
+  Object.keys(DB).forEach(sec=>{
+    if(secF!=='all'&&sec!==secF)return;
+    DB[sec].forEach(a=>{
+      const prom=alumnoPromedio(a);
+      const cursosR=CURSOS.filter(c=>{const bvs=[0,1,2,3].map(b=>bimAvg(a,c,b)).filter(v=>v>0);return avg(bvs)<11;});
+      let nivel='low';
+      if(prom<11)nivel='high';
+      else if(prom<13||cursosR.length>=2)nivel='med';
+      all.push({...a,sec,prom,cursosR,nivel});
+    });
+  });
+  all=all.filter(a=>nivF==='all'||a.nivel===nivF).sort((a,b)=>a.prom-b.prom);
+  const high=all.filter(x=>x.nivel==='high').length;
+  const med=all.filter(x=>x.nivel==='med').length;
+  const low=all.filter(x=>x.nivel==='low').length;
+  document.getElementById('riesgo-stats').innerHTML=`
+    <div class="stat-card danger"><div class="val">${high}</div><div class="lbl">🚨 Alto riesgo (&lt;11)</div></div>
+    <div class="stat-card warning"><div class="val">${med}</div><div class="lbl">⚠️ Riesgo medio</div></div>
+    <div class="stat-card success"><div class="val">${low}</div><div class="lbl">✅ Sin riesgo</div></div>
+    <div class="stat-card accent"><div class="val">${all.length}</div><div class="lbl">Total mostrados</div></div>
+  `;
+  if(!all.length){document.getElementById('riesgo-list').innerHTML='<div class="empty"><div class="emoji">✅</div><p>No hay alumnos con este filtro</p></div>';return;}
+  document.getElementById('riesgo-list').innerHTML=all.map(a=>`
+    <div class="alert-card risk-${a.nivel}">
+      <div class="alert-icon">${a.nivel==='high'?'🚨':a.nivel==='med'?'⚠️':'✅'}</div>
+      <div style="flex:1">
+        <div class="alert-name">${a.nombre}</div>
+        <div class="alert-detail">Sección ${a.sec} · Promedio general: <strong>${a.prom}</strong></div>
+        <div class="alert-badges">
+          ${a.cursosR.map(c=>`<span class="alert-badge bad">❌ ${c}</span>`).join('')}
+          ${!a.cursosR.length?'<span class="alert-badge">Sin cursos reprobados</span>':''}
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:28px;font-weight:800;color:${gColor(a.prom)}">${a.prom}</div>
+        <div style="font-size:11px;color:var(--muted)">/20</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// INIT
+renderRegistroTable();
+renderRiesgo();
+</script>
+</body>
+</html>
