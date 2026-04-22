@@ -15,7 +15,7 @@
     --texto:#1c1c2e; --texto-suave:#5a6480;
   }
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-  html, body { height:100%; overflow:hidden; }
+  html, body { height:100%; }
 
   body {
     font-family: 'DM Sans', sans-serif;
@@ -23,6 +23,7 @@
     display: flex;
     align-items: stretch;
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
   /* ── LADO IZQUIERDO (decorativo) ── */
@@ -379,21 +380,25 @@
 
   @media(max-width:900px){
     .left-panel { display: none; }
-    .right-panel {
-      width: 100%;
-      padding: 40px 28px 60px 28px;
-      min-height: 100vh;
-      height: auto;
-      overflow-y: visible;
+    
+    html, body {
+      height: auto !important;
+      overflow: visible !important;
     }
     body {
-      overflow-y: auto;
-      align-items: flex-start;
+      display: block !important;
+      overflow-y: auto !important;
     }
-    html, body { height: auto; min-height: 100%; }
+    .right-panel {
+      width: 100%;
+      min-height: 100vh;
+      height: auto;
+      padding: 40px 28px 80px 28px;
+      overflow: visible;
+    }
   }
   @media(max-width:420px){
-    .right-panel { padding: 36px 20px 60px 20px; }
+    .right-panel { padding: 36px 20px 80px 20px; }
     .rol-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
