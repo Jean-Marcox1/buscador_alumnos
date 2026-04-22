@@ -379,13 +379,22 @@
 
   @media(max-width:900px){
     .left-panel { display: none; }
-    .right-panel { width: 100%; padding: 40px 28px; }
-    body { overflow-y: auto; }
-    html, body { height: auto; }
+    .right-panel {
+      width: 100%;
+      padding: 40px 28px 60px 28px;
+      min-height: 100vh;
+      height: auto;
+      overflow-y: visible;
+    }
+    body {
+      overflow-y: auto;
+      align-items: flex-start;
+    }
+    html, body { height: auto; min-height: 100%; }
   }
   @media(max-width:420px){
-    .right-panel { padding: 36px 20px; }
-    .rol-grid { grid-template-columns: 1fr 1fr; } 
+    .right-panel { padding: 36px 20px 60px 20px; }
+    .rol-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
@@ -448,9 +457,9 @@
 
   <!-- Selector de rol -->
   <div class="rol-grid">
-    <div class="rol-btn selected" data-rol="director">
-      <span class="rol-icon">👨‍💼</span>
-      <div class="rol-name">Director</div>
+    <div class="rol-btn selected" data-rol="directora">
+      <span class="rol-icon">🤵‍♀️</span>
+      <div class="rol-name">Directora</div>
     </div>
     <div class="rol-btn" data-rol="docente">
       <span class="rol-icon">👩‍🏫</span>
@@ -472,7 +481,7 @@
     <div class="field-label"><span class="lbl-icon">👤</span> Usuario</div>
     <div class="field-box">
       <div class="field-prefix">USR</div>
-      <input type="text" id="usuarioInput" placeholder="Ej: director.pineda" autocomplete="username" />
+      <input type="text" id="usuarioInput" placeholder="Ej: Janetysaurbina@hotmail.com" autocomplete="username" />
     </div>
   </div>
 
@@ -499,14 +508,14 @@
   <div class="demo-creds">
     <div class="demo-label">Usuarios de prueba — clic para autocompletar</div>
     <div class="demo-list">
-      <div class="demo-item" data-u="director.pineda" data-p="director2026">
-        <div class="demo-role">Director</div>
-        <div class="demo-user">director.pineda / director2026</div>
+      <div class="demo-item" data-u="Janetysaurbina@hotmail.com" data-p="directora2026">
+        <div class="demo-role">Directora</div>
+        <div class="demo-user">Janetysaurbina@hotmail.com / directora2026</div>
         <div class="demo-use">Usar →</div>
       </div>
-      <div class="demo-item" data-u="secretaria.ie" data-p="secretaria2026">
+      <div class="demo-item" data-u="noemi@gmail.com" data-p="secretaria2026">
         <div class="demo-role">Secretaría</div>
-        <div class="demo-user">secretaria.ie / secretaria2026</div>
+        <div class="demo-user">noemi@gmail.com / secretaria2026</div>
         <div class="demo-use">Usar →</div>
       </div>
       <div class="demo-item" data-u="docente.aula" data-p="docente2026">
@@ -521,19 +530,25 @@
     © 2026 I.E. Victor Armando Pineda Tagle · Lima, Perú
   </div>
 </div>
-
 <script>
 (function(){
 
-  // ── Credenciales válidas ──
-  var CREDS = [
-    { usuario: 'director.pineda',  clave: 'director2026' },
-    { usuario: 'secretaria.ie',    clave: 'secretaria2026' },
-    { usuario: 'docente.aula',     clave: 'docente2026' },
+  // ── Credenciales base (nunca cambian) ──
+  var CREDS_BASE = [
+    { usuario: 'Janetysaurbina@hotmail.com', clave: 'directora2026', rol: 'directora', pregunta: '¿Nombre de tu escuela?', respuesta: 'pineda tagle' },
+    { usuario: 'noemi@gmail.com',            clave: 'secretaria2026', rol: 'secretaria', pregunta: '¿Nombre de tu escuela?', respuesta: 'pineda tagle' },
+    { usuario: 'docente.aula',               clave: 'docente2026',    rol: 'docente',    pregunta: '¿Nombre de tu escuela?', respuesta: 'pineda tagle' },
   ];
 
-  // ── Variable global para el rol seleccionado ──
-  var rolSeleccionado = 'director';
+  // ── Obtener clave actual (puede ser la cambiada o la base) ──
+  function getClaveActual(usuario) {
+    var guardada = localStorage.getItem('ie_pwd_' + usuario);
+    if (guardada) return guardada;
+    var cred = CREDS_BASE.find(function(c){ return c.usuario === usuario; });
+    return cred ? cred.clave : null;
+  }
+
+  var rolSeleccionado = 'directora';
 
   // ── Selector de rol ──
   document.querySelectorAll('.rol-btn').forEach(function(btn){
@@ -541,7 +556,6 @@
       document.querySelectorAll('.rol-btn').forEach(function(b){ b.classList.remove('selected'); });
       btn.classList.add('selected');
       rolSeleccionado = btn.getAttribute('data-rol');
-      console.log('Rol seleccionado:', rolSeleccionado);
     });
   });
 
@@ -549,37 +563,22 @@
   var togglePass = document.getElementById('togglePass');
   var claveInput = document.getElementById('claveInput');
   togglePass.addEventListener('click', function(){
-    if(claveInput.type === 'password'){
-      claveInput.type = 'text';
-      togglePass.textContent = '🙈';
-    } else {
-      claveInput.type = 'password';
-      togglePass.textContent = '👁';
-    }
+    claveInput.type = claveInput.type === 'password' ? 'text' : 'password';
+    togglePass.textContent = claveInput.type === 'password' ? '👁' : '🙈';
   });
 
   // ── Autocompletar demo ──
   document.querySelectorAll('.demo-item').forEach(function(item){
     item.addEventListener('click', function(){
       var rol = item.querySelector('.demo-role').textContent.trim().toLowerCase();
-      
-      // Actualizar rol seleccionado
       document.querySelectorAll('.rol-btn').forEach(function(btn){
         var btnRol = btn.getAttribute('data-rol');
-        if(btnRol === 'director' && rol.includes('director')){
-          btn.classList.add('selected');
-          rolSeleccionado = 'director';
-        } else if(btnRol === 'secretaria' && rol.includes('secretaría')){
-          btn.classList.add('selected');
-          rolSeleccionado = 'secretaria';
-        } else if(btnRol === 'docente' && rol.includes('docente')){
-          btn.classList.add('selected');
-          rolSeleccionado = 'docente';
-        } else {
-          btn.classList.remove('selected');
-        }
+        var match = (btnRol === 'directora' && rol.includes('director')) ||
+                    (btnRol === 'secretaria' && rol.includes('secretar')) ||
+                    (btnRol === 'docente' && rol.includes('docente'));
+        btn.classList.toggle('selected', match);
+        if (match) rolSeleccionado = btnRol;
       });
-
       document.getElementById('usuarioInput').value = item.getAttribute('data-u');
       document.getElementById('claveInput').value   = item.getAttribute('data-p');
       claveInput.type = 'password';
@@ -588,7 +587,7 @@
     });
   });
 
-  // ── Mostrar/ocultar error ──
+  // ── Error ──
   function mostrarError(msg){
     var el = document.getElementById('loginError');
     document.getElementById('errorText').textContent = msg;
@@ -601,27 +600,28 @@
     el.style.display = 'none';
   }
 
-  // ── Login ──
+  // ── Login (usa clave actual, que puede ser la nueva) ──
   function intentarLogin(){
     var usuario = document.getElementById('usuarioInput').value.trim();
     var clave   = document.getElementById('claveInput').value;
     ocultarError();
-
-    if(!usuario){ mostrarError('Ingrese su nombre de usuario.'); return; }
-    if(!clave)  { mostrarError('Ingrese su contraseña.'); return; }
+    if (!usuario){ mostrarError('Ingrese su nombre de usuario.'); return; }
+    if (!clave)  { mostrarError('Ingrese su contraseña.'); return; }
 
     var btn = document.getElementById('btnLogin');
     btn.classList.add('loading');
 
     setTimeout(function(){
-      var ok = CREDS.some(function(c){ return c.usuario === usuario && c.clave === clave; });
+      // Busca el usuario en la lista base
+      var cred = CREDS_BASE.find(function(c){ return c.usuario === usuario; });
+      var claveCorrecta = cred ? getClaveActual(usuario) : null;
+      var ok = cred && clave === claveCorrecta;
+
       btn.classList.remove('loading');
-      if(ok){
-        // Guardar sesión con rol seleccionado
+      if (ok){
         sessionStorage.setItem('ie_auth', '1');
         sessionStorage.setItem('ie_usuario', usuario);
         sessionStorage.setItem('ie_rol', rolSeleccionado);
-        console.log('Login exitoso. Rol:', rolSeleccionado);
         window.location.href = 'index.html';
       } else {
         mostrarError('Usuario o contraseña incorrectos. Verifique sus datos.');
@@ -636,6 +636,227 @@
   document.getElementById('claveInput').addEventListener('keydown', function(e){ if(e.key==='Enter') intentarLogin(); });
   document.getElementById('usuarioInput').addEventListener('input', ocultarError);
   document.getElementById('claveInput').addEventListener('input', ocultarError);
+
+
+  // ══════════════════════════════════════════
+  //   MODAL RECUPERAR CONTRASEÑA
+  // ══════════════════════════════════════════
+
+  // ── Inyectar estilos del modal ──
+  var estilosModal = `
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(15,15,30,0.55); backdrop-filter: blur(4px);
+      z-index: 999; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #f0f2f8; border-radius: 16px;
+      padding: 36px 32px; width: 100%; max-width: 420px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      position: relative; animation: fadeUp .3s ease both;
+    }
+    .modal-close {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none; font-size: 20px;
+      cursor: pointer; color: #5a6480; line-height: 1;
+    }
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 700; color: #1a3a6b;
+      margin-bottom: 4px;
+    }
+    .modal-sub { font-size: 12px; color: #5a6480; margin-bottom: 24px; }
+    .modal-step { display: none; }
+    .modal-step.active { display: block; }
+    .modal-field { margin-bottom: 16px; }
+    .modal-field label {
+      font-size: 10px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: #1a3a6b;
+      display: block; margin-bottom: 7px;
+    }
+    .modal-field select, .modal-field input {
+      width: 100%; height: 48px; border-radius: 9px;
+      border: 1.5px solid #d0d6e8; padding: 0 14px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      color: #0f0f0f; background: #fff; outline: none;
+      transition: border-color .2s;
+    }
+    .modal-field select:focus, .modal-field input:focus {
+      border-color: #256ad1;
+      box-shadow: 0 0 0 3px rgba(37,106,209,0.1);
+    }
+    .modal-error {
+      font-size: 12px; color: #c0202c; font-weight: 500;
+      margin-bottom: 14px; min-height: 18px;
+    }
+    .modal-btn {
+      width: 100%; height: 48px; background: #1a3a6b;
+      color: #fff; border: none; border-radius: 9px;
+      font-family: 'DM Sans', sans-serif; font-size: 12px;
+      font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      cursor: pointer; transition: background .2s;
+    }
+    .modal-btn:hover { background: #1e4fa0; }
+    .modal-success {
+      text-align: center; padding: 12px 0;
+    }
+    .modal-success .ok-icon { font-size: 42px; margin-bottom: 12px; }
+    .modal-success p { font-size: 13px; color: #5a6480; line-height: 1.6; }
+    .modal-success strong { color: #1a3a6b; }
+    .link-recuperar {
+      display: inline-block; margin-top: 14px;
+      font-size: 11px; color: #256ad1; cursor: pointer;
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+    .link-recuperar:hover { color: #1a3a6b; }
+  `;
+  var styleTag = document.createElement('style');
+  styleTag.textContent = estilosModal;
+  document.head.appendChild(styleTag);
+
+  // ── Inyectar HTML del modal ──
+  var modalHTML = `
+    <div class="modal-overlay" id="modalRecuperar">
+      <div class="modal-box">
+        <button class="modal-close" id="modalCerrar" title="Cerrar">✕</button>
+        <div class="modal-title">Recuperar Contraseña</div>
+        <div class="modal-sub">Siga los pasos para restablecer su acceso.</div>
+
+        <!-- PASO 1: elegir usuario -->
+        <div class="modal-step active" id="paso1">
+          <div class="modal-field">
+            <label>👤 Seleccione su usuario</label>
+            <select id="recUsuario">
+              <option value="">— Elija su cuenta —</option>
+              <option value="Janetysaurbina@hotmail.com">Directora · Janetysaurbina@hotmail.com</option>
+              <option value="noemi@gmail.com">Secretaría · noemi@gmail.com</option>
+              <option value="docente.aula">Docente · docente.aula</option>
+            </select>
+          </div>
+          <div class="modal-error" id="err1"></div>
+          <button class="modal-btn" id="btnPaso1">Continuar →</button>
+        </div>
+
+        <!-- PASO 2: pregunta de seguridad -->
+        <div class="modal-step" id="paso2">
+          <div class="modal-field">
+            <label>🔐 Pregunta de seguridad</label>
+            <input type="text" id="recPregunta" readonly style="background:#e8eaf2;color:#5a6480;" />
+          </div>
+          <div class="modal-field">
+            <label>✏️ Su respuesta</label>
+            <input type="text" id="recRespuesta" placeholder="Escriba su respuesta..." />
+          </div>
+          <div class="modal-error" id="err2"></div>
+          <button class="modal-btn" id="btnPaso2">Verificar →</button>
+        </div>
+
+        <!-- PASO 3: nueva contraseña -->
+        <div class="modal-step" id="paso3">
+          <div class="modal-field">
+            <label>🔒 Nueva contraseña</label>
+            <input type="password" id="recNuevaClave" placeholder="Mínimo 6 caracteres" />
+          </div>
+          <div class="modal-field">
+            <label>🔒 Confirmar contraseña</label>
+            <input type="password" id="recConfirmaClave" placeholder="Repita la contraseña" />
+          </div>
+          <div class="modal-error" id="err3"></div>
+          <button class="modal-btn" id="btnPaso3">Guardar nueva contraseña ✓</button>
+        </div>
+
+        <!-- PASO 4: éxito -->
+        <div class="modal-step" id="paso4">
+          <div class="modal-success">
+            <div class="ok-icon">✅</div>
+            <p>¡Contraseña cambiada exitosamente!<br>
+            Ya puede ingresar con su <strong>nueva contraseña</strong>.</p>
+          </div>
+          <button class="modal-btn" style="margin-top:20px;" id="btnCerrarFinal">Ir al inicio de sesión</button>
+        </div>
+
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  // ── Agregar enlace bajo el botón de login ──
+  var btnLogin = document.getElementById('btnLogin');
+  var linkRec = document.createElement('div');
+  linkRec.style.textAlign = 'center';
+  linkRec.style.marginTop = '10px';
+  linkRec.innerHTML = '<span class="link-recuperar" id="linkRecuperar">¿Olvidaste tu contraseña?</span>';
+  btnLogin.parentNode.insertBefore(linkRec, btnLogin.nextSibling);
+
+  // ── Lógica del modal ──
+  var usuarioRecuperando = '';
+
+  function irPaso(n){
+    document.querySelectorAll('.modal-step').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById('paso' + n).classList.add('active');
+  }
+
+  document.getElementById('linkRecuperar').addEventListener('click', function(){
+    usuarioRecuperando = '';
+    irPaso(1);
+    document.getElementById('recUsuario').value = '';
+    document.getElementById('err1').textContent = '';
+    document.getElementById('modalRecuperar').classList.add('open');
+  });
+
+  document.getElementById('modalCerrar').addEventListener('click', function(){
+    document.getElementById('modalRecuperar').classList.remove('open');
+  });
+  document.getElementById('modalRecuperar').addEventListener('click', function(e){
+    if (e.target === this) this.classList.remove('open');
+  });
+
+  // Paso 1 → verificar usuario seleccionado
+  document.getElementById('btnPaso1').addEventListener('click', function(){
+    var u = document.getElementById('recUsuario').value;
+    if (!u){ document.getElementById('err1').textContent = 'Seleccione un usuario.'; return; }
+    usuarioRecuperando = u;
+    var cred = CREDS_BASE.find(function(c){ return c.usuario === u; });
+    document.getElementById('recPregunta').value = cred.pregunta;
+    document.getElementById('recRespuesta').value = '';
+    document.getElementById('err2').textContent = '';
+    irPaso(2);
+  });
+
+  // Paso 2 → verificar respuesta
+  document.getElementById('btnPaso2').addEventListener('click', function(){
+    var respuesta = document.getElementById('recRespuesta').value.trim().toLowerCase();
+    var cred = CREDS_BASE.find(function(c){ return c.usuario === usuarioRecuperando; });
+    if (!respuesta){ document.getElementById('err2').textContent = 'Ingrese su respuesta.'; return; }
+    if (respuesta !== cred.respuesta){
+      document.getElementById('err2').textContent = 'Respuesta incorrecta. Intente nuevamente.';
+      return;
+    }
+    document.getElementById('recNuevaClave').value = '';
+    document.getElementById('recConfirmaClave').value = '';
+    document.getElementById('err3').textContent = '';
+    irPaso(3);
+  });
+
+  // Paso 3 → guardar nueva contraseña
+  document.getElementById('btnPaso3').addEventListener('click', function(){
+    var nueva    = document.getElementById('recNuevaClave').value;
+    var confirma = document.getElementById('recConfirmaClave').value;
+    if (nueva.length < 6){ document.getElementById('err3').textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
+    if (nueva !== confirma){ document.getElementById('err3').textContent = 'Las contraseñas no coinciden.'; return; }
+    // Guardar en localStorage
+    localStorage.setItem('ie_pwd_' + usuarioRecuperando, nueva);
+    irPaso(4);
+  });
+
+  // Paso 4 → cerrar y autocompletar usuario
+  document.getElementById('btnCerrarFinal').addEventListener('click', function(){
+    document.getElementById('modalRecuperar').classList.remove('open');
+    document.getElementById('usuarioInput').value = usuarioRecuperando;
+    document.getElementById('claveInput').value = '';
+    document.getElementById('claveInput').focus();
+  });
 
 })();
 </script>
